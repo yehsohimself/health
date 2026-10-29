@@ -39,12 +39,21 @@ watch how you respond, and change the plan for a reason they can explain. PT tri
 
 ## A day with PT
 
-| | |
-|---|---|
-| <img src="docs/today.jpg" width="420" alt="Today screen"> | **Morning.** Answer three taps of questions. The session for today appears, already adjusted: the right progression step for each movement, the right number of sets, a 10-minute version if you are short on time. Your streak counts any finished session, even 10 minutes. |
-| <img src="docs/player.jpg" width="420" alt="Guided player"> | **Training.** A full-screen player walks you through every set and rest: photo storyboard, three-step how-to, rep counter, rest timer, coach voice and beeps. After the last set: *Easy, Good or Hard?* |
-| <img src="docs/exercise-card.jpg" width="420" alt="Exercise card"> | **Learning a movement.** Every one of the 78 movements has a three-frame storyboard, the common mistakes, where you should feel it, the muscles involved, an easier and a harder step, and a curated YouTube walkthrough. |
-| <img src="docs/nutrition.jpg" width="420" alt="Nutrition"> | **Eating.** Snap a photo or type *"two-egg menemen, a slice of bread, 30 g feta"*. You get grams and macros per item, each with its source. Calorie and protein targets correct themselves from your weigh-ins. |
+**Morning.** Answer three taps of questions. The session for today appears, already adjusted: the right progression step for each movement, the right number of sets, a 10-minute version if you are short on time. Your streak counts any finished session, even 10 minutes.
+
+<p align="center"><img src="docs/today.jpg" width="760" alt="Today screen"></p>
+
+**Training.** A full-screen player walks you through every set and rest: photo storyboard, three-step how-to, rep counter, rest timer, coach voice and beeps. After the last set: *Easy, Good or Hard?*
+
+<p align="center"><img src="docs/player.jpg" width="760" alt="Guided player"></p>
+
+**Learning a movement.** Every one of the 78 movements has a three-frame storyboard, the common mistakes, where you should feel it, the muscles involved, an easier and a harder step, and a curated YouTube walkthrough.
+
+<p align="center"><img src="docs/exercise-card.jpg" width="760" alt="Exercise card"></p>
+
+**Eating.** Snap a photo or type *"two-egg menemen, a slice of bread, 30 g feta"*. You get grams and macros per item, each with its source. Calorie and protein targets correct themselves from your weigh-ins.
+
+<p align="center"><img src="docs/nutrition.jpg" width="760" alt="Nutrition"></p>
 
 On Sunday you get a short coach message (what went well, what changes next week, one habit to keep) and next
 week's plan is written with it.
