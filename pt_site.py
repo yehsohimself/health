@@ -13,6 +13,7 @@ import tempfile
 import threading
 import time
 import traceback
+import uuid
 from pathlib import Path
 
 from flask import Response, abort, jsonify, request, send_file
@@ -691,7 +692,7 @@ def kaydet(app):
                 fotolar = _yemek_fotolari(td)
                 y = pt_beslenme.yemek_coz(metin, resimler=fotolar, cevap=cevap)
                 if fotolar:                                           # kaydedilirse günlükte görünecek küçük kopya
-                    fid = f"y{int(time.time() * 1000)}"
+                    fid = f"y{int(time.time() * 1000)}{uuid.uuid4().hex[:4]}"
                     if pt_beslenme.foto_kaydet(fid, fotolar[0]):
                         y["foto_id"] = fid
                 return jsonify(y)
@@ -717,7 +718,7 @@ def kaydet(app):
 
     @app.get("/pt-yemek-foto/<yid>.jpg")
     def pt_yemek_foto(yid):
-        if not re.fullmatch(r"y\d{10,16}", yid):
+        if not re.fullmatch(r"y\d{10,18}[0-9a-f]{0,4}", yid):
             abort(404)
         p_ = pt_beslenme.FOTO / f"{yid}.jpg"
         if not p_.exists():

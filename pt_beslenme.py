@@ -12,6 +12,7 @@
 import datetime as dt
 import json
 import time
+import uuid
 from pathlib import Path
 
 import pt
@@ -244,7 +245,7 @@ def yemek_kopyala(tarih, kaynak, idler=None):
     yeni = []
     for i, y in enumerate(L):
         k = {a: y[a] for a in ("ad", "ogun", "kalemler", "not") if a in y}
-        k.update(id=f"y{int(time.time() * 1000)}{i}", t=int(time.time()) + i, kopya=kaynak)
+        k.update(id=f"y{int(time.time() * 1000)}{i}{uuid.uuid4().hex[:4]}", t=int(time.time()) + i, kopya=kaynak)   # aynı milisaniyede iki kopya birbirini ezmesin
         yeni.append(yemek_kaydet(tarih, k))
     return yeni
 
@@ -482,7 +483,7 @@ def foto_kaydet(yid, kaynak):
 def disaridan_kaydet(resimler, metin="", tarih=None):
     """Telefonun Paylaş menüsünden gelen fotoğraf: tahmin edilir ve 'kontrol bekliyor' işaretiyle hemen kaydedilir."""
     y = yemek_coz(metin, resimler=resimler)
-    y["id"] = f"y{int(time.time() * 1000)}"
+    y["id"] = f"y{int(time.time() * 1000)}{uuid.uuid4().hex[:4]}"
     if resimler and foto_kaydet(y["id"], resimler[0]):
         y["foto"] = True
     y["kontrol"] = True
@@ -493,7 +494,7 @@ def disaridan_kaydet(resimler, metin="", tarih=None):
 
 def yemek_kaydet(tarih, y):
     y = dict(y)
-    y.setdefault("id", f"y{int(time.time() * 1000)}")
+    y.setdefault("id", f"y{int(time.time() * 1000)}{uuid.uuid4().hex[:4]}")
     y.setdefault("t", int(time.time()))
     def temiz(k):
         k = dict(k)
