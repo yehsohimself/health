@@ -72,6 +72,6 @@ def _guvenlik(r):
 pt_site.kaydet(app)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PT_PORT", "8771"))
+    port = int(sys.argv[sys.argv.index("--port") + 1]) if "--port" in sys.argv else int(os.environ.get("PT_PORT", "8771"))
     print(f"PT: http://127.0.0.1:{port}", flush=True)
     app.run(host="127.0.0.1", port=port, threaded=True)

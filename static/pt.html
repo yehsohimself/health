@@ -585,7 +585,7 @@ temaUygula(); $('#tema').onclick = () => { store.set('tema_v20', store.get('tema
 (() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'PT', 8771]];
   const m = $('#urunMenu'); const yerel = /^(127\.|localhost|192\.168\.|10\.|.*\.local$)/.test(location.hostname);
   const kurulu = (document.documentElement.dataset.urunler || '').split(',').filter(Boolean);
-  if (kurulu.length === 1) { $('#urunBtn').hidden = true; return; }   // tek başına PT: başka ürün yok
+  if (kurulu.length === 1) { $('#urunBtn').style.display = 'none'; return; }   // tek başına PT: başka ürün yok
   m.innerHTML = yerel ? U.filter(([k]) => !kurulu.length || kurulu.includes(k)).map(([k, a, p]) => `<a href="${location.protocol}//${location.hostname}:${p}/" class="${String(p) === location.port ? 'on' : ''}"><img src="/static/logo/${k}.svg" alt="">${a}</a>`).join('') : '<a class="on"><img src="/static/logo/pt.svg" alt="">PT</a>';
   $('#urunBtn').onclick = e => { e.stopPropagation(); m.classList.toggle('acik'); };
   document.addEventListener('click', e => { if (!e.target.closest('#urunBtn,#urunMenu')) m.classList.remove('acik'); }); })();
