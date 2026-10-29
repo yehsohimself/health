@@ -1,0 +1,6 @@
+flask
+requests
+pillow
+numpy
+pyobjc-framework-Vision
+pytest

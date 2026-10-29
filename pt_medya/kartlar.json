@@ -1,0 +1,2566 @@
+{
+ "duvar_sinav": {
+  "adimlar": [
+   "Duvara bir kol boyu uzaklıkta durun, elleri omuz hizasında duvara koyun.",
+   "Dirsekleri bükerek göğsü duvara yaklaştırın, gövdeyi düz tutun.",
+   "Elleri iterek başlangıç pozisyonuna dönün."
+  ],
+  "hatalar": [
+   "Kalça öne ya da geriye kırılıyor.",
+   "Dirsekler fazla yana açılıyor."
+  ],
+  "hisset": "Göğüs ve kolların arkasında hafif bir çalışma hissedin.",
+  "nefes": "Yaklaşırken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "gogus",
+    "triceps"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing facing a wall at arm's length, palms flat on the wall at shoulder height, arms straight, body in a straight line from head to heels, feet hip-width apart",
+   "bit": "Same person with elbows bent about 90 degrees at about 45 degrees from the torso, chest close to the wall, body still in a straight diagonal line, heels on the floor",
+   "hareket": "Bend the elbows to lean the chest toward the wall, then push back to straight arms, body staying rigid",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "wall"
+  },
+  "zaman": 1792929560
+ },
+ "egimli_sinav": {
+  "adimlar": [
+   "Elleri sehpa ya da bankta omuz genişliğinde koyun, vücut düz çizgide olsun.",
+   "Dirsekleri bükerek göğsü yüzeye doğru indirin.",
+   "Elleri iterek kolları uzatın ve başlangıca dönün."
+  ],
+  "hatalar": [
+   "Bel çöküyor, karın gevşiyor.",
+   "Baş öne düşüyor, boyun geriliyor."
+  ],
+  "hisset": "Göğüs, omuz önü ve kolların arkasında hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "gogus",
+    "triceps",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "karin",
+    "kalca"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in an incline push-up position, hands on the edge of a sturdy bench shoulder-width apart, arms straight, body in a straight diagonal line from head to heels, feet on the floor",
+   "bit": "Same person with elbows bent to about 90 degrees at about 45 degrees from the torso, chest close to the bench edge, body still straight",
+   "hareket": "Lower the chest toward the bench by bending the elbows, then press back up to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "sturdy bench"
+  },
+  "zaman": 1792929560
+ },
+ "sinav": {
+  "adimlar": [
+   "Eller omuz altında, vücut başından topuğa düz bir çizgide olsun.",
+   "Dirsekleri yaklaşık 45° açıyla bükerek göğsü yere yaklaştırın.",
+   "Yerden iterek kolları tamamen uzatın."
+  ],
+  "hatalar": [
+   "Dirsekler 90° yana açılıyor.",
+   "Kalça düşüyor ya da yukarı kalkıyor."
+  ],
+  "hisset": "Göğüs ortasında ve kolların arkasında hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "gogus",
+    "triceps",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "karin",
+    "kalca"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a high plank push-up position on the floor, hands under shoulders, arms straight, body in a straight line from head to heels, toes on the floor",
+   "bit": "Same person lowered with elbows bent at about 45 degrees from the torso, chest hovering just above the floor, body straight",
+   "hareket": "Lower the body as one rigid line until the chest nearly touches the floor, then push back up to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929560
+ },
+ "elmas_sinav": {
+  "adimlar": [
+   "Elleri göğüs altında, baş ve işaret parmakları birleşik biçimde koyun.",
+   "Dirsekleri vücuda yakın bükerek göğsü ellere yaklaştırın.",
+   "Kolları uzatarak başlangıç pozisyonuna dönün."
+  ],
+  "hatalar": [
+   "Dirsekler yanlara savruluyor.",
+   "Kalça çöküyor, gövde düz kalmıyor."
+  ],
+  "hisset": "Kolların arkasında ve göğüs içinde yoğun çalışma hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "triceps",
+    "gogus"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a high plank position, hands together directly under the chest with thumbs and index fingers touching forming a diamond shape, arms straight, body in a straight line, toes on the floor",
+   "bit": "Same person lowered with elbows bent close to the ribs, chest hovering just above the hands, body straight",
+   "hareket": "Lower the chest toward the diamond hands keeping elbows close to the body, then press back up",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929560
+ },
+ "yaslanan_sinav": {
+  "adimlar": [
+   "Plank pozisyonunda omuzları ellerin önüne kaydırın, parmaklar hafif dışa baksın.",
+   "Omuzlar önde kalacak biçimde dirsekleri vücuda yakın bükerek inin.",
+   "Elleri iterek kolları uzatın, öne yaslanmayı koruyun."
+  ],
+  "hatalar": [
+   "Omuzlar geri kaçıp yaslanma kayboluyor.",
+   "Bel çukurlaşıyor, karın gevşiyor."
+  ],
+  "hisset": "Omuz önünde ve karında güçlü gerilim hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "gogus",
+    "triceps"
+   ],
+   "ikincil": [
+    "karin",
+    "on_kol"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a planche-lean push-up position on the floor, shoulders positioned well forward of the hands, arms straight, body straight and leaning forward, toes on the floor, hands turned slightly outward",
+   "bit": "Same person lowered with elbows bent close to the torso, shoulders still ahead of the hands, chest near the floor, body straight",
+   "hareket": "Keep shoulders forward over the hands while lowering the chest, then push back up to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929560
+ },
+ "arcer_sinav": {
+  "adimlar": [
+   "Elleri omuzdan geniş koyun, bacaklar açık plank pozisyonunda başlayın.",
+   "Bir kolu bükerek gövdeyi o tarafa indirin, öbür kol düz kalsın.",
+   "İterek ortaya dönün ve diğer tarafa geçin."
+  ],
+  "hatalar": [
+   "Düz kol bükülüyor, yük paylaşılıyor.",
+   "Kalça yana dönüyor."
+  ],
+  "hisset": "Bükülen kolun göğsünde ve düz kolun omzunda hissedin.",
+  "nefes": "İnerken nefes alın, dönerken verin.",
+  "kaslar": {
+   "birincil": [
+    "gogus",
+    "triceps",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "karin",
+    "yan_karin",
+    "ic_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a wide-arm push-up position on the floor, hands much wider than shoulders, arms straight, legs slightly apart, body straight, toes on the floor",
+   "bit": "Same person shifted over the right hand with the right elbow bent deeply and chest low near the right hand, left arm fully extended straight out to the side, hips level",
+   "hareket": "Shift the body weight sideways, bend one arm while the other stays straight, then push back to center",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929560
+ },
+ "tek_kol_sinav": {
+  "adimlar": [
+   "Ayakları geniş açın, bir elinizi göğüs altına, diğerini sırtınıza koyun.",
+   "Kalçayı dönmeden dirseği bükerek göğsü yere indirin.",
+   "Tek kolla iterek başlangıca dönün."
+  ],
+  "hatalar": [
+   "Kalça ve omuzlar yana dönüyor.",
+   "Ayaklar yeterince açık değil, denge kaybolur."
+  ],
+  "hisset": "Göğüs, omuz ve gövde yan kaslarında hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "gogus",
+    "triceps",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "karin",
+    "yan_karin",
+    "kalca"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a one-arm push-up position, feet wide apart, one hand on the floor under the chest with arm straight, the other hand resting behind the lower back, body straight, hips and shoulders square to the floor",
+   "bit": "Same person lowered with the supporting elbow bent, chest hovering just above the floor, hips and shoulders level and not rotated",
+   "hareket": "Lower the chest on one arm without rotating the hips, then press back up to straight arm",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929560
+ },
+ "destek_tutus": {
+  "adimlar": [
+   "Paralel barları tutup kendinizi yukarı itin, kollar düz olsun.",
+   "Omuzları kulaklardan uzak, aşağıda tutun; gövdeyi sabitleyin.",
+   "Süre boyunca pozisyonu koruyun, kontrollü inin."
+  ],
+  "hatalar": [
+   "Omuzlar kulaklara doğru yükseliyor.",
+   "Dirsekler hafif bükülüyor, vücut sallanıyor."
+  ],
+  "hisset": "Kolların arkasında, omuz çevresinde ve karında hissedin.",
+  "nefes": "Normal ve düzenli nefes alıp verin.",
+  "kaslar": {
+   "birincil": [
+    "triceps",
+    "gogus",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "karin",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person supported on parallel bars, hands gripping the bars, arms fully straight and locked, shoulders pressed down away from the ears, torso upright, legs hanging straight down, feet slightly forward",
+   "bit": "Same static position held, arms straight, shoulders depressed, body still",
+   "hareket": "Static hold with no movement, arms straight and body steady",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "parallel bars"
+  },
+  "zaman": 1792929560
+ },
+ "negatif_dips": {
+  "adimlar": [
+   "Paralelde kollar düz destek pozisyonuna çıkın.",
+   "Dirsekleri bükerek 3-5 saniyede yavaşça inin.",
+   "Alt noktada durup yeniden başlangıca çıkın."
+  ],
+  "hatalar": [
+   "Hızla düşüyorsunuz, kontrol kayboluyor.",
+   "Omuzlar öne çöküyor."
+  ],
+  "hisset": "Kolların arkasında ve göğüs altında hissedin.",
+  "nefes": "İnerken nefes alın, yukarıda verin.",
+  "kaslar": {
+   "birincil": [
+    "triceps",
+    "gogus"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person supported on parallel bars with arms fully straight, shoulders down, torso slightly leaning forward, legs bent behind or hanging",
+   "bit": "Same person lowered with elbows bent to about 90 degrees, upper arms parallel to the floor, torso slightly forward",
+   "hareket": "Slowly lower the body between the bars with elbows bending over several seconds",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "parallel bars"
+  },
+  "zaman": 1792929560
+ },
+ "dips": {
+  "adimlar": [
+   "Paralelde kollar düz destek pozisyonunda başlayın, gövdeyi hafif öne eğin.",
+   "Omuz dirsek hizasına gelene kadar kontrollü inin.",
+   "Kolları uzatarak yukarı itin."
+  ],
+  "hatalar": [
+   "Omuzlar çok aşağı iniyor, eklem zorlanıyor.",
+   "Dirsekler çok açılıyor."
+  ],
+  "hisset": "Göğüs alt kısmında ve kolların arkasında hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "triceps",
+    "gogus",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "karin",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person supported on parallel bars with arms fully straight, shoulders down, torso leaning slightly forward, legs bent behind with ankles crossed",
+   "bit": "Same person lowered until the shoulders are level with the elbows, elbows bent about 90 degrees, torso leaning slightly forward",
+   "hareket": "Lower the body between the bars until shoulders reach elbow height, then press back up to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "parallel bars"
+  },
+  "zaman": 1792929560
+ },
+ "pike_sinav": {
+  "adimlar": [
+   "Kalçayı yukarı kaldırıp ters V şekli alın, eller omuzdan hafif geniş.",
+   "Dirsekleri bükerek başı ellerin önüne doğru indirin.",
+   "Elleri iterek ters V pozisyonuna dönün."
+  ],
+  "hatalar": [
+   "Kalça düşüp şınava dönüşüyor.",
+   "Dirsekler fazla yana açılıyor."
+  ],
+  "hisset": "Omuz önünde ve kolların arkasında hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "triceps"
+   ],
+   "ikincil": [
+    "gogus",
+    "ust_sirt",
+    "arka_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in an inverted V pike position on the floor, hands shoulder-width apart, arms straight, hips high, legs nearly straight, head between the arms",
+   "bit": "Same person with elbows bent, head lowered toward the floor in front of the hands, hips still high",
+   "hareket": "Bend the elbows to lower the head forward between the hands, then press back up to the inverted V",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929560
+ },
+ "yuksek_pike_sinav": {
+  "adimlar": [
+   "Ayakları sandalyeye koyun, kalçayı yukarı kaldırıp ters V yapın.",
+   "Dirsekleri bükerek başı ellerin önüne doğru indirin.",
+   "Elleri iterek kolları uzatın."
+  ],
+  "hatalar": [
+   "Sandalye kayıyor ya da dengesiz.",
+   "Bel çöküp kalça aşağı düşüyor."
+  ],
+  "hisset": "Omuzlarda ve kolların arkasında yoğun yük hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "triceps"
+   ],
+   "ikincil": [
+    "gogus",
+    "ust_sirt",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a pike position with feet resting on a sturdy chair, hands on the floor shoulder-width apart, arms straight, hips high, torso angled steeply downward",
+   "bit": "Same person with elbows bent, head lowered close to the floor in front of the hands, feet still on the chair",
+   "hareket": "Lower the head toward the floor by bending the elbows, then press back up to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "sturdy chair"
+  },
+  "zaman": 1792929560
+ },
+ "duvar_amut_sinav": {
+  "adimlar": [
+   "Duvara sırtınız dönük amut pozisyonuna geçin, eller omuz genişliğinde yerde.",
+   "Dirsekleri kontrollü bükerek başınızı yere doğru indirin.",
+   "Başınız yere hafifçe değince kolları açıp başlangıca itin."
+  ],
+  "hatalar": [
+   "Bel aşırı çukurlaşıyor",
+   "Dirsekler yanlara fazla açılıyor"
+  ],
+  "hisset": "Omuzlarda ve kolların arkasında yük hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "triceps"
+   ],
+   "ikincil": [
+    "yan_omuz",
+    "ust_sirt",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a handstand against a wall, belly facing the wall, arms fully extended, hands shoulder-width on the floor, body straight and vertical, feet resting on the wall",
+   "bit": "Same handstand position with elbows bent, top of the head lightly touching the floor, body straight, feet on the wall",
+   "hareket": "Bend the elbows slowly to lower the head to the floor, then press back up to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "plain wall"
+  },
+  "zaman": 1792929559
+ },
+ "ters_kurek": {
+  "adimlar": [
+   "Alçak barın altında sırtüstü uzanın, bara tutunun, vücut düz.",
+   "Topukları yerde tutarak göğsünüzü bara doğru çekin.",
+   "Kontrollü şekilde kolları açıp başlangıca inin."
+  ],
+  "hatalar": [
+   "Kalça aşağı sarkıyor",
+   "Omuzlar kulaklara doğru kalkıyor"
+  ],
+  "hisset": "Sırtın ortasında ve kürek kemiklerinin arasında hissedin.",
+  "nefes": "Çekerken nefes verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "ust_sirt"
+   ],
+   "ikincil": [
+    "biceps",
+    "arka_omuz",
+    "on_kol"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying face-up under a low horizontal bar, gripping it with overhand grip, arms fully extended, body in a straight line, heels on the floor",
+   "bit": "Same person with elbows bent, chest touching the low bar, body still in a straight line, heels on the floor",
+   "hareket": "Pull the chest up to the bar keeping the body rigid, then lower slowly to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "low horizontal bar (or sturdy table edge)"
+  },
+  "zaman": 1792929559
+ },
+ "aktif_asilma": {
+  "adimlar": [
+   "Bara omuz genişliğinde tutunun ve kollar düz şekilde asılın.",
+   "Omuzları kulaklardan uzaklaştırarak aşağı ve geriye çekin.",
+   "Kolları bükmeden birkaç saniye tutun, sonra gevşetin."
+  ],
+  "hatalar": [
+   "Dirsekler bükülüyor",
+   "Omuzlar kulaklara doğru kalkık kalıyor"
+  ],
+  "hisset": "Kürek kemiklerinizin altında ve sırtınızın üst kısmında hissedin.",
+  "nefes": "Normal ve düzenli nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "ust_sirt"
+   ],
+   "ikincil": [
+    "on_kol",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person hanging from a pull-up bar with straight arms, overhand grip shoulder-width, shoulders shrugged up toward the ears, feet off the floor",
+   "bit": "Same hanging position with arms still straight, shoulders pulled down and back away from the ears, chest slightly lifted",
+   "hareket": "Depress the shoulder blades downward without bending the elbows, hold, then release",
+   "kamera": "front",
+   "tutus": true,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "kurek_cekis": {
+  "adimlar": [
+   "Bara kollar düz asılın, omuz genişliğinde tutuşla.",
+   "Kolları bükmeden kürek kemiklerini aşağı çekerek gövdeyi yükseltin.",
+   "Yavaşça bırakıp tam asılmaya dönün."
+  ],
+  "hatalar": [
+   "Dirsekler bükülüyor",
+   "Hareketi sallanarak yapıyorsunuz"
+  ],
+  "hisset": "Kürek kemiklerinin altında ve sırtın üst kısmında hissedin.",
+  "nefes": "Yukarı çekerken verin, bırakırken alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "ust_sirt"
+   ],
+   "ikincil": [
+    "on_kol",
+    "arka_omuz"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a dead hang from a pull-up bar, arms straight, shoulders relaxed up near the ears, feet off the floor",
+   "bit": "Same person with arms still straight, shoulder blades pulled down, body raised a few centimeters",
+   "hareket": "Pull the shoulders down to lift the body slightly with straight arms, then lower back to dead hang",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "negatif_barfiks": {
+  "adimlar": [
+   "Sıçrayarak ya da basamakla çene barın üstünde başlayın.",
+   "Gövdeyi kontrollü şekilde 3-5 saniyede aşağı indirin.",
+   "Kollar tam düzleşince bırakın, yeniden başlayın."
+  ],
+  "hatalar": [
+   "Kontrolsüzce hızlı düşüyorsunuz",
+   "Omuzlar kulaklara kalkıyor"
+  ],
+  "hisset": "Sırtta ve pazılarda yavaş inişte gerilim hissedin.",
+  "nefes": "İnerken yavaşça nefes verin.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "biceps"
+   ],
+   "ikincil": [
+    "on_kol",
+    "arka_omuz",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person at the top of a pull-up with chin above the bar, elbows bent, overhand grip, legs together, body straight",
+   "bit": "Same person hanging with arms fully extended below the bar, body straight and still",
+   "hareket": "Lower the body slowly and steadily from chin above the bar to fully straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "barfiks": {
+  "adimlar": [
+   "Bara omuz genişliğinden biraz geniş tutunun, kollar düz asılın.",
+   "Dirsekleri aşağı çekerek çeneyi barın üstüne taşıyın.",
+   "Kontrollü inip kollar tam düzleşince bitirin."
+  ],
+  "hatalar": [
+   "Çene bara ulaşmıyor",
+   "Tam açılmadan tekrar ediyorsunuz"
+  ],
+  "hisset": "Sırtın yanlarında ve pazılarda hissedin.",
+  "nefes": "Çekerken verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "biceps"
+   ],
+   "ikincil": [
+    "on_kol",
+    "arka_omuz",
+    "ust_sirt"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person hanging from a pull-up bar with overhand grip slightly wider than shoulders, arms fully extended, legs together",
+   "bit": "Same person with chin clearly above the bar, elbows pointing down, chest up",
+   "hareket": "Pull the body up until the chin passes the bar, then lower to full arm extension",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "gogse_barfiks": {
+  "adimlar": [
+   "Bara geniş tutunun, kollar düz asılın, hafif geriye yaslanın.",
+   "Dirsekleri aşağı çekerek göğsünüzü bara doğru patlayıcı çekin.",
+   "Göğüs bara değince kontrollü inip tam açılın."
+  ],
+  "hatalar": [
+   "Göğüs bara ulaşmıyor",
+   "Kontrolsüz sallanıp ivme alıyorsunuz"
+  ],
+  "hisset": "Sırtın geniş kaslarında ve kürek kemiklerinin arasında hissedin.",
+  "nefes": "Çekerken verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "biceps"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "arka_omuz",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person hanging from a pull-up bar with a wide overhand grip, arms straight, legs together",
+   "bit": "Same person pulled high with the chest touching the bar, elbows back, torso leaning slightly back",
+   "hareket": "Pull explosively until the chest touches the bar, then lower under control to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "arcer_barfiks": {
+  "adimlar": [
+   "Bara çok geniş tutunun, kollar düz asılın.",
+   "Bir kola doğru çekin; diğer kol düz kalsın.",
+   "Kontrolle inin ve diğer tarafa geçin."
+  ],
+  "hatalar": [
+   "Düz kol dirsekten bükülüyor",
+   "Gövde fazla dönüyor"
+  ],
+  "hisset": "Çeken tarafın sırtında ve pazısında yoğun hissedin.",
+  "nefes": "Çekerken verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "biceps"
+   ],
+   "ikincil": [
+    "on_kol",
+    "yan_karin",
+    "ust_sirt"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person hanging from a pull-up bar with a very wide overhand grip, both arms straight, legs together",
+   "bit": "Same person with chin at bar level over one hand, that elbow bent, the other arm fully straight along the bar",
+   "hareket": "Shift the body toward one hand while pulling up, the opposite arm stays straight, then lower back",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "muscle_up": {
+  "adimlar": [
+   "Bara kapalı tutuşla asılın, kollar düz, vücut hafif öne.",
+   "Patlayıcı çekin, göğsü bara getirip bileklerin üstüne geçin.",
+   "Kolları düzeltip barın üstünde dikey durun, kontrollü inin."
+  ],
+  "hatalar": [
+   "Kollar erken bükülüp geçiş zorlaşıyor",
+   "Kalça sallanarak ivme alıyor"
+  ],
+  "hisset": "Sırtta, göğüste ve kolların arkasında hissedin.",
+  "nefes": "Çekmeden önce alın, geçişte verin.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "gogus",
+    "triceps"
+   ],
+   "ikincil": [
+    "biceps",
+    "on_omuz",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person hanging from a high pull-up bar with false grip, arms straight, body slightly hollow",
+   "bit": "Same person above the bar in a support position, arms fully extended, torso upright, bar at waist level",
+   "hareket": "Pull explosively, lean over the bar transitioning the chest above it, then press to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "high pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "tuck_front_lever": {
+  "adimlar": [
+   "Bara asılın, kollar düz, dizleri göğse çekin.",
+   "Kalçayı kaldırıp sırtı yere paralel getirin.",
+   "Pozisyonu tutun, sonra kontrolle indirin."
+  ],
+  "hatalar": [
+   "Kalça düşüyor, sırt paralel değil",
+   "Kollar bükülüyor"
+  ],
+  "hisset": "Sırtın yanlarında ve karın bölgesinde hissedin.",
+  "nefes": "Kısa ve düzenli nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "karin"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "arka_omuz",
+    "on_kol"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person hanging from a pull-up bar with straight arms, knees tucked to the chest",
+   "bit": "Same person with back horizontal, parallel to the floor, knees tucked tight to chest, arms straight, hips level with shoulders",
+   "hareket": "Raise the hips and swing the body up to horizontal while tucked, hold, then lower",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "adv_tuck_front_lever": {
+  "adimlar": [
+   "Bara asılın, kollar düz, tuck front lever pozisyonuna geçin.",
+   "Sırtı düz tutarak dizleri 90° açacak şekilde uzatın.",
+   "Pozisyonu tutun, dizleri toplayıp kontrolle inin."
+  ],
+  "hatalar": [
+   "Sırt kamburlaşıyor",
+   "Kalça yukarı ya da aşağı kayıyor"
+  ],
+  "hisset": "Sırtın yanlarında ve karında güçlü gerilim hissedin.",
+  "nefes": "Kısa ve düzenli nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "kanat",
+    "karin"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "arka_omuz",
+    "on_kol"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person hanging from a pull-up bar in a tucked front lever, back horizontal, knees tight to chest, arms straight",
+   "bit": "Same person with flat horizontal back, hips extended, knees bent at 90 degrees, thighs in line with torso, arms straight",
+   "hareket": "From a tight tuck, open the hips so the thighs extend while the back remains flat, hold",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "pull-up bar"
+  },
+  "zaman": 1792929559
+ },
+ "sandalye_kalkis": {
+  "adimlar": [
+   "Sandalyede dik oturun, ayaklar omuz genişliğinde, kollar göğüste çapraz.",
+   "Gövdeyi hafif öne eğip ayakların üzerinden kalkın.",
+   "Tam dikilin, kontrollü şekilde yavaşça oturun."
+  ],
+  "hatalar": [
+   "Dizler içe doğru çöküyor",
+   "Ellerle destek alıyorsunuz"
+  ],
+  "hisset": "Uyluk ön kısmında ve kalçada hissedin.",
+  "nefes": "Kalkarken verin, oturmadan önce alın.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "baldir",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person sitting upright on a chair, feet flat shoulder-width apart, arms crossed over chest",
+   "bit": "Same person standing fully upright beside the chair, hips and knees extended, arms crossed over chest",
+   "hareket": "Lean slightly forward and stand up without hands, then sit back down under control",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "a standard chair"
+  },
+  "zaman": 1792929559
+ },
+ "squat": {
+  "adimlar": [
+   "Ayaklar omuz genişliğinde, parmaklar hafif dışa, kollar önde durun.",
+   "Kalçayı geriye ve aşağı doğru oturtun, topuklar yerde kalsın.",
+   "Kalça diz hizasının altına inince topuklarla itip ayağa kalkın."
+  ],
+  "hatalar": [
+   "Topuklar yerden kalkıyor",
+   "Dizler içe çöküyor"
+  ],
+  "hisset": "Uyluk önünde ve kalçada hissedin.",
+  "nefes": "İnerken nefes alın, kalkarken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "ic_bacak",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing upright, feet shoulder-width apart, toes slightly turned out, arms extended forward at shoulder height, facing right in side view",
+   "bit": "The same person in a deep squat, hips lower than knees, heels flat on the floor, torso leaning slightly forward, arms extended forward",
+   "hareket": "Hips push back and down into a deep squat with heels grounded, then drive back up to standing",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929558
+ },
+ "bulgar_squat": {
+  "adimlar": [
+   "Sandalyeye arkadan durun, arka ayağın üstünü sandalyeye koyun.",
+   "Gövde dik, ön dizi bükerek arka diz yere yaklaşana dek inin.",
+   "Ön topukla itip başlangıca dönün."
+  ],
+  "hatalar": [
+   "Ön ayak sandalyeye çok yakın",
+   "Ön diz içe kayıyor"
+  ],
+  "hisset": "Ön bacağın uyluğunda ve kalçasında hissedin.",
+  "nefes": "İnerken alın, kalkarken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "ic_bacak",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing in a split stance facing right, front foot flat on the floor about one long step ahead of a chair, back foot instep resting on the seat of a sturdy chair behind them, torso upright, hands on hips",
+   "bit": "The same person lowered with front knee bent about 90 degrees, back knee hovering just above the floor, torso upright, back foot still on the chair",
+   "hareket": "Lower straight down by bending both knees until the back knee nears the floor, then push through the front heel to rise",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "a sturdy chair behind the person"
+  },
+  "zaman": 1792929558
+ },
+ "karides_squat": {
+  "adimlar": [
+   "Tek ayak üstünde durun, öbür bacağı geriye bükerek ayak bileğini elinizle tutun.",
+   "Ayakta duran dizi bükerek arka dizi yere doğru indirin.",
+   "Dizi yere hafifçe dokundurup ön ayakla itin ve ayağa kalkın."
+  ],
+  "hatalar": [
+   "Gövde öne aşırı eğiliyor",
+   "Arka diz sert biçimde yere çarpıyor"
+  ],
+  "hisset": "Ayakta duran bacağın uyluğunda hissedin.",
+  "nefes": "İnerken alın, kalkarken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "karin",
+    "baldir"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing on one leg facing right, the other knee bent behind with the ankle held by the hand on the same side, other arm extended forward for balance, torso upright",
+   "bit": "The same person in a single-leg squat with the standing knee deeply bent and the back knee lightly touching the floor, back ankle still held, torso slightly leaning forward",
+   "hareket": "Bend the standing knee to lower the back knee toward the floor, then press up through the standing foot",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929558
+ },
+ "pistol": {
+  "adimlar": [
+   "Tek ayak üstünde durun, öbür bacağı önde düz uzatın, kollar önde.",
+   "Ayakta duran dizi bükerek kalçayı aşağı oturtun, serbest bacak havada kalsın.",
+   "Tüm ayakla itip bacağı düz tutarak ayağa kalkın."
+  ],
+  "hatalar": [
+   "Topuk yerden kalkıyor",
+   "Serbest bacak yere düşüyor"
+  ],
+  "hisset": "Ayakta duran bacağın uyluğunda ve kalçasında hissedin.",
+  "nefes": "İnerken alın, kalkarken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "karin",
+    "baldir"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing on one leg facing right, the other leg extended straight forward off the floor, arms extended forward at shoulder height",
+   "bit": "The same person in a full single-leg deep squat, standing leg fully bent with hips near the heel, free leg straight and parallel to the floor, arms forward",
+   "hareket": "Sit down on the standing leg into a full deep squat while the other leg stays straight and raised, then stand back up",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929558
+ },
+ "kalca_kopru": {
+  "adimlar": [
+   "Sırtüstü yatın, dizler bükülü, ayaklar yerde kalça genişliğinde.",
+   "Topuklarla itip kalçayı omuz-diz çizgisi oluşana dek kaldırın.",
+   "Üstte kalçayı sıkın, yavaşça indirin."
+  ],
+  "hatalar": [
+   "Bel aşırı kavisleniyor",
+   "Topuklar yerden kalkıyor"
+  ],
+  "hisset": "Kalçada ve uyluk arkasında hissedin.",
+  "nefes": "Kaldırırken verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "karin",
+    "bel"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their back on the floor, knees bent, feet flat hip-width apart, arms resting at sides, side view",
+   "bit": "The same person with hips lifted so shoulders, hips and knees form a straight line, feet flat, arms at sides",
+   "hareket": "Push through the heels to lift the hips up to a straight line, then lower slowly",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929558
+ },
+ "tek_kalca_kopru": {
+  "adimlar": [
+   "Sırtüstü yatın, bir ayak yerde, öbür bacak havada düz.",
+   "Yerdeki topukla itip kalçayı düz çizgiye kadar kaldırın.",
+   "Kalçayı yatay tutarak yavaşça indirin."
+  ],
+  "hatalar": [
+   "Kalça yana düşüyor",
+   "Bel aşırı kavisleniyor"
+  ],
+  "hisset": "Yerdeki ayak tarafı kalçada ve uyluk arkasında hissedin.",
+  "nefes": "Kaldırırken verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "karin",
+    "bel"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their back on the floor, one foot flat on the floor with knee bent, the other leg extended straight up at an angle, arms at sides, side view",
+   "bit": "The same person with hips lifted high, body forming a straight line from shoulders to the bent knee, free leg extended straight in line with the thigh, hips level",
+   "hareket": "Push through the single heel to raise the hips while the other leg stays straight, then lower with control",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929558
+ },
+ "nordic_negatif": {
+  "adimlar": [
+   "Yastıklı yerde dizlerinizin üstünde durun, ayaklarınızı sabitleyin, gövde dik.",
+   "Kalçayı açık tutarak gövdeyi yavaşça öne doğru düşürün.",
+   "Elleriniz yere değince itip başlangıca dönün."
+  ],
+  "hatalar": [
+   "Kalça öne bükülüyor",
+   "Hızlıca yere düşüyorsunuz"
+  ],
+  "hisset": "Uyluk arkasında gerilme hissedin.",
+  "nefes": "Düşerken yavaşça verin, dönerken alın.",
+  "kaslar": {
+   "birincil": [
+    "arka_bacak"
+   ],
+   "ikincil": [
+    "kalca",
+    "karin",
+    "baldir"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person kneeling upright on the floor, torso vertical, body straight from knees to head, ankles held down by a partner or fixed under a sturdy anchor, arms bent in front of chest",
+   "bit": "The same person lowered forward in a straight line from knees to head, hands reaching the floor in front, hips open",
+   "hareket": "Lower the straight body slowly forward from the knees, controlling the fall with the hamstrings, then push back up with hands",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "an anchor or sturdy fixed object holding the ankles"
+  },
+  "zaman": 1792929558
+ },
+ "kb_swing": {
+  "adimlar": [
+   "Ayaklar omuz genişliğinde, kettlebell ayaklar önünde, kalçayı geriye iterek tutun.",
+   "Kalçayı hızla öne iterek kettlebell'i göğüs hizasına savurun.",
+   "Kettlebell'i geri bırakıp kalçayı geriye iterek tekrar savurun."
+  ],
+  "hatalar": [
+   "Kolla kaldırıyorsunuz",
+   "Bel yuvarlanıyor"
+  ],
+  "hisset": "Kalçada ve uyluk arkasında hissedin.",
+  "nefes": "İtişte verin, geri dönüşte alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "arka_bacak"
+   ],
+   "ikincil": [
+    "bel",
+    "karin",
+    "on_omuz"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a hip hinge stance, flat back, knees slightly bent, both hands gripping a kettlebell hanging between the legs, side view",
+   "bit": "The same person standing tall with hips fully extended, arms straight in front at chest height holding the kettlebell",
+   "hareket": "Snap the hips forward to swing the kettlebell up to chest height with straight arms, then let it fall back between the legs",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "a kettlebell"
+  },
+  "zaman": 1792929558
+ },
+ "baldir": {
+  "adimlar": [
+   "Tek ayağın ön kısmıyla basamakta durun, topuk boşta, destek alın.",
+   "Topuğu yükselebildiğiniz kadar yukarı kaldırın.",
+   "Topuğu basamak seviyesinin altına yavaşça indirin."
+  ],
+  "hatalar": [
+   "Diz bükülüyor",
+   "Hareket yarım kalıyor"
+  ],
+  "hisset": "Baldırın arkasında hissedin.",
+  "nefes": "Kalkarken verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "baldir"
+   ],
+   "ikincil": []
+  },
+  "gorsel": {
+   "bas": "A single person standing on the edge of a step on one foot, the heel hanging below the step edge, other foot lifted behind, one hand lightly on a wall for balance, side view",
+   "bit": "The same person fully raised onto the toes of the standing foot, heel high, leg straight",
+   "hareket": "Rise onto the ball of the foot as high as possible, then lower the heel below the step level",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "a step or stair edge"
+  },
+  "zaman": 1792929558
+ },
+ "dead_bug": {
+  "adimlar": [
+   "Sırtüstü yatın, kollar tavana uzanık, dizler 90 derece havada.",
+   "Karşı kol ve bacağı yavaşça yere doğru uzatın, bel yerde kalsın.",
+   "Başlangıca dönüp diğer tarafla tekrarlayın."
+  ],
+  "hatalar": [
+   "Bel yerden kalkıyor",
+   "Çok hızlı hareket ediyorsunuz"
+  ],
+  "hisset": "Karın merkezinde hissedin.",
+  "nefes": "Uzatırken verin, dönerken alın.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "yan_karin",
+    "kalca"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their back on an exercise mat, arms extended straight up toward the ceiling, hips and knees bent at 90 degrees with shins parallel to the floor, lower back flat on the mat",
+   "bit": "The same person with one arm extended overhead and the opposite leg extended straight just above the mat, other arm and leg still up, lower back pressed flat",
+   "hareket": "Lower the opposite arm and leg away from the body toward the floor while the back stays flat, then return",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929558
+ },
+ "tuck_hollow": {
+  "adimlar": [
+   "Sırtüstü yatın, dizleri göğse çekin, kollar yanda.",
+   "Omuzları ve başı yerden kaldırın, belinizi yere bastırın.",
+   "Pozisyonu koruyun, sonra yavaşça gevşeyin."
+  ],
+  "hatalar": [
+   "Bel yerden kalkıyor",
+   "Boyun öne çöküyor"
+  ],
+  "hisset": "Karın ön kısmında hissedin.",
+  "nefes": "Normal nefes alıp verin, tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "yan_karin",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their back on an exercise mat, knees bent and drawn toward the chest, arms resting at sides, lower back flat",
+   "bit": "The same person with shoulders and head lifted off the mat, knees tucked close to the chest, arms reaching alongside the legs, lower back pressed into the mat",
+   "hareket": "Curl the shoulders up while keeping the knees tucked and hold the position",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929558
+ },
+ "hollow": {
+  "adimlar": [
+   "Sırtüstü yatın, kollar başın üstünde, bacaklar uzun.",
+   "Kollar, bacaklar ve omuzları kaldırın, belinizi yere bastırın.",
+   "Pozisyonu koruyun, sonra kontrolle indirin."
+  ],
+  "hatalar": [
+   "Bel yerden kalkıyor",
+   "Bacaklar çok yüksek duruyor"
+  ],
+  "hisset": "Karın ön kısmında hissedin.",
+  "nefes": "Normal nefes alıp verin, tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "yan_karin",
+    "on_bacak",
+    "kalca"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying flat on their back on an exercise mat, arms extended overhead, legs straight together, lower back pressed to the mat",
+   "bit": "The same person in a banana shape with arms, shoulders and straight legs lifted just off the mat, lower back pressed flat, arms beside the ears",
+   "hareket": "Lift arms, shoulders and legs off the mat while keeping the lower back pressed down and hold",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929558
+ },
+ "plank": {
+  "adimlar": [
+   "Mat üzerinde dirsekler omuz altında, önkollar yerde, ayak uçları yerde durun.",
+   "Kalçayı kaldırıp vücudu baştan topuğa düz bir çizgiye getirin.",
+   "Karnı sıkı tutarak pozisyonu koruyun, sonra dizlerinizi yavaşça yere bırakın."
+  ],
+  "hatalar": [
+   "Kalça yukarı kalkıyor",
+   "Bel çöküyor, karın gevşiyor"
+  ],
+  "hisset": "Karın ve kalçanın sıkıştığını, omuzların da pozisyonu taşıdığını hissedin.",
+  "nefes": "Sakin ve düzenli nefes alıp verin, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "kalca",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person on an exercise mat, forearms flat on the mat, elbows directly under shoulders, knees on the mat, head neutral",
+   "bit": "Full forearm plank: body in one straight line from head to heels, forearms on the mat, toes on the mat, hips level with shoulders and ankles, core tight",
+   "hareket": "Person lifts knees off the mat and straightens the body into a straight line, then holds still",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "exercise mat on the floor"
+  },
+  "zaman": 1792929600
+ },
+ "yan_plank": {
+  "adimlar": [
+   "Mat üzerinde yan yatın, dirseği omuz altına koyun, bacaklar uzanık olsun.",
+   "Kalçayı kaldırıp baştan ayağa düz bir çizgi oluşturun.",
+   "Pozisyonu koruyun, yavaşça inin ve diğer yanda tekrarlayın."
+  ],
+  "hatalar": [
+   "Kalça öne ya da arkaya dönüyor",
+   "Kalça aşağı sarkıyor"
+  ],
+  "hisset": "Alttaki yan karnın ve kalça yan kaslarının çalıştığını hissedin.",
+  "nefes": "Düzenli nefes alıp verin, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "yan_karin"
+   ],
+   "ikincil": [
+    "yan_omuz",
+    "kalca",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person lying on their side on an exercise mat, lower forearm on the mat with elbow under shoulder, legs stacked and straight",
+   "bit": "Side plank: body in a straight diagonal line from head to feet, supported by one forearm and the side edge of the bottom foot, hips lifted, top arm resting along the top side or pointing up",
+   "hareket": "Person presses the forearm down and lifts the hips off the mat until the body is straight, then holds",
+   "kamera": "front",
+   "tutus": true,
+   "ekipman_en": "exercise mat on the floor"
+  },
+  "zaman": 1792929600
+ },
+ "diz_kaldirma": {
+  "adimlar": [
+   "Bara omuz genişliğinde asılın, omuzları hafifçe aşağı çekin, bacaklar sarkık olsun.",
+   "Gövdeyi sallamadan dizleri kalça hizasının üstüne kadar kontrollü çekin.",
+   "Dizleri yavaşça indirip tekrar sarkık pozisyona dönün."
+  ],
+  "hatalar": [
+   "Gövde sallanıyor, hareket ivmeyle yapılıyor",
+   "Omuzlar kulaklara doğru yükseliyor"
+  ],
+  "hisset": "Alt karın ve kalça bükücülerinin çalıştığını, ön kolların bara tutunduğunu hissedin.",
+  "nefes": "Dizleri çekerken nefes verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "on_kol",
+    "kanat",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person hanging from a pull-up bar with an overhand shoulder-width grip, arms straight, legs hanging straight down, body still",
+   "bit": "Person hanging from the bar with knees pulled up toward the chest, thighs above hip level, pelvis slightly curled, arms straight",
+   "hareket": "Person lifts both bent knees up toward the chest without swinging, then lowers them slowly",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "pull-up bar mounted overhead"
+  },
+  "zaman": 1792929600
+ },
+ "bacak_kaldirma": {
+  "adimlar": [
+   "Bara omuz genişliğinde asılın, omuzları aşağı çekin, bacaklar birleşik olsun.",
+   "Dizleri bükmeden bacakları en az yere paralel olana kadar kaldırın.",
+   "Bacakları kontrollü indirip sallanmadan başlangıca dönün."
+  ],
+  "hatalar": [
+   "Dizler bükülüyor",
+   "Gövde sallanıyor, bacaklar düşüyor"
+  ],
+  "hisset": "Karın ön duvarında ve kalça bükücülerinde güçlü bir çalışma hissedin.",
+  "nefes": "Bacakları kaldırırken nefes verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "on_bacak",
+    "on_kol",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person hanging from a pull-up bar with an overhand grip, arms straight, legs straight and together hanging down",
+   "bit": "Person hanging from the bar with straight legs raised to at least parallel with the floor, forming an L shape with the torso, arms straight",
+   "hareket": "Person raises both straight legs forward and up to horizontal without swinging, then lowers them slowly",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "pull-up bar mounted overhead"
+  },
+  "zaman": 1792929600
+ },
+ "ayak_bara": {
+  "adimlar": [
+   "Bara omuz genişliğinde asılın, omuzları aktif tutun, bacaklar sarkık olsun.",
+   "Bacakları düz tutarak kaldırın, kalçayı katlayıp ayak uçlarını bara götürün.",
+   "Ayak uçları bara değince kontrollü şekilde yavaşça inin."
+  ],
+  "hatalar": [
+   "Sallanarak ivmeyle çıkmak",
+   "Dizleri bükerek hareketi kısaltmak"
+  ],
+  "hisset": "Tüm karın bölgesinde ve kollarla sırtta güçlü bir gerilim hissedin.",
+  "nefes": "Kalkarken nefes verin, inerken nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "kanat"
+   ],
+   "ikincil": [
+    "on_kol",
+    "on_bacak",
+    "arka_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person hanging from a pull-up bar with an overhand grip, arms straight, legs straight hanging down",
+   "bit": "Person hanging from the bar with body folded in half, straight legs raised so toes touch the bar, hips piked, arms straight or slightly bent",
+   "hareket": "Person lifts straight legs up and over toward the bar until the toes touch it, then lowers with control",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "pull-up bar mounted overhead"
+  },
+  "zaman": 1792929600
+ },
+ "tuck_lsit": {
+  "adimlar": [
+   "Yerde oturun, avuçları kalçanın yanında yere koyun; paralelde ise tutacakları kavrayın.",
+   "Kolları düzleştirip kalçayı yerden kaldırın, dizleri göğse çekin.",
+   "Dizler göğüste pozisyonu koruyun, sonra kalçayı kontrollü indirin."
+  ],
+  "hatalar": [
+   "Omuzlar kulaklara kalkıyor",
+   "Kollar bükülüyor, kalça düşüyor"
+  ],
+  "hisset": "Karın, kalça bükücüleri ve kol arkasında güçlü bir çalışma hissedin.",
+  "nefes": "Pozisyonda sakin nefes alıp verin, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "triceps"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "on_bacak",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person sitting on the floor with legs bent, palms flat on the floor beside the hips, arms straight",
+   "bit": "Person supported on straight arms with hips and feet lifted off the floor, knees tucked tightly to the chest, shoulders pressed down, torso slightly leaning forward",
+   "hareket": "Person presses palms down, straightens arms and lifts hips and feet off the floor with knees tucked, then holds",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "lsit": {
+  "adimlar": [
+   "Yerde bacaklar önde düz oturun, avuçları kalçanın yanında yere koyun.",
+   "Kolları düzleştirip kalçayı ve bacakları yerden kaldırın.",
+   "Bacakları yere paralel tutun, sonra kontrollü şekilde yere inin."
+  ],
+  "hatalar": [
+   "Bacaklar yere paralelin altına düşüyor",
+   "Dizler bükülüyor, omuzlar yükseliyor"
+  ],
+  "hisset": "Karın, kalça bükücüleri ve kol arkasında yoğun bir gerilim hissedin.",
+  "nefes": "Sakin ve kısa nefesler alın, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "triceps"
+   ],
+   "ikincil": [
+    "on_bacak",
+    "on_omuz",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person sitting on the floor with legs straight forward, palms flat on the floor beside the hips, arms straight",
+   "bit": "Person supported on straight arms with hips and straight legs lifted off the floor, legs parallel to the floor forming an L shape with the torso, toes pointed, shoulders pressed down",
+   "hareket": "Person presses palms down, lifts hips and straight legs off the floor to horizontal, then holds",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "duvar_yuruyus": {
+  "adimlar": [
+   "Yüzü duvara dönük şınav pozisyonunda başlayın, ayak uçları duvara yakın olsun.",
+   "Ayaklarla duvara tırmanın, elleri duvara doğru küçük adımlarla yaklaştırın.",
+   "Mümkün olan en yüksek noktada durun, sonra aynı şekilde geri inin."
+  ],
+  "hatalar": [
+   "Bel çöküyor, karın gevşiyor",
+   "Eller duvardan çok uzakta kalıyor"
+  ],
+  "hisset": "Omuzlarda ve kol arkasında yük, karında ise sıkılık hissedin.",
+  "nefes": "Adımlar arasında düzenli nefes alıp verin, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "triceps"
+   ],
+   "ikincil": [
+    "karin",
+    "ust_sirt",
+    "on_kol"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person in a push-up position facing a wall, hands on the floor shoulder-width apart, feet on the floor close to the wall, body straight",
+   "bit": "Person in a near-vertical handstand-like position facing the wall, hands on the floor close to the wall, feet high on the wall, arms straight, body nearly straight",
+   "hareket": "Person walks feet up the wall step by step while walking hands closer to the wall until the body is nearly vertical",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "wall"
+  },
+  "zaman": 1792929600
+ },
+ "karin_duvar_amut": {
+  "adimlar": [
+   "Duvara dönük şınav pozisyonunda başlayın, ayaklarla duvara tırmanın.",
+   "Karnınız duvara dönük, kollar düz, vücudu düz çizgide dikey tutun.",
+   "Pozisyonu koruyun, sonra ayakları duvardan yavaşça indirin."
+  ],
+  "hatalar": [
+   "Bel çukurlaşıyor, karın gevşiyor",
+   "Omuzlar kulaklara doğru itilmiyor"
+  ],
+  "hisset": "Omuzları yukarı itişi ve karnın vücudu düz tuttuğunu hissedin.",
+  "nefes": "Pozisyonda sakin nefes alıp verin, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "triceps"
+   ],
+   "ikincil": [
+    "karin",
+    "ust_sirt",
+    "on_kol"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person in a push-up position facing a wall, hands on the floor about 15 cm from the wall, feet on the floor",
+   "bit": "Person in a vertical handstand with chest and stomach facing the wall, toes resting on the wall, arms straight, body in a straight line, head neutral between the arms",
+   "hareket": "Person walks feet up the wall until the body is vertical and straight, then holds",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "wall"
+  },
+  "zaman": 1792929600
+ },
+ "amut_dengesi": {
+  "adimlar": [
+   "Karın duvara dönük amut pozisyonunda başlayın, kollar düz olsun.",
+   "Önce bir ayağı, sonra diğerini duvardan hafifçe çekin.",
+   "Dengeyi birkaç saniye koruyun, sonra ayakları duvara geri koyun."
+  ],
+  "hatalar": [
+   "Bel yay gibi kavisleniyor",
+   "Omuzlar gevşiyor, kollar bükülüyor"
+  ],
+  "hisset": "Omuzlar ve ellerdeki baskıyı, parmakların dengeyi ayarladığını hissedin.",
+  "nefes": "Kısa ve sakin nefesler alın, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "triceps"
+   ],
+   "ikincil": [
+    "karin",
+    "on_kol",
+    "ust_sirt"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person in a handstand facing a wall, both toes touching the wall, arms straight, body in a straight line",
+   "bit": "Person in a freestanding handstand with both feet away from the wall, body straight and vertical, arms straight, hands flat on the floor",
+   "hareket": "Person lifts one foot off the wall, then the other, and balances in the handstand away from the wall",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "wall behind the person"
+  },
+  "zaman": 1792929600
+ },
+ "serbest_amut": {
+  "adimlar": [
+   "Omuz genişliğinde eller yerde, kollar düz, bir bacak hazır pozisyonda başlayın.",
+   "Bacakları yukarı taşıyıp vücudu dikey düz bir çizgiye getirin.",
+   "Parmaklarla dengeyi ayarlayın, sonra bir bacağı kontrollü indirin."
+  ],
+  "hatalar": [
+   "Bel çukurlaşıyor, bacaklar açılıyor",
+   "Kollar bükülüyor, omuzlar gevşiyor"
+  ],
+  "hisset": "Omuzlarda sağlam bir baskı, parmaklarda ise denge ayarını hissedin.",
+  "nefes": "Kısa ve sakin nefesler alın, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "triceps"
+   ],
+   "ikincil": [
+    "karin",
+    "on_kol",
+    "ust_sirt"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person standing in a lunge with both hands flat on the floor shoulder-width apart, arms straight, one leg back, hips above shoulders",
+   "bit": "Person in a freestanding handstand, body vertical and straight, arms straight, legs together, fingers spread on the floor, head neutral",
+   "hareket": "Person kicks one leg up, brings the other to join it, and holds a vertical balance on the hands",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "karides": {
+  "adimlar": [
+   "Mat üzerinde yan yatın, dizler bükülü, üstteki elinizi önde tutun.",
+   "Ayağı yere basıp kalçayı geri itin, omuz üstünde dönerek kendinizi uzaklaştırın.",
+   "Kalçayı yere indirip dizleri kendinize çekerek başlangıca dönün."
+  ],
+  "hatalar": [
+   "Kalçayı yeterince yukarı itmemek",
+   "Başı yere bastırıp boynu zorlamak"
+  ],
+  "hisset": "Kalçada ve karnın yanında hareketi, bacakta itişi hissedin.",
+  "nefes": "İterken nefes verin, kalçayı indirirken nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "yan_karin"
+   ],
+   "ikincil": [
+    "karin",
+    "on_bacak",
+    "baldir"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single athletic person lying on their back on an exercise mat, on one side, knees bent, near foot planted on the mat, top arm in front",
+   "bit": "Person on the mat with hips moved backward away from the head, rotated onto the shoulder, knees pulled in, creating space",
+   "hareket": "Person pushes off the planted foot, lifts hips, and slides them backward while rotating over the shoulder, then returns",
+   "kamera": "top",
+   "tutus": false,
+   "ekipman_en": "exercise mat on the floor"
+  },
+  "zaman": 1792929600
+ },
+ "ters_karides": {
+  "adimlar": [
+   "Sırt üstü yatın, dizler bükülü, ayaklar yerde, eller yanda.",
+   "Ayaklara basıp kalçayı yana kaydırın, omuzlarla başa doğru kayın.",
+   "Kalçayı açıp başlangıca dönün, diğer tarafa tekrarlayın."
+  ],
+  "hatalar": [
+   "Başı yere sürtmek, boynu sıkıştırmak",
+   "Sadece kollarla itmek, kalçayı kullanmamak"
+  ],
+  "hisset": "Kalça, karın yan hattı ve bacakların dışında hissedin.",
+  "nefes": "Kayarken verin, başlangıca dönerken alın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "yan_karin",
+    "kalca"
+   ],
+   "ikincil": [
+    "on_bacak",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their back on an exercise mat, knees bent, feet flat on the mat, arms relaxed at sides, head neutral",
+   "bit": "The person's hips shifted sideways and turned onto one side, knees drawn in, shoulders slid a short distance toward the head side of the mat, feet pushing off",
+   "hareket": "From lying on back, push through feet and shrimp the hips sideways and away, sliding the body toward the head side, then return",
+   "kamera": "top",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929600
+ },
+ "kopru_upa": {
+  "adimlar": [
+   "Sırt üstü yatın, dizler bükülü, ayaklar kalçaya yakın.",
+   "Ayaklarla itip kalçayı kaldırın, omuz üstüne köprü kurup yana dönün.",
+   "Kontrolle yere inin, başlangıca dönün ve diğer tarafa geçin."
+  ],
+  "hatalar": [
+   "Başın üstüne yüklenip boyunu zorlamak",
+   "Kalçayı yeterince yukarı kaldırmamak"
+  ],
+  "hisset": "Kalça, arka bacak ve omuz-sırt bölgesinde hissedin.",
+  "nefes": "Kalkarken verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "arka_bacak",
+    "bel"
+   ],
+   "ikincil": [
+    "karin",
+    "ust_sirt",
+    "yan_karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their back on an exercise mat, knees bent, feet flat close to the hips, arms crossed or held in front of chest",
+   "bit": "The person in a high bridge on the upper shoulder with hips lifted, body rotated to one side, weight on feet and shoulder, head not bearing load",
+   "hareket": "From lying on back, drive through feet to lift hips into a bridge and rotate over the shoulder to the side, then lower back down",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929600
+ },
+ "teknik_kalkis": {
+  "adimlar": [
+   "Yere oturun, bir el arkada yerde, ayaklar öndedir.",
+   "Elin ve ayak tabanının üzerine basıp kalçayı yerden kaldırın.",
+   "Arka bacağı geriye atıp ayağa kalkın, savunma duruşuna geçin."
+  ],
+  "hatalar": [
+   "Kalçayı yerde bırakıp sadece kollara yüklenmek",
+   "Bakışı yere çevirip dengeyi kaybetmek"
+  ],
+  "hisset": "Omuz, kalça ve bacaklarda itiş gücünü hissedin.",
+  "nefes": "Kalkarken verin, ayakta alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "on_bacak",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "triceps",
+    "karin",
+    "arka_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person seated on the floor, one hand planted behind the body, other arm forward, knees bent, feet flat in front, no equipment",
+   "bit": "The person standing upright in a slightly bent athletic stance, knees soft, hands up in front guarding, one foot forward",
+   "hareket": "From seated, post on hand and foot to lift hips, sweep the free leg back, and rise to a standing stance",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "sit_out": {
+  "adimlar": [
+   "Dört ayak pozisyonunda başlayın, eller omuz, dizler kalça altında.",
+   "Bir kolu ve bacağı destekleyerek karşı bacağı gövde altından geçirin.",
+   "Kalçayı yere çevirin, kontrolle dört ayağa dönün."
+  ],
+  "hatalar": [
+   "Kalçayı yüksek tutup dengesiz kalmak",
+   "Sırtı yuvarlayıp başı aşağı sarkıtmak"
+  ],
+  "hisset": "Karın yan hattı, kalça ve omuzlarda hissedin.",
+  "nefes": "Geçerken verin, dönerken alın.",
+  "kaslar": {
+   "birincil": [
+    "yan_karin",
+    "kalca",
+    "karin"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "triceps",
+    "ic_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person on hands and knees on an exercise mat, hands under shoulders, knees under hips, back flat, head neutral",
+   "bit": "The person seated with hips on the mat, one leg threaded under the torso to the opposite side, torso rotated, one hand supporting behind",
+   "hareket": "From all fours, lift one hand, thread the leg under the body, rotate the hips down to a sit-out, then return to all fours",
+   "kamera": "top",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929600
+ },
+ "sprawl": {
+  "adimlar": [
+   "Ayakta, ayaklar omuz genişliğinde, dizler hafif bükülü durun.",
+   "Kalçayı hızla aşağı atıp bacakları geriye uzatın.",
+   "Eller üstünde destekle, ayağa dönüp başlangıca gelin."
+  ],
+  "hatalar": [
+   "Kalçayı yüksek bırakıp yere indirmemek",
+   "Dizleri yere çarpmak, bacakları açmamak"
+  ],
+  "hisset": "Kalça, karın ve bacak arkasında hissedin.",
+  "nefes": "Atarken verin, kalkarken alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "karin",
+    "on_bacak"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "arka_bacak",
+    "bel"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing in an athletic stance, feet shoulder-width apart, knees slightly bent, hands up in front, no equipment",
+   "bit": "The person with legs extended back, hips low close to the floor, chest up, hands pressing down in front, feet wide",
+   "hareket": "From standing, drop the hips quickly and throw both legs back into a sprawl, then return to standing",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "granby": {
+  "adimlar": [
+   "Dört ayakta başlayın, bir omzunuzu yere doğru yönlendirin.",
+   "Omuz üstünden yuvarlanıp bacakları çevirin, başa yük bindirmeyin.",
+   "Dizlerinizin üstüne oturup kontrolle dört ayağa dönün."
+  ],
+  "hatalar": [
+   "Direkt başın tepesine yuvarlanmak",
+   "Kalçayı kaldırıp dengesiz yuvarlanmak"
+  ],
+  "hisset": "Omuz, karın yan hattı ve kalça çevresinde hissedin.",
+  "nefes": "Yuvarlanırken verin, dönüşte alın.",
+  "kaslar": {
+   "birincil": [
+    "yan_karin",
+    "kalca",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "karin",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person on hands and knees on an exercise mat, hands under shoulders, one shoulder tucking toward the mat, head turned to the side",
+   "bit": "The person rolled over the shoulder and finishing on knees and hands or seated, legs rotated, head free of the mat",
+   "hareket": "From all fours, tuck one shoulder to the mat and roll diagonally over the shoulder blade while turning the legs through, ending on the mat",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929600
+ },
+ "one_rulo": {
+  "adimlar": [
+   "Dizlerinizin üstünde durun, bir kolu karşı bacağın arasına uzatın.",
+   "Çapraz omuza doğru yuvarlanın, çeneyi göğse yaklaştırın.",
+   "Yuvarlanıp ayağa ya da dize gelin, kontrolle durun."
+  ],
+  "hatalar": [
+   "Başın üstünden yuvarlanıp boyunu sıkıştırmak",
+   "Sırtı düz tutmayıp omuzu çökertmek"
+  ],
+  "hisset": "Omuz, sırt ve karın bölgesinde hissedin.",
+  "nefes": "Yuvarlanırken verin, bitişte alın.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "ust_sirt",
+    "karin"
+   ],
+   "ikincil": [
+    "kanat",
+    "kalca",
+    "yan_karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person kneeling on an exercise mat, one arm reaching diagonally through the opposite side, chin tucked, back rounded",
+   "bit": "The person finishing the roll on the mat, rolled across the diagonal shoulder, ending in a seated or kneeling position, head free",
+   "hareket": "From kneeling, place the arm through and roll diagonally across the shoulder blade to the opposite hip, coming up to kneeling or sitting",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929600
+ },
+ "kalca_degistirme": {
+  "adimlar": [
+   "Yere oturun, bacaklar önde, eller arkada destekli.",
+   "Kalçayı yerden kaldırıp bir yana çevirin, bacakları yer değiştirin.",
+   "Diğer tarafa geçin, kontrolü koruyup yer değiştirmeyi sürdürün."
+  ],
+  "hatalar": [
+   "Sırtı çökertip dengeyi kaybetmek",
+   "Sadece bacakları sallayıp kalçayı çevirmemek"
+  ],
+  "hisset": "Kalça, karın yan hattı ve kollarda hissedin.",
+  "nefes": "Çevirirken verin, geçişte alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "yan_karin",
+    "karin"
+   ],
+   "ikincil": [
+    "triceps",
+    "on_omuz",
+    "ic_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person seated on an exercise mat, legs forward and slightly bent, hands planted behind the hips supporting the torso",
+   "bit": "The person seated with hips pivoted to the opposite side, legs swung across, hands planted behind, torso upright",
+   "hareket": "From seated, lift the hips slightly and pivot them to one side while swinging the legs across, then repeat to the other side",
+   "kamera": "top",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929600
+ },
+ "bacak_pummel": {
+  "adimlar": [
+   "Sırt üstü yatın, dizleri göğse çekin, eller yerde.",
+   "Bacaklarla guard çevirir gibi diz ve kalçayı yana yönlendirin.",
+   "Bacakları çevirerek diğer tarafa geçin, ritimle sürdürün."
+  ],
+  "hatalar": [
+   "Belin yerden kalkması, kalçayı çökertmek",
+   "Sadece dizleri sallayıp kalçayı katmamak"
+  ],
+  "hisset": "Karın, kalça ve iç bacakta hissedin.",
+  "nefes": "Çevirirken verin, geri dönüşte alın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "kalca",
+    "ic_bacak"
+   ],
+   "ikincil": [
+    "yan_karin",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their back on an exercise mat, knees pulled toward the chest, feet lifted, hands resting on the mat",
+   "bit": "The person on their back with knees and hips rotated toward one side, legs crossed over the line of the body, shoulders flat",
+   "hareket": "From lying on back with knees up, rotate the hips and legs from one side to the other as if circling the guard, keeping shoulders down",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929600
+ },
+ "golge_pas": {
+  "adimlar": [
+   "Ayakta atletik duruşta başlayın, hayali rakibi önünüzde düşünün.",
+   "Hayali bacaklara basın, kalçayı kaydırıp çevreleyin.",
+   "Yan kontrole oturun, dengeli duruşa dönün."
+  ],
+  "hatalar": [
+   "Gövdeyi dik tutmayıp öne yıkılmak",
+   "Ayak hareketini unutup sadece kollarla çalışmak"
+  ],
+  "hisset": "Kalça, bacaklar ve karın bölgesinde hissedin.",
+  "nefes": "Geçerken verin, duruşta alın.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca",
+    "karin"
+   ],
+   "ikincil": [
+    "ic_bacak",
+    "baldir",
+    "yan_karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing in an athletic stance, knees bent, hands forward as if gripping an invisible opponent, no equipment",
+   "bit": "The person in a low side-control stance, hips low, one knee forward, hands pressing down on an imaginary opponent",
+   "hareket": "From standing, step and circle around an imaginary guard, pressing down and passing the legs, ending in a low controlling stance",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "golge_gures": {
+  "adimlar": [
+   "Ayakta atletik duruşta başlayın, eller önde.",
+   "Sprawl yapıp ardından karidesle kayarak kalkışa geçin.",
+   "Teknik kalkışla ayağa dönüp zinciri başa alın."
+  ],
+  "hatalar": [
+   "Geçişleri aceleyle yapıp formu bozmak",
+   "Kalçayı yere indirmeden zinciri geçmek"
+  ],
+  "hisset": "Kalça, bacaklar ve karın bölgesinde hissedin.",
+  "nefes": "Her geçişte verin, duruşta alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "on_bacak",
+    "karin"
+   ],
+   "ikincil": [
+    "yan_karin",
+    "on_omuz",
+    "arka_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing in an athletic wrestling stance, knees bent, hands up, no equipment",
+   "bit": "The person back in a standing wrestling stance after completing the sprawl, shrimp and technical stand-up sequence",
+   "hareket": "From standing, sprawl to the floor, shrimp sideways, then do a technical stand-up back to the stance, as a continuous flow",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "beast": {
+  "adimlar": [
+   "Dört ayakta başlayın, eller omuz altında, dizler kalça altında.",
+   "Dizleri yerden iki parmak kaldırın, sırtı düz tutun.",
+   "Pozisyonu koruyun, sonra kontrolle dizleri yere bırakın."
+  ],
+  "hatalar": [
+   "Kalçayı çok yükseğe kaldırmak",
+   "Sırtı çökertmek ya da yuvarlamak"
+  ],
+  "hisset": "Karın, omuz ve uyluklarda hissedin.",
+  "nefes": "Normal ve akıcı nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "on_bacak",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "triceps",
+    "kalca",
+    "bel"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person on hands and knees, hands under shoulders, knees under hips, back flat, head neutral, no equipment",
+   "bit": "The person holding with knees hovering about two fingers above the floor, back flat, hips level, arms straight",
+   "hareket": "From all fours, lift the knees slightly off the floor and hold the position steadily, then lower",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929600
+ },
+ "crab": {
+  "adimlar": [
+   "Yere oturun, dizler bükülü, eller kalçanın arkasında parmaklar ayağa dönük.",
+   "Kalçanızı yere paralel olana kadar yukarı kaldırın.",
+   "Kontrollü şekilde kalçanızı indirip oturuşa dönün."
+  ],
+  "hatalar": [
+   "Kalça düşer, vücut çökük kalır",
+   "Omuzlar kulaklara doğru kalkar"
+  ],
+  "hisset": "Arka omuzlarda, üst kolun arkasında ve kalça kaslarında hissedin.",
+  "nefes": "Kalçayı kaldırırken nefes verin, pozisyonda düzenli nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "triceps",
+    "kalca",
+    "arka_omuz"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "karin",
+    "on_omuz"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person sitting on the floor, knees bent, feet flat, hands placed behind the hips with fingers pointing toward the feet, torso upright",
+   "bit": "Same person in reverse tabletop position, hips lifted level with shoulders, arms straight, thighs horizontal, shins vertical, head neutral",
+   "hareket": "Hips lift from the floor up to the reverse tabletop position, then lower back down",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "ape": {
+  "adimlar": [
+   "Ayaklar omuz genişliğinde, derin çömelmede, eller önde yerde başlayın.",
+   "Elleri yere koyup ayakları yana doğru adımlayarak ilerleyin.",
+   "Çömelmeye dönüp yönü değiştirerek tekrarlayın."
+  ],
+  "hatalar": [
+   "Topuklar yerden kalkar",
+   "Göğüs çöker, bel yuvarlanır"
+  ],
+  "hisset": "Kalça, iç bacak ve uyluklarda hissedin.",
+  "nefes": "Her adımda burundan alıp ağızdan verin.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "on_bacak",
+    "ic_bacak"
+   ],
+   "ikincil": [
+    "karin",
+    "arka_omuz",
+    "baldir"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a deep squat facing forward, feet shoulder-width apart, hands on the floor between the feet, chest lifted",
+   "bit": "Same person in a deep squat shifted one step sideways, hands and feet relocated to the side, chest lifted, hips low",
+   "hareket": "Hands and feet step laterally in a deep squat, moving sideways in a controlled walk",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "underswitch": {
+  "adimlar": [
+   "Beast pozisyonunda başlayın: eller omuz altında, dizler yerden az yukarıda.",
+   "Bir elinizi kaldırıp karşı bacağı alttan geçirerek gövdeyi döndürün.",
+   "Crab pozisyonuna oturun, sonra kontrolle beast'e dönün."
+  ],
+  "hatalar": [
+   "Dizler fazla yükselir, kalça sallanır",
+   "Destek eli omuzdan uzağa kayar"
+  ],
+  "hisset": "Omuzlarda, gövde çevresinde ve kalçada hissedin.",
+  "nefes": "Dönüşte nefes verin, pozisyonlarda yavaş nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "yan_karin",
+    "kalca"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "triceps",
+    "arka_omuz"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in beast position on hands and toes, knees hovering just above the floor, back flat, hands under shoulders",
+   "bit": "Same person in crab position, face up, hips lifted, hands and feet on the floor, arms straight",
+   "hareket": "Person rotates the torso, passes one leg under the body, and turns from beast into crab",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "side_kickthrough": {
+  "adimlar": [
+   "Beast pozisyonunda başlayın: dizler yerden az yukarıda, sırt düz.",
+   "Bir elinizi kaldırıp aynı taraf bacağı alttan yana uzatın.",
+   "Bacağı geri çekip beast'e dönün, tarafı değiştirin."
+  ],
+  "hatalar": [
+   "Kalça yukarı kalkar, sırt yuvarlanır",
+   "Destek eli yerden kopar"
+  ],
+  "hisset": "Gövde yanlarında, kalçada ve destek omzunda hissedin.",
+  "nefes": "Bacağı uzatırken nefes verin, dönüşte alın.",
+  "kaslar": {
+   "birincil": [
+    "yan_karin",
+    "karin",
+    "kalca"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "triceps",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in beast position, hands under shoulders, knees hovering above the floor, back flat",
+   "bit": "Same person with torso rotated, one hand lifted, one leg threaded under the body and extended straight out to the side, supported on the other hand and foot",
+   "hareket": "One leg sweeps under the body and extends sideways while the torso rotates, then returns to beast",
+   "kamera": "top",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "scorpion_reach": {
+  "adimlar": [
+   "Beast pozisyonunda başlayın: eller omuz altında, dizler yerden az yukarıda.",
+   "Bir bacağı karşı tarafa çaprazdan geriye doğru uzatın.",
+   "Bacağı geri alıp beast'e dönün, tarafı değiştirin."
+  ],
+  "hatalar": [
+   "Kalça aşırı döner, bel çöker",
+   "Destek kolu bükülür, omuz çöker"
+  ],
+  "hisset": "Kalça ön yüzünde, gövde yanında ve omuzda hissedin.",
+  "nefes": "Bacağı uzatırken nefes verin, dönüşte alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "yan_karin",
+    "bel"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "triceps",
+    "arka_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in beast position on hands and toes, knees hovering above the floor, back flat, hands under shoulders",
+   "bit": "Same person with one leg extended diagonally behind and across the body, hips rotated, torso twisting slightly, supported on both hands and the other foot",
+   "hareket": "One leg reaches back across the body in a diagonal arc, then returns to beast",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "front_step": {
+  "adimlar": [
+   "Beast pozisyonunda başlayın: dizler yerden az yukarıda, sırt düz.",
+   "Bir ayağı öne, elin dışına doğru adımlayın.",
+   "Ayağı geri alıp beast'e dönün, tarafı değiştirin."
+  ],
+  "hatalar": [
+   "Ayak ele çok uzakta basılır",
+   "Kalça yükselir, sırt yuvarlanır"
+  ],
+  "hisset": "Kalça, iç bacak ve karın bölgesinde hissedin.",
+  "nefes": "Adım atarken nefes verin, dönüşte alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "karin",
+    "ic_bacak"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "triceps",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in beast position, hands under shoulders, knees hovering above the floor, back flat",
+   "bit": "Same person with one foot planted on the floor outside the same-side hand, other knee hovering, hips low, hands still on the floor",
+   "hareket": "One foot steps forward outside the hand, then steps back to beast",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "flow_zinciri": {
+  "adimlar": [
+   "Beast pozisyonunda başlayın: eller omuz altında, dizler hafif havada.",
+   "Öğrendiğiniz geçişleri sırayla, kesintisiz ve kontrollü zincirleyin.",
+   "Beast'e dönüp akışı sakince bitirin."
+  ],
+  "hatalar": [
+   "Geçişler aceleyle yapılır, kontrol kaybolur",
+   "Nefes tutulur, omuzlar kasılır"
+  ],
+  "hisset": "Tüm vücutta, özellikle omuz, karın ve kalçada hissedin.",
+  "nefes": "Akış boyunca düzenli, ritmik nefes alıp verin.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "kalca",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "triceps",
+    "yan_karin",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in beast position on hands and toes, knees hovering above the floor, back flat",
+   "bit": "Same person back in beast position after a sequence of transitions, controlled and balanced",
+   "hareket": "Person flows smoothly between beast, crab, and side-step positions, then returns to beast",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "kedi_inek": {
+  "adimlar": [
+   "Paspasta dört ayak üzerinde durun, eller omuz, dizler kalça altında.",
+   "Nefes verip omurgayı yukarı kıvırın, sonra nefes alıp açın.",
+   "Nötr omurgaya dönüp yavaşça tekrarlayın."
+  ],
+  "hatalar": [
+   "Hareket hızlı yapılır, omurga bölümleri atlanır",
+   "Kollar bükülür, omuzlar kulağa kalkar"
+  ],
+  "hisset": "Omurga boyunca, bel ve sırtta hissedin.",
+  "nefes": "Kıvırırken verin, açarken alın.",
+  "kaslar": {
+   "birincil": [
+    "bel",
+    "karin"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "kanat",
+    "boyun"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person on all fours on an exercise mat, hands under shoulders, knees under hips, neutral spine",
+   "bit": "Same person with spine rounded upward, chin tucked to chest, then arched with chest open and gaze forward",
+   "hareket": "Spine alternates between rounding up and arching down in a slow wave",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929597
+ },
+ "dunya_esneme": {
+  "adimlar": [
+   "Geniş bir lunge'a geçin, eller ön ayağın iki yanında.",
+   "Ön ayak tarafındaki dirseği yere indirin, sonra kolu göğse doğru açıp yukarı döndürün.",
+   "Kolu indirip lunge'a dönün, tarafı değiştirin."
+  ],
+  "hatalar": [
+   "Arka diz yere çöker, kalça düşer",
+   "Dönüşte bakış ve göğüs kapalı kalır"
+  ],
+  "hisset": "Kalça önünde, iç bacakta ve göğüs omurgasında hissedin.",
+  "nefes": "Dönüşte nefes verin, açılırken derin alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "ic_bacak",
+    "ust_sirt"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "on_bacak",
+    "gogus"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a deep lunge with both hands on the floor inside the front foot, back leg extended",
+   "bit": "Same person with the inner elbow near the floor, one arm raised toward the ceiling, chest rotated open, gaze following the hand",
+   "hareket": "Elbow drops toward the floor, then the arm rotates up and opens the chest",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "derin_squat_tutus": {
+  "adimlar": [
+   "Ayaklar omuz genişliğinde, parmaklar hafif dışa bakacak şekilde durun.",
+   "Kalçayı yavaşça derin çömelmeye indirin, topuklar yerde kalsın.",
+   "Göğüs dik, dirsekler dizleri iterek pozisyonu tutun."
+  ],
+  "hatalar": [
+   "Topuklar yerden kalkar",
+   "Göğüs öne çöker, bel yuvarlanır"
+  ],
+  "hisset": "Kalça, kasık ve ayak bileğinde hissedin.",
+  "nefes": "Yavaş ve derin, karına doğru nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "ic_bacak",
+    "baldir"
+   ],
+   "ikincil": [
+    "on_bacak",
+    "bel"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing with feet shoulder-width apart, toes slightly turned out, hands together in front of the chest",
+   "bit": "Same person in a deep squat, heels flat, chest upright, palms together, elbows pressing against the inner knees",
+   "hareket": "Person lowers slowly from standing into a deep squat and holds it",
+   "kamera": "front",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929597
+ },
+ "kalca_9090": {
+  "adimlar": [
+   "Paspasta oturun, bir diz önde, diğeri yanda, ikisi 90 derece bükülü.",
+   "Elleri kullanmadan dizleri yana çevirip kalçayı döndürün.",
+   "Gövdeyi dik tutarak diğer tarafa geçin ve tekrarlayın."
+  ],
+  "hatalar": [
+   "Gövde öne eğilir, elle destek alınır",
+   "Kalça yerden kalkar, hareket zorlanır"
+  ],
+  "hisset": "Kalçanın dış ve ön kısmında, iç bacakta hissedin.",
+  "nefes": "Dönüş sırasında yavaş, düzenli nefes alıp verin.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "ic_bacak"
+   ],
+   "ikincil": [
+    "bel",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person sitting upright on an exercise mat, front knee bent at 90 degrees, back knee bent at 90 degrees to the side, arms crossed on chest",
+   "bit": "Same person with both knees rotated to the opposite side, still 90 degrees each, torso upright, arms crossed on chest",
+   "hareket": "Both knees rotate from one side to the other without hand support, hips pivoting",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929597
+ },
+ "gogus_donus": {
+  "adimlar": [
+   "Paspasta yan yatın, dizler 90 derece bükülü, kollar önde birleşik.",
+   "Üstteki kolu tavana, sonra arkaya doğru açın, bakışınız elinizi izlesin.",
+   "Kolu geri getirip başlangıca dönün, tarafı değiştirin."
+  ],
+  "hatalar": [
+   "Dizler birbirinden ayrılır, bel döner",
+   "Omuz kulağa kalkar, kol zorlanır"
+  ],
+  "hisset": "Göğüs omurgasında, göğüs önünde ve omuzda hissedin.",
+  "nefes": "Kolu açarken nefes alın, dönerken verin.",
+  "kaslar": {
+   "birincil": [
+    "ust_sirt",
+    "gogus"
+   ],
+   "ikincil": [
+    "yan_karin",
+    "on_omuz",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person lying on their side on an exercise mat, knees bent at 90 degrees stacked, arms extended forward together, head resting",
+   "bit": "Same person with the top arm opened wide to the other side, chest rotated toward the ceiling, gaze following the hand, knees still stacked",
+   "hareket": "Top arm sweeps in an arc across the body and opens, rotating the upper back",
+   "kamera": "top",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1792929597
+ },
+ "bilek_hazirlik": {
+  "adimlar": [
+   "Ayakta ya da oturarak durun, kolu öne uzatın, hafif dumbbell tutun.",
+   "Bileği yukarı, aşağı, sağa ve sola yavaşça hareket ettirin.",
+   "Her yönde kontrollü bitirin, bileği nötr konuma getirip gevşetin."
+  ],
+  "hatalar": [
+   "Dirseği bükmek ve kolu düşürmek",
+   "Hareketi hızlı ve sallanarak yapmak"
+  ],
+  "hisset": "Bilek eklemi çevresinde ve ön kol kaslarında hafif gerilim hissedin.",
+  "nefes": "Doğal ve düzenli nefes alıp verin, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "on_kol"
+   ],
+   "ikincil": [
+    "biceps"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing upright, side view, one arm extended forward at shoulder height, elbow straight, palm facing down, holding a light dumbbell, wrist in neutral position",
+   "bit": "Same standing posture, arm still extended forward, wrist flexed upward with the back of the hand angled toward the forearm while holding the light dumbbell",
+   "hareket": "Wrist slowly moves from neutral to up, down, left and right in controlled small movements while the forearm stays still",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "light dumbbell"
+  },
+  "zaman": 1792929620
+ },
+ "omuz_cevirme": {
+  "adimlar": [
+   "Bandı geniş tutuşla, kollar önde ve düz şekilde tutun.",
+   "Kolları düz tutarak bandı başın üzerinden arkaya doğru taşıyın.",
+   "Aynı yoldan öne dönün, omuz seviyesinde bırakın."
+  ],
+  "hatalar": [
+   "Tutuşu çok dar yapıp omuzu zorlamak",
+   "Belden kavis yapıp kaburgaları öne itmek"
+  ],
+  "hisset": "Omuz önünde, göğüste ve omuz ekleminin çevresinde açılma hissedin.",
+  "nefes": "Arkaya giderken nefes alın, öne dönerken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_omuz",
+    "gogus",
+    "arka_omuz"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "kanat"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing tall, front view, feet hip-width apart, arms straight in front of the thighs holding a resistance band with a wide overhand grip, band taut",
+   "bit": "Same person with arms straight and overhead then behind the head and torso, band held taut at wide grip, torso upright, ribs down",
+   "hareket": "Straight arms sweep the band in a wide arc from in front of the thighs, up overhead, and back behind the body, then return along the same path",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "resistance band"
+  },
+  "zaman": 1792929620
+ },
+ "kanepe_esneme": {
+  "adimlar": [
+   "Arka dizinizi duvar dibine yerleştirin, ön ayağı önde dengeleyin.",
+   "Kalçanızı öne doğru sürün, gövdeyi dik tutun.",
+   "Gerginliği tutun, sonra yavaşça bırakıp taraf değiştirin."
+  ],
+  "hatalar": [
+   "Belden aşırı kavis yapmak",
+   "Kalçayı öne sürmeden gövdeyi öne eğmek"
+  ],
+  "hisset": "Arka bacağın uyluk önünde ve kalça önünde gerilim hissedin.",
+  "nefes": "Gerilmede yavaşça nefes verin, tutarken düzenli nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person in a kneeling lunge position, side view, back knee on the floor close to a wall with the shin and foot raised up against the wall, front foot flat on the floor, torso upright",
+   "bit": "Same person with hips pushed forward, back knee still at the wall, torso tall, hands on the front thigh, stretching the front of the back thigh and hip",
+   "hareket": "Hips slowly slide forward from the starting position until a stretch is felt, hold, then slowly return",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "wall"
+  },
+  "zaman": 1792929620
+ },
+ "boyun_hazirlik": {
+  "adimlar": [
+   "Dik oturun ya da durun, omuzlar gevşek, bakış karşıda.",
+   "Başı yavaş daireler çizerek çevirin, sonra eliniz ile hafif izometrik baskı yapın.",
+   "Başı nötr konuma getirin, boynu gevşetin."
+  ],
+  "hatalar": [
+   "Başı hızlı ve zorlayarak çevirmek",
+   "Omuzları kulağa doğru kaldırmak"
+  ],
+  "hisset": "Boynun yanlarında ve arkasında hafif çalışma ve esneme hissedin.",
+  "nefes": "Yavaş ve düzenli nefes alın, baskıda nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "boyun"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "yan_omuz"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing upright, front view, shoulders relaxed, head in neutral position, arms at sides, eyes looking forward",
+   "bit": "Same person with one hand placed on the side of the head, head neutral, gently pressing the head into the hand without moving, shoulders relaxed",
+   "hareket": "Head slowly draws small circles, then returns to neutral and presses gently against the palm of the hand in a static isometric hold",
+   "kamera": "front",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929620
+ },
+ "jumping_jack": {
+  "adimlar": [
+   "Ayaklar bitişik, kollar yanda dik durun.",
+   "Hafif sıçrayıp ayakları açın, kolları yandan başın üzerine kaldırın.",
+   "Tekrar sıçrayıp ayakları birleştirin, kolları yana indirin."
+  ],
+  "hatalar": [
+   "Ayaklara sert ve gürültülü inmek",
+   "Kolları omuz seviyesinin altında bırakmak"
+  ],
+  "hisset": "Bacaklarda, omuzlarda ve kalçada ısınma hissedin.",
+  "nefes": "Ritme uyumlu nefes alıp verin, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "baldir",
+    "yan_omuz",
+    "kalca"
+   ],
+   "ikincil": [
+    "ic_bacak",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing tall, front view, feet together, arms straight down at the sides, relaxed posture",
+   "bit": "Same person in the air or landing with feet wide apart and both arms straight overhead, hands nearly touching above the head",
+   "hareket": "Person jumps lightly, feet spread apart while arms sweep up from the sides overhead, then jumps back to feet together with arms down",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1792929620
+ },
+ "ip_atlama": {
+  "adimlar": [
+   "Dik durun, ipi iki elinizle tutun, dirsekler vücuda yakın olsun.",
+   "Bilekleri çevirerek ipi döndürün, ayak uçlarında alçak sıçrayın.",
+   "Yumuşak inin, ritmi koruyun ya da yavaşça durun."
+  ],
+  "hatalar": [
+   "Çok yüksek sıçramak",
+   "Kolları geniş çevirip dirsekleri açmak"
+  ],
+  "hisset": "Baldırlarda, ayak bileklerinde ve ön kolda çalışma hissedin.",
+  "nefes": "Düzenli ve ritmik nefes alın, nefesi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "baldir"
+   ],
+   "ikincil": [
+    "on_kol",
+    "yan_omuz",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing upright, side view, holding the handles of a jump rope with both hands at hip height, elbows close to the body, rope resting behind the heels",
+   "bit": "Same person landing softly on the balls of the feet with the rope passing under the feet, knees slightly bent, torso upright",
+   "hareket": "Wrists turn the rope in a circle overhead and under the feet while the person makes small low hops on the balls of the feet",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "jump rope"
+  },
+  "zaman": 1792929620
+ }
+}

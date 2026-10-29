@@ -1,0 +1,26 @@
+.venv*/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+# your own data stays on your Mac
+pt/
+ayarlar.json
+kayitlar/
+.onbellek/
+# exercise pictures and voice come from the release download (kurulum.sh)
+pt_medya/*
+!pt_medya/kartlar.json
+!pt_medya/youtube.json
+!pt_medya/youtube_sorgu.json
+!pt_medya/anatomi.json
+!pt_medya/storyboard.json
+modeller/*
+!modeller/bls/
+modeller/bls/*
+!modeller/bls/bls.json
+!modeller/bls/LISANS.md
+
+# kesilen depo: örnek medya ve ekran görüntüsü depoya girer (monorepo'da *.mp4/*.jpg dışarıdaydı)
+!static/*_ornek/*.mp4
+!docs/ekran.jpg

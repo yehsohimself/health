@@ -1,0 +1,314 @@
+{
+ "sinav": {
+  "arama_en": "how to do a push up tutorial proper form",
+  "arama_tr": "şınav nasıl çekilir doğru form"
+ },
+ "barfiks": {
+  "arama_en": "how to do a pull up tutorial proper form",
+  "arama_tr": "barfiks nasıl çekilir doğru form"
+ },
+ "squat": {
+  "arama_en": "how to do a bodyweight squat tutorial proper form",
+  "arama_tr": "squat nasıl yapılır doğru form"
+ },
+ "karides": {
+  "arama_en": "BJJ shrimp hip escape drill tutorial proper form",
+  "arama_tr": "BJJ karides hareketi hip escape nasıl yapılır"
+ },
+ "underswitch": {
+  "arama_en": "animal flow underswitch beast to crab tutorial",
+  "arama_tr": "animal flow underswitch beast crab geçişi nasıl yapılır"
+ },
+ "plank": {
+  "arama_en": "how to do a forearm plank tutorial proper form",
+  "arama_tr": "plank nasıl yapılır doğru form"
+ },
+ "duvar_sinav": {
+  "arama_en": "how to do wall push up tutorial proper form",
+  "arama_tr": "duvar şınavı nasıl yapılır doğru form"
+ },
+ "egimli_sinav": {
+  "arama_en": "how to do incline push up tutorial proper form",
+  "arama_tr": "eğimli şınav nasıl yapılır doğru form"
+ },
+ "elmas_sinav": {
+  "arama_en": "how to do diamond push up tutorial proper form",
+  "arama_tr": "elmas şınav nasıl yapılır doğru form"
+ },
+ "yaslanan_sinav": {
+  "arama_en": "how to do planche lean push up tutorial proper form",
+  "arama_tr": "planche lean şınav nasıl yapılır doğru form"
+ },
+ "arcer_sinav": {
+  "arama_en": "how to do archer push up tutorial proper form",
+  "arama_tr": "okçu şınavı nasıl yapılır doğru form"
+ },
+ "tek_kol_sinav": {
+  "arama_en": "how to do one arm push up tutorial proper form",
+  "arama_tr": "tek kol şınav nasıl yapılır doğru form"
+ },
+ "destek_tutus": {
+  "arama_en": "parallel bar support hold tutorial proper form",
+  "arama_tr": "paralel bar destek tutuşu nasıl yapılır"
+ },
+ "negatif_dips": {
+  "arama_en": "how to do negative dips tutorial proper form",
+  "arama_tr": "negatif dips nasıl yapılır doğru form"
+ },
+ "dips": {
+  "arama_en": "how to do parallel bar dips tutorial proper form",
+  "arama_tr": "paralel bar dips nasıl yapılır doğru form"
+ },
+ "pike_sinav": {
+  "arama_en": "how to do pike push up tutorial proper form",
+  "arama_tr": "pike şınav nasıl yapılır doğru form"
+ },
+ "yuksek_pike_sinav": {
+  "arama_en": "how to do elevated feet pike push up tutorial proper form",
+  "arama_tr": "ayaklar yüksekte pike şınav nasıl yapılır"
+ },
+ "duvar_amut_sinav": {
+  "arama_en": "how to do wall handstand push up tutorial proper form",
+  "arama_tr": "duvarda amut şınavı nasıl yapılır"
+ },
+ "ters_kurek": {
+  "arama_en": "how to do inverted row bodyweight tutorial proper form",
+  "arama_tr": "ters kürek çekişi nasıl yapılır"
+ },
+ "aktif_asilma": {
+  "arama_en": "how to do active hang tutorial proper form",
+  "arama_tr": "aktif asılma nasıl yapılır barfiks hazırlık"
+ },
+ "kurek_cekis": {
+  "arama_en": "how to do scapular pull up tutorial proper form",
+  "arama_tr": "kürek kemiği çekişi scapular pull up nasıl yapılır"
+ },
+ "negatif_barfiks": {
+  "arama_en": "how to do negative pull up tutorial proper form",
+  "arama_tr": "negatif barfiks nasıl yapılır"
+ },
+ "gogse_barfiks": {
+  "arama_en": "how to do chest to bar pull up tutorial proper form",
+  "arama_tr": "göğse barfiks nasıl yapılır"
+ },
+ "arcer_barfiks": {
+  "arama_en": "how to do archer pull up tutorial proper form",
+  "arama_tr": "okçu barfiksi nasıl yapılır"
+ },
+ "muscle_up": {
+  "arama_en": "how to do bar muscle up tutorial proper form",
+  "arama_tr": "muscle up nasıl yapılır barda"
+ },
+ "tuck_front_lever": {
+  "arama_en": "how to do tuck front lever tutorial proper form",
+  "arama_tr": "tuck front lever nasıl yapılır"
+ },
+ "adv_tuck_front_lever": {
+  "arama_en": "how to advanced tuck front lever tutorial proper form",
+  "arama_tr": "advanced tuck front lever nasıl yapılır"
+ },
+ "sandalye_kalkis": {
+  "arama_en": "how to do sit to stand from chair without hands proper form",
+  "arama_tr": "sandalyeden elsiz kalkma egzersizi nasıl yapılır"
+ },
+ "bulgar_squat": {
+  "arama_en": "how to bulgarian split squat tutorial proper form",
+  "arama_tr": "bulgar split squat nasıl yapılır"
+ },
+ "karides_squat": {
+  "arama_en": "how to shrimp squat tutorial proper form",
+  "arama_tr": "karides squat nasıl yapılır"
+ },
+ "pistol": {
+  "arama_en": "how to pistol squat tutorial proper form",
+  "arama_tr": "pistol squat nasıl yapılır"
+ },
+ "kalca_kopru": {
+  "arama_en": "how to glute bridge tutorial proper form",
+  "arama_tr": "kalça köprüsü nasıl yapılır"
+ },
+ "tek_kalca_kopru": {
+  "arama_en": "how to single leg glute bridge tutorial proper form",
+  "arama_tr": "tek bacak kalça köprüsü nasıl yapılır"
+ },
+ "nordic_negatif": {
+  "arama_en": "how to nordic hamstring curl negative tutorial proper form",
+  "arama_tr": "nordic hamstring curl nasıl yapılır"
+ },
+ "kb_swing": {
+  "arama_en": "how to kettlebell swing tutorial proper form",
+  "arama_tr": "kettlebell swing nasıl yapılır"
+ },
+ "baldir": {
+  "arama_en": "how to single leg calf raise on step tutorial proper form",
+  "arama_tr": "tek bacak baldır kaldırma nasıl yapılır"
+ },
+ "dead_bug": {
+  "arama_en": "how to do dead bug exercise tutorial proper form",
+  "arama_tr": "dead bug egzersizi nasıl yapılır doğru form"
+ },
+ "tuck_hollow": {
+  "arama_en": "how to do tuck hollow body hold tutorial proper form",
+  "arama_tr": "tuck hollow body hold nasıl yapılır doğru form"
+ },
+ "hollow": {
+  "arama_en": "how to do hollow body hold tutorial proper form",
+  "arama_tr": "hollow body hold nasıl yapılır doğru form"
+ },
+ "yan_plank": {
+  "arama_en": "how to do side plank tutorial proper form",
+  "arama_tr": "yan plank nasıl yapılır doğru form"
+ },
+ "diz_kaldirma": {
+  "arama_en": "how to do hanging knee raise tutorial proper form",
+  "arama_tr": "asılı diz kaldırma nasıl yapılır doğru form"
+ },
+ "bacak_kaldirma": {
+  "arama_en": "how to do hanging straight leg raise tutorial proper form",
+  "arama_tr": "asılı bacak kaldırma nasıl yapılır doğru form"
+ },
+ "ayak_bara": {
+  "arama_en": "how to do toes to bar tutorial proper form",
+  "arama_tr": "toes to bar nasıl yapılır doğru form"
+ },
+ "tuck_lsit": {
+  "arama_en": "how to do tuck L-sit tutorial proper form",
+  "arama_tr": "tuck L-sit nasıl yapılır doğru form"
+ },
+ "lsit": {
+  "arama_en": "how to do L-sit tutorial proper form",
+  "arama_tr": "L-sit nasıl yapılır doğru form"
+ },
+ "duvar_yuruyus": {
+  "arama_en": "how to do wall walk exercise tutorial proper form",
+  "arama_tr": "wall walk duvara yürüyüş egzersizi nasıl yapılır doğru form"
+ },
+ "karin_duvar_amut": {
+  "arama_en": "how to chest to wall handstand tutorial proper form",
+  "arama_tr": "duvara karın dönük amut nasıl yapılır"
+ },
+ "amut_dengesi": {
+  "arama_en": "how to balance handstand away from wall tutorial proper form",
+  "arama_tr": "amut dengesi duvardan uzaklaşma nasıl yapılır"
+ },
+ "serbest_amut": {
+  "arama_en": "how to freestanding handstand tutorial proper form",
+  "arama_tr": "serbest amut nasıl yapılır"
+ },
+ "ters_karides": {
+  "arama_en": "BJJ reverse shrimp tutorial proper form",
+  "arama_tr": "bjj ters karides nasıl yapılır"
+ },
+ "kopru_upa": {
+  "arama_en": "BJJ upa bridge trap and roll escape tutorial proper form",
+  "arama_tr": "bjj köprü upa nasıl yapılır"
+ },
+ "teknik_kalkis": {
+  "arama_en": "BJJ technical stand up tutorial proper form",
+  "arama_tr": "bjj teknik ayağa kalkış nasıl yapılır"
+ },
+ "sit_out": {
+  "arama_en": "BJJ sit out tutorial proper form",
+  "arama_tr": "bjj sit out nasıl yapılır"
+ },
+ "sprawl": {
+  "arama_en": "BJJ sprawl tutorial proper form",
+  "arama_tr": "bjj sprawl nasıl yapılır"
+ },
+ "granby": {
+  "arama_en": "BJJ granby roll tutorial proper form",
+  "arama_tr": "bjj granby rulo nasıl yapılır"
+ },
+ "one_rulo": {
+  "arama_en": "BJJ shoulder roll tutorial proper form",
+  "arama_tr": "bjj omuz rulosu nasıl yapılır"
+ },
+ "kalca_degistirme": {
+  "arama_en": "BJJ hip switch drill seated tutorial proper form",
+  "arama_tr": "BJJ kalça değiştirme hip switch egzersizi nasıl yapılır"
+ },
+ "bacak_pummel": {
+  "arama_en": "BJJ leg pummel guard drill on back tutorial proper form",
+  "arama_tr": "BJJ sırt üstü bacak pummel guard drill nasıl yapılır"
+ },
+ "golge_pas": {
+  "arama_en": "BJJ shadow guard passing drill solo tutorial",
+  "arama_tr": "BJJ gölge guard geçişi solo antrenman nasıl yapılır"
+ },
+ "golge_gures": {
+  "arama_en": "BJJ solo wrestling drills sprawl shrimp technical stand up tutorial",
+  "arama_tr": "BJJ solo drill sprawl shrimp teknik kalkış nasıl yapılır"
+ },
+ "beast": {
+  "arama_en": "animal flow beast position hold tutorial proper form",
+  "arama_tr": "animal flow beast pozisyonu nasıl yapılır"
+ },
+ "crab": {
+  "arama_en": "animal flow crab reach reverse tabletop tutorial proper form",
+  "arama_tr": "animal flow crab ters masa pozisyonu nasıl yapılır"
+ },
+ "ape": {
+  "arama_en": "animal flow ape lateral travel tutorial proper form",
+  "arama_tr": "animal flow ape yana yürüyüş nasıl yapılır"
+ },
+ "side_kickthrough": {
+  "arama_en": "animal flow side kick through tutorial proper form",
+  "arama_tr": "animal flow side kick through nasıl yapılır"
+ },
+ "scorpion_reach": {
+  "arama_en": "animal flow scorpion reach tutorial proper form",
+  "arama_tr": "animal flow scorpion reach nasıl yapılır"
+ },
+ "front_step": {
+  "arama_en": "animal flow front step from beast tutorial proper form",
+  "arama_tr": "animal flow front step beast pozisyonundan nasıl yapılır"
+ },
+ "flow_zinciri": {
+  "arama_en": "animal flow beast crab transitions tutorial proper form",
+  "arama_tr": "animal flow beast crab geçişleri nasıl yapılır"
+ },
+ "kedi_inek": {
+  "arama_en": "cat cow stretch tutorial proper form",
+  "arama_tr": "kedi inek egzersizi nasıl yapılır"
+ },
+ "dunya_esneme": {
+  "arama_en": "world's greatest stretch tutorial proper form",
+  "arama_tr": "dünyanın en iyi esnemesi nasıl yapılır"
+ },
+ "derin_squat_tutus": {
+  "arama_en": "deep squat hold mobility tutorial proper form",
+  "arama_tr": "derin squat tutuşu mobilite nasıl yapılır"
+ },
+ "kalca_9090": {
+  "arama_en": "90/90 hip transitions without hands tutorial proper form",
+  "arama_tr": "90/90 kalça geçişi nasıl yapılır"
+ },
+ "gogus_donus": {
+  "arama_en": "thoracic spine rotation side lying open book tutorial proper form",
+  "arama_tr": "göğüs omurgası dönüşü yan yatarak kol açma nasıl yapılır"
+ },
+ "bilek_hazirlik": {
+  "arama_en": "wrist mobility warm up with light dumbbell tutorial proper form",
+  "arama_tr": "bilek hazırlığı ısınma hafif dambılla nasıl yapılır"
+ },
+ "omuz_cevirme": {
+  "arama_en": "shoulder pass through with resistance band tutorial proper form",
+  "arama_tr": "bantla omuz çevirme nasıl yapılır"
+ },
+ "kanepe_esneme": {
+  "arama_en": "couch stretch tutorial proper form",
+  "arama_tr": "kanepe esnemesi couch stretch nasıl yapılır"
+ },
+ "boyun_hazirlik": {
+  "arama_en": "neck mobility warm up and isometric neck holds tutorial proper form",
+  "arama_tr": "boyun hazırlığı izometrik boyun egzersizi nasıl yapılır"
+ },
+ "jumping_jack": {
+  "arama_en": "how to do jumping jacks tutorial proper form",
+  "arama_tr": "jumping jack nasıl yapılır doğru form"
+ },
+ "ip_atlama": {
+  "arama_en": "how to jump rope tutorial proper form for beginners",
+  "arama_tr": "ip atlama nasıl yapılır doğru teknik"
+ }
+}
