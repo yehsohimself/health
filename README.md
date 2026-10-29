@@ -39,7 +39,7 @@ watch how you respond, and change the plan for a reason they can explain. PT tri
 
 ## A day with PT
 
-**Morning.** Answer three taps of questions. The session for today appears, already adjusted: the right progression step for each movement, the right number of sets, a 10-minute version if you are short on time. Your streak counts any finished session, even 10 minutes.
+**Morning.** Three taps for the morning check, and the session for today appears, already adjusted: the right progression step for each movement, the right number of sets, a 10-minute version if you are short on time. Your streak counts any finished session, even 10 minutes.
 
 <p align="center"><img src="docs/today.jpg" width="760" alt="Today screen"></p>
 
