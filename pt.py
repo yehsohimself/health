@@ -244,7 +244,7 @@ PROFIL_VARSAYILAN = {
     "ad": "", "cinsiyet": "erkek", "dogum_tarihi": "", "yas": None, "boy_cm": None, "kilo_kg": None, "hedef_kilo_kg": None, "hedef_tarih": "",
     "hedefler": [], "beceri_hedefleri": [], "neden": "", "hedef_turleri": [], "deneyim": "", "motivasyon": "", "diyet": "",
     "ek_bilgi": [], "notlar": [], "gun_duzeni": {}, "beslenme_aliskanlik": {}, "saglik_degerleri": [], "aliskanlik": {}, "ara_cevaplar": {}, "program_aktif": None, "program_biten": [],
-    "gorusmeler": {},
+    "gorusmeler": {}, "kontrol_istegi": "", "son_kontrol": "",
     "yontemler": {"kalistenik": 2, "bjj_solo": 1, "flow": 1, "bisiklet": 1, "mobilite": 1},
     "bjj_ders": {"gunler": [], "saat": "", "sure_dk": 90},
     "ekipman": ["bisiklet", "bar", "mat"], "gunler": [0, 1, 2, 3, 4, 5, 6], "gunluk_dk": 45, "antrenman_saati": "sabah",
@@ -1040,6 +1040,8 @@ BU HAFTANIN KOŞULLARI:
 - Başlangıç durumu (ÖNCELİKLİ; profildeki gün/dakika tercihinden önce gelir): {baslangic}
 - Gün düzeni: {gun_duzeni} (antrenmanı kalkış/iş saatlerine ve yoğun günlere göre yerleştir; "saat" alanına HH:MM yaz).
 - Jiu-jitsu: son 8 haftada derslerde en çok zorlandığı pozisyonlar: {bjj_zor}. Solo BJJ seansında bu pozisyonların drillerini öne al: {bjj_drill}
+- Birlikte belirlenen hedefler (planı bunlara doğru kur; kısa vadeli hedef bu haftanın odağına girsin): {hedefler}
+- Son ara kontrolün kararı (uygula): {kontrol}
 
 İLERLEME KURALLARI (KODDA; sen hedefleri değiştirme, aynen kullan). Her zincirde ŞU AN çalışılan hareket ve hedefi:
 {basamaklar}
@@ -1163,6 +1165,13 @@ def _baslangic_metni(b, p):
             + (f" Kullanıcının hedef becerileri: {', '.join(map(str, beceri))}." if beceri else ""))
 
 
+def _g_metin(fn, varsayilan=""):
+    try:
+        return fn() or varsayilan
+    except Exception:  # noqa: BLE001
+        return varsayilan
+
+
 def program_uret(kod=None, istek=""):
     """Haftanın planı: Claude yazar, sonra kodla doğrulanır (bilinmeyen hareket atılır, hedefler kurallardan, ekipman denetimi)."""
     import claude_yaz
@@ -1183,7 +1192,9 @@ def program_uret(kod=None, istek=""):
         bulgular=__import__("pt_kanit").onayli_metin(),
         blok=json.dumps(__import__("pt_koc").blok(kod, p), ensure_ascii=False), gun_duzeni=json.dumps(__import__("pt_koc").gun_duzeni(p), ensure_ascii=False),
         katalog=_katalog_metni(p, kat), bjj_zor=", ".join(f"{a} ({n})" for a, n in bjj_ozeti(56)["zorlandigim"][:3]) or "kayıt yok",
-        bjj_drill=", ".join(sorted({k for a, _ in bjj_ozeti(56)["zorlandigim"][:3] for k in BJJ_DRILL.get(a, [])})) or "-")
+        bjj_drill=", ".join(sorted({k for a, _ in bjj_ozeti(56)["zorlandigim"][:3] for k in BJJ_DRILL.get(a, [])})) or "-",
+        hedefler=_g_metin(lambda: __import__("pt_hedef").istem_metni(), "henüz belirlenmedi"),
+        kontrol=p.get("kontrol_istegi") or "yok")
     c = claude_yaz.sor_json(istem, model_adi="opus", zaman_asimi=900)
     pl = plani_dogrula(c, tarihler, p, kat)
     bjj_ders_isle(pl, p)
@@ -1489,6 +1500,7 @@ def hafta_verisi(kod):
         "gorusme": {k: v for k, v in _json(MESAJLAR / f"{hafta_gecerli(kod)}.gorusme.json", {}).items() if k in ("sorular", "cevaplar", "aliskanlik")},
         "aksamlar": [{"tarih": d["tarih"], **{k: (d.get("aksam") or {}).get(k) for k in ("antrenman", "beslenme", "aclik", "enerji")}} for d in gunluk if d.get("aksam")],
         "beslenme": pt_beslenme.hafta_ozeti(gl), "uyku_ortalama": round(sum(float(x.get("uyku_saat") or 0) for x in sabah) / len(sabah), 1) if sabah else None,
+        "hedefler": _g_metin(lambda: __import__("pt_hedef").istem_metni(), "henüz belirlenmedi"),
     }
 
 

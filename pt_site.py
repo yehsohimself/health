@@ -163,6 +163,10 @@ def ozet():
         "blok": _g(lambda: pt_koc.blok(kod, p)), "aliskanlik": _g(lambda: pt_koc.aliskanlik_bugun(t)), "ara_soru": _g(pt_koc.ara_soru),
         "kutlama": _g(lambda: pt_koc.kutlamalar(t), []),
         "gorusme_eksik": [g for g, alan in (("diyet", "beslenme_aliskanlik"), ("gun", "gun_duzeni")) if not p.get(alan)],
+        "hedefler": _g(lambda: __import__("pt_hedef").ozet(), {"aktif": [], "var": False}),
+        "kontrol": _g(lambda: __import__("pt_kontrol").ozet()["kontrol"], {}),
+        "degerlendirme": _g(lambda: {**__import__("pt_kontrol").ozet()["degerlendirme"], "hazirlaniyor": "degerlendirme" in calisan}, {}),
+        "akis": _g(lambda: pt_koc.gun_akisi(t)["akis"], []),
         "haftalik_gorusme": pt.bugun().weekday() >= 5 and pt._hafta_no(kod) > 1 and not (pt._json(pt.MESAJLAR / f"{kod}.gorusme.json", {}).get("cevaplar")),
     }
 
@@ -269,6 +273,26 @@ def _dongu():
                                 pass
                             return m
                         _arka("mesaj", "haftalık koç mesajı ve gelecek hafta", hafta_sonu)
+                import pt_kontrol
+                if claude_yaz.hazir():
+                    if not pt_kontrol.degerlendirme_oku().get("mesaj") and "degerlendirme" not in calisan and not _yakinda_basarisiz("degerlendirme"):
+                        _degerlendirme_baslat()                                              # kurulmuş ama değerlendirmesi hiç yazılmamış
+                    z = pt_kontrol.zamani()
+                    if z.get("zamani") and not z.get("acik") and "kontrol" not in calisan and not _yakinda_basarisiz("kontrol"):
+                        def kontrol_hazirla():
+                            k = pt_kontrol.hazirla()
+                            try:
+                                import pt_push
+                                pt_push.gonder("Ara kontrol zamanı", "İki hafta doldu: üç dakikada programı gözden geçirelim.", "/?u=pt", "pt-kontrol")
+                            except Exception:  # noqa: BLE001
+                                pass
+                            return {"tarih": k.get("tarih")}
+                        _arka("kontrol", "ara kontrol hazırlanıyor", kontrol_hazirla)
+                try:
+                    import pt_hedef
+                    pt_hedef.kendiliginden_tamamla()
+                except Exception:  # noqa: BLE001
+                    traceback.print_exc()
                 import pt_kanit
                 if time.time() - (pt_kanit.durum().get("son_tarama") or 0) > 30 * 86400 and claude_yaz.arka_plan_uygun() and "kanit" not in calisan \
                         and not _yakinda_basarisiz("kanit", 72):
@@ -279,6 +303,25 @@ def _dongu():
         except Exception:  # noqa: BLE001
             traceback.print_exc()
         time.sleep(120)
+
+
+def _degerlendirme_baslat(yenile=False):
+    """Kurulumdan sonra: PT'nin değerlendirmesi + üç vade için hedef önerisi (arka planda, tek iş)."""
+    def kos():
+        import pt_hedef
+        import pt_kontrol
+        d = pt_kontrol.degerlendirme(yenile=yenile)
+        try:
+            pt_hedef.oner(yenile=yenile)
+        except Exception:  # noqa: BLE001
+            traceback.print_exc()
+        try:
+            import pt_push
+            pt_push.gonder("Değerlendirmeniz hazır", (d.get("antrenman") or {}).get("yaklasim") or "Sizi nasıl gördüğümü ve planı yazdım.", "/?u=pt", "pt-degerlendirme")
+        except Exception:  # noqa: BLE001
+            pass
+        return {"zaman": d.get("zaman")}
+    return _arka("degerlendirme", "değerlendirme yazılıyor", kos)
 
 
 def _oneri_guvenli():
@@ -418,7 +461,90 @@ def kaydet(app):
             return pl
         if not _arka("plan", "haftalık plan yazılıyor", yaz):
             return jsonify({"hata": "Plan zaten yazılıyor."}), 409
+        if g.get("ilk") or g.get("degerlendirme"):
+            _degerlendirme_baslat(yenile=bool(g.get("degerlendirme")))
         return jsonify({"ok": True})
+
+    # ---------------------------------------------------------------- değerlendirme, hedefler, ara kontrol (2026-10-30)
+    @app.get("/api/pt/degerlendirme")
+    def pt_degerlendirme():
+        import pt_kontrol
+        if request.args.get("yenile"):
+            _degerlendirme_baslat(yenile=True)
+        d = pt_kontrol.degerlendirme_oku()
+        return jsonify({"degerlendirme": {k: v for k, v in d.items() if k != "hesap"}, "hazirlaniyor": "degerlendirme" in calisan,
+                        "hata": (sonuclar.get("degerlendirme") or {}).get("hata")})
+
+    @app.post("/api/pt/degerlendirme")
+    def pt_degerlendirme_isaretle():
+        import pt_kontrol
+        g = _govde()
+        if g.get("yenile"):
+            return jsonify({"ok": _degerlendirme_baslat(yenile=True)})
+        pt_kontrol.degerlendirme_isaretle(bool(g.get("okundu", True)))
+        return jsonify({"ok": True})
+
+    @app.get("/api/pt/hedefler")
+    def pt_hedefler():
+        import pt_hedef
+        d = pt_hedef._oku()
+        return jsonify({"aktif": pt_hedef.aktif(), "hepsi": pt_hedef.hepsi(), "oneri": {k: v for k, v in (d.get("oneri") or {}).items() if k != "adaylar"},
+                        "adaylar": (d.get("oneri") or {}).get("adaylar") or [], "vadeler": [{"kod": k, "ad": a, "gun": g_, "sure": s} for k, a, g_, s in pt_hedef.VADELER],
+                        "hazirlaniyor": "hedef_oneri" in calisan})
+
+    @app.post("/api/pt/hedefler")
+    def pt_hedefler_islem():
+        import pt_hedef
+        g = _govde()
+        islem = g.get("islem")
+        if islem == "oner":
+            if g.get("hemen"):
+                return jsonify({"oneri": pt_hedef.oner(yenile=bool(g.get("yenile")))})
+            return jsonify({"ok": _arka("hedef_oneri", "hedefler öneriliyor", pt_hedef.oner, bool(g.get("yenile")))})
+        if islem == "kaydet":
+            L = g.get("hedefler")
+            if not isinstance(L, list) or not L:
+                return jsonify({"hata": "En az bir hedef seçin."}), 400
+            return jsonify({"aktif": pt_hedef.kaydet(L[:6])})
+        if islem == "degistir":
+            h = pt_hedef.degistir(str(g.get("id") or ""), g.get("metin"), g.get("durum"))
+            if not h:
+                return jsonify({"hata": "Hedef bulunamadı."}), 404
+            with _kilit:
+                pt_oyun._onbellek.clear()
+            return jsonify({"hedef": h, "aktif": pt_hedef.aktif()})
+        return jsonify({"hata": "islem: oner | kaydet | degistir"}), 400
+
+    @app.get("/api/pt/kontrol")
+    def pt_kontrol_durum():
+        import pt_kontrol
+        z = pt_kontrol.zamani()
+        return jsonify({**z, "gecmis": pt_kontrol.gecmis()[-12:], "hazirlaniyor": "kontrol" in calisan})
+
+    @app.post("/api/pt/kontrol")
+    def pt_kontrol_islem():
+        import pt_kontrol
+        g = _govde()
+        islem = g.get("islem")
+        if islem == "baslat":
+            return jsonify({"kontrol": pt_kontrol.hazirla(yenile=bool(g.get("yenile")))})
+        if islem == "bitir":
+            cev = g.get("cevaplar") if isinstance(g.get("cevaplar"), dict) else {}
+            k = pt_kontrol.bitir(_tarih(g.get("tarih")), cev)
+            if g.get("yeniden_yaz") and (k.get("sonuc") or {}).get("karar") == "guncelle":
+                _arka("plan", "plan güncelleniyor", pt.program_uret, pt.hafta_kodu(), (k["sonuc"].get("plan_istegi") or ""))
+            return jsonify({"kontrol": k, "plan_yaziliyor": "plan" in calisan})
+        return jsonify({"hata": "islem: baslat | bitir"}), 400
+
+    @app.post("/api/pt/ek-gorev")
+    def pt_ek_gorev():
+        g = _govde()
+        t = _tarih(g.get("tarih"))
+        try:
+            e = pt_oyun.ek_gorev_isaretle(t, str(g.get("kod") or ""), bool(g.get("tamam", True)))
+        except ValueError as er:
+            return jsonify({"hata": str(er)}), 400
+        return jsonify({"ek_gorev": e, "oyun": pt_oyun.ozet()})
 
     @app.post("/api/pt/program/geri-al")
     def pt_program_geri():

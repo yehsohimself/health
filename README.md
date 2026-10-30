@@ -58,6 +58,18 @@ watch how you respond, and change the plan for a reason they can explain. PT tri
 On Sunday you get a short coach message (what went well, what changes next week, one habit to keep) and next
 week's plan is written with it.
 
+**After the intake, PT tells you what it concluded.** Like a real trainer at the end of a first session: how it sees you, which training
+approach and which nutrition approach fit you and *why*, what to watch, the first three steps. The numbers in it (calories, protein, test
+results, progression steps) come from code; the model only explains them.
+
+**Three goals, set together.** Four weeks, three months, one year. PT proposes measurable candidates it can actually track (weight trend, a
+test result, the next progression step, number of sessions, a streak), you accept, swap or write your own. Progress is measured from your
+records, not from your feeling.
+
+**A check-in every 14 days.** PT reads the last two weeks (adherence, effort ratings, pain, sleep, weight trend against the expected pace,
+goal progress), asks three or four short questions and decides, with reasons, whether the program stays or changes. Safe changes are
+applied (session length, number of days, weight-loss pace); the rest goes into next week's plan.
+
 ## What's inside
 
 **Training**
@@ -82,7 +94,11 @@ week's plan is written with it.
 - Weekly menu and shopping list, barcode lookup (Open Food Facts), *same as yesterday* logging.
 
 **Progress**
-- Duolingo-style streak with streak freezes and a repair window, 39 badge levels, a weekly ring.
+- Duolingo-style streak with streak freezes and a repair window, 43 badge levels, a weekly ring.
+- Points and levels: every record earns points (session, morning check, meals, tasks, records, progression steps), a daily 100-point
+  goal, three optional bonus tasks a day, twelve levels. Nothing is stored as a counter; it is recomputed from your logs, so a late or
+  corrected entry fixes itself.
+- Today's plan as a timeline: what to do at what time and why, with the done items ticked off.
 - Strength tests every five weeks, weight trend (smoothed), readiness and fatigue from training load.
 
 ## Who it's for

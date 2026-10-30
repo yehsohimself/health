@@ -82,8 +82,14 @@ def gun_akisi(tarih=None):
     sdk = simdi.hour * 60 + simdi.minute if bugun_mu else -1
     L = []
 
-    def ekle(dk, tur, baslik, detay="", bitti=False, eylem=None, sure=0):
-        L.append({"saat": _saat(dk), "dk": dk, "tur": tur, "baslik": baslik, "detay": detay, "bitti": bool(bitti), "eylem": eylem, "sure": sure})
+    NEDEN = {"sabah": "Uyku ve enerjinize göre bugünkü seansı ayarlarım.", "pencere": "Yeme düzeniniz: açık kalan saatler.",
+             "ogun": "Protein hedefini öğünlere bölmek tok tutar ve kası korur.", "seans": "", "su": "Günlük su hedefinizin bir adımı.",
+             "mola": "Masa başında oturan kalçayı ve omurgayı açar.", "aksam": "Bir dakikada günü kapatır, yarını hazırlarım.",
+             "uyku": "Toparlanmanın en büyük kısmı uykuda olur.", "takvim": ""}
+
+    def ekle(dk, tur, baslik, detay="", bitti=False, eylem=None, sure=0, neden=None):
+        L.append({"saat": _saat(dk), "dk": dk, "tur": tur, "baslik": baslik, "detay": detay, "bitti": bool(bitti), "eylem": eylem, "sure": sure,
+                  "neden": neden if neden is not None else NEDEN.get(tur, "")})
 
     kalkis, yatis = _dk(gd["kalkis"]), _dk(gd["yatis"], "23:00")
     if yatis < kalkis:
@@ -132,7 +138,7 @@ def gun_akisi(tarih=None):
             dilim = saat or p.get("antrenman_saati") or "sabah"
             saat = {"sabah": _saat(kalkis + 45), "ogle": "12:30", "aksam": _saat(max(_dk(gd["is_bit"]) + 30, 17 * 60 + 30))}.get(dilim, SAAT_DILIM.get(dilim, "18:00"))
         ekle(_dk(saat), "seans", s.get("baslik") or "Antrenman", f"{s.get('sure_dk') or ''} dk", bitti=s.get("bitti"), eylem=f"seans:{s.get('id')}",
-             sure=int(s.get("sure_dk") or 30))
+             sure=int(s.get("sure_dk") or 30), neden=s.get("neden") or "")
     # su ve mola
     hedef_su = pt.su_hedefi(p)
     for i, kesir in enumerate((0.35, 0.65, 0.9)):

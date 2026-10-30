@@ -55,6 +55,8 @@ AILELER = [
     ("sabah", "Sabah kontrolü", "sabah", "gunes", [(7, "Bir hafta dinledi", "7 sabah kontrolü."), (30, "Kendini dinleyen", "30 sabah kontrolü."),
      (100, "Yüz sabah", "100 sabah kontrolü.")]),
     ("bjj", "Minder", "bjj", "kusak", [(1, "İlk ders", "İlk BJJ dersini kaydedin."), (10, "Mindere sadık", "10 BJJ dersi."), (50, "Elli ders", "50 BJJ dersi.")]),
+    ("puan", "Puan", "puan", "kupa", [(500, "Beş yüz puan", "Toplam 500 puan."), (1500, "Bin beş yüz", "Toplam 1.500 puan."), (5000, "Beş bin puan", "Toplam 5.000 puan."),
+     (15000, "On beş bin", "Toplam 15.000 puan.")]),
 ]
 # (kod, ad, açıklama, ölçü, eşik, simge, aile, seviye)
 ROZETLER = [(f"{on}_{e}", ad, ac, olcu, e, ikon, on, i + 1) for on, _, olcu, ikon, L in AILELER for i, (e, ad, ac) in enumerate(L)] + \
@@ -74,6 +76,105 @@ GOREVLER = {
     "aksam": ("Akşam görüşmesi", "ay"),
 }
 
+# Puan (2026-10-30; kullanıcı: "Duolingo gibi; ek görevler ek puan kazandırsın"). Her kayıt puan getirir; günlük hedef 100 puan (Duolingo'nun
+# günlük XP hedefi gibi), toplam puan seviye verir. Puan da seri gibi dosyada tutulmaz, günlüklerden hesaplanır.
+PUAN = {"seans": 40, "seans_dk_ust": 30, "bjj": 50, "test": 30, "sabah": 10, "aksam": 10, "ogun": 5, "ogun_ust": 3, "su": 10, "aliskanlik": 10,
+        "gorev": 10, "gorev_hepsi": 20, "rekor": 25, "basamak": 40, "hedef": 100}
+GUNLUK_PUAN_HEDEF = 100
+SEVIYELER = [(0, "Başlangıç"), (150, "Isınma"), (400, "Düzen"), (800, "Ritim"), (1500, "Kararlı"), (2500, "Güçlü"), (4000, "Dayanıklı"),
+             (6000, "Usta"), (9000, "Atlet"), (13000, "Efsane"), (20000, "Efsane II"), (30000, "Efsane III")]
+# Ek görevler: her gün üç tane sunulur (tarihle tohumlanır), isteğe bağlı; işaretlenince puan. (kod, ad, puan, açıklama, koşul)
+EK_GOREVLER = [
+    ("yuruyus", "20 dakika yürüyüş", 15, "Tempolu; toparlanmayı ve günlük hareketi artırır.", None),
+    ("adim", "8 bin adım", 20, "Telefonun adım sayacı yeter.", None),
+    ("esneme", "5 dakika esneme", 10, "Kalça, göğüs ve omuz; akşam en iyisi.", None),
+    ("mobilite", "10 dakika hareketlilik", 15, "Hareket kütüphanesindeki hareketlilik seansı sayılır.", None),
+    ("ekransiz", "Yatmadan 30 dakika önce ekran yok", 15, "Uykuya dalma süresini kısaltır.", None),
+    ("uyku7", "7 saatten fazla uyku", 20, "Sabah kontrolünde yazdığınız süre sayılır.", None),
+    ("sebze", "İki porsiyon sebze", 10, "Lif hedefi için.", None),
+    ("sekersiz", "Şekerli içecek yok", 10, "Gün boyunca.", None),
+    ("protein_ogun", "Her öğünde protein", 15, "Avuç içi kadar.", None),
+    ("merdiven", "Asansör yerine merdiven", 10, "Bugün her seferinde.", None),
+    ("mola", "İki hareket molası", 10, "Masa başında 2 dakikalık mola, iki kez.", "masa"),
+    ("durus", "Üç kez duruş kontrolü", 10, "Omuzlar geride, çene içeride; telefonda hatırlatma kurun.", "masa"),
+    ("nefes", "5 dakika nefes çalışması", 10, "4-7-8 ya da kutu nefesi; stresi düşürür.", None),
+    ("soguk", "Duşun sonunda 30 saniye soğuk su", 10, "Uyanıklık; kalp sorunu varsa atlayın.", "kalp_yok"),
+    ("hazirlik", "Yarının öğünlerini hazırlayın", 15, "Bir öğün bile yeter.", None),
+    ("kayit", "Bütün öğünleri kaydedin", 15, "Fotoğrafla ya da yazarak.", None),
+]
+EK = {k: (ad, puan, ac, kosul) for k, ad, puan, ac, kosul in EK_GOREVLER}
+
+
+def seviye_bul(toplam):
+    no, ad, alt = 1, SEVIYELER[0][1], 0
+    for i, (esik, a) in enumerate(SEVIYELER):
+        if toplam >= esik:
+            no, ad, alt = i + 1, a, esik
+    ust = next((e for e, _ in SEVIYELER if e > toplam), None)
+    sonraki = next((a for e, a in SEVIYELER if e > toplam), None)
+    return {"no": no, "ad": ad, "alt": alt, "ust": ust, "sonraki": sonraki, "toplam": toplam,
+            "oran": round((toplam - alt) / max(1, (ust or toplam + 1) - alt), 3) if ust else 1.0, "kalan": (ust - toplam) if ust else 0}
+
+
+def ek_gorevler_gun(t, bag):
+    """Günün üç ek görevi (tarihle tohumlanmış; koşula uymayanlar havuza girmez)."""
+    import random
+    havuz = [k for k, _, _, _, kosul in EK_GOREVLER if kosul is None or (kosul == "masa" and bag.get("masa")) or (kosul == "kalp_yok" and not bag.get("kalp"))]
+    return random.Random("ek:" + t).sample(havuz, min(3, len(havuz)))
+
+
+def gun_puani(t, d, hedef, G, bag, ek_olay=None):
+    """Bir günün puanı ve kalemleri. ek_olay: {rekor: n, basamak: n, hedef: n} o gün olan olaylar."""
+    K = []
+    ek_olay = ek_olay or {}
+    for s in d.get("seanslar") or []:
+        if s.get("bitti"):
+            K.append(("Antrenman" + (f" · {s.get('baslik')}" if s.get("baslik") else ""), PUAN["seans"] + min(PUAN["seans_dk_ust"], int(s.get("sure_dk") or 0))))
+    for _ in d.get("bjj") or []:
+        K.append(("Jiu-jitsu dersi", PUAN["bjj"]))
+    if d.get("_test"):
+        K.append(("Test", PUAN["test"]))
+    if d.get("sabah"):
+        K.append(("Sabah kontrolü", PUAN["sabah"]))
+    if d.get("aksam"):
+        K.append(("Akşam görüşmesi", PUAN["aksam"]))
+    n = min(PUAN["ogun_ust"], len(d.get("yemekler") or []))
+    if n:
+        K.append((f"{n} öğün kaydı", PUAN["ogun"] * n))
+    if bag.get("su") and (d.get("su_ml") or 0) >= bag["su"]:
+        K.append(("Su hedefi", PUAN["su"]))
+    if (d.get("aliskanlik") or {}).get("tamam"):
+        K.append(("Haftanın alışkanlığı", PUAN["aliskanlik"]))
+    tamam = [g for g in G if g["tamam"]]
+    if tamam:
+        K.append((f"{len(tamam)} görev", PUAN["gorev"] * len(tamam) + (PUAN["gorev_hepsi"] if len(tamam) == len(G) and G else 0)))
+    sunulan = set(ek_gorevler_gun(t, bag))
+    for kod in (d.get("ek_gorev") or {}):
+        if kod in EK and kod in sunulan:
+            K.append((EK[kod][0], EK[kod][1]))
+    for ad, k in (("rekor", "Kişisel rekor"), ("basamak", "Basamak yukarı"), ("hedef", "Hedef tamam")):
+        if ek_olay.get(ad):
+            K.append((k if ek_olay[ad] == 1 else f"{ek_olay[ad]} {k.lower()}", PUAN[ad] * ek_olay[ad]))
+    return sum(p for _, p in K), [{"ad": a, "puan": p} for a, p in K]
+
+
+def ek_gorev_isaretle(t, kod, tamam=True):
+    if kod not in EK:
+        raise ValueError("Bilinmeyen görev.")
+
+    def degis(d):
+        e = d.get("ek_gorev") or {}
+        if tamam:
+            e[kod] = int(__import__("time").time())
+        else:
+            e.pop(kod, None)
+        d["ek_gorev"] = e
+    pt.gun_degistir(t, degis)
+    with _kilit:
+        _onbellek.clear()
+    return pt.gun(t).get("ek_gorev") or {}
+
+
 def _imza():
     """Sonucu etkileyen dosyaların değişiklik zamanları: değişmedikçe önbellek kullanılır."""
     en, n = 0, 0
@@ -87,7 +188,8 @@ def _imza():
         except FileNotFoundError:
             pass
     il = pt.VERI / "ilerleme.json"
-    return (pt.bugun().isoformat(), en, n, il.stat().st_mtime_ns if il.exists() else 0)
+    hd = pt.VERI / "hedefler.json"
+    return (pt.bugun().isoformat(), en, n, il.stat().st_mtime_ns if il.exists() else 0, hd.stat().st_mtime_ns if hd.exists() else 0)
 
 
 def _gun_dosyalari():
@@ -127,7 +229,9 @@ def _gorev_baglam():
         protein = pt_beslenme.hedefler(p).get("protein")
     except Exception:
         protein = None
-    return {"su": pt.su_hedefi(p), "protein": protein, "aliskanlik": bool((p.get("aliskanlik") or {}).get("metin"))}
+    masa = any("masa" in str(x.get("cevap", "")).lower() for x in p.get("ek_bilgi") or []) or (p.get("gun_duzeni") or {}).get("is_yeri") in ("ofis", "ev_masa")
+    return {"su": pt.su_hedefi(p), "protein": protein, "aliskanlik": bool((p.get("aliskanlik") or {}).get("metin")), "masa": masa,
+            "kalp": bool((p.get("tarama") or {}).get("kalp"))}
 
 
 def _protein(d):
@@ -198,8 +302,14 @@ def _hesapla():
     seri = en_uzun = ardisik = 0
     koruma = KORUMA_BAS
     kayitlar, olaylar, kopus = [], [], None
-    sayac = {"seans": 0, "dk": 0, "sabah": 0, "bjj": 0, "rekor": 0, "mukemmel": 0, "en_uzun": 0, "gorev": 0, "program": 0}
+    sayac = {"seans": 0, "dk": 0, "sabah": 0, "bjj": 0, "rekor": 0, "mukemmel": 0, "en_uzun": 0, "gorev": 0, "program": 0, "puan": 0}
     bag = _gorev_baglam()
+    hedef_tamam = {}
+    for h in pt._json(pt.VERI / "hedefler.json", {}).get("hedefler") or []:
+        if h.get("durum") == "tamam" and h.get("tamam_tarih"):
+            hedef_tamam[h["tamam_tarih"]] = hedef_tamam.get(h["tamam_tarih"], 0) + 1
+    hafta_bas = (bugun - dt.timedelta(days=bugun.weekday())).isoformat()
+    hafta_puan, bugun_kalemler, bugun_ek = 0, [], []
     biten_prog = sorted((x.get("tarih") or "", x.get("kod")) for x in pt.profil().get("program_biten") or [])
     gorev_gunleri, bugun_gorev = [], []
     rozet_tarih, en_iyi, ilk = {}, {}, {}
@@ -215,6 +325,7 @@ def _hesapla():
         tamam = gun_tamam(hedef, d)
         bugun_mu = g_ == bugun
         basladi = basladi or tamam
+        rekor_gun = 0
         # birikimli sayaçlar (rozetler için)
         for s in d.get("seanslar") or []:
             if not s.get("bitti"):
@@ -228,6 +339,7 @@ def _hesapla():
                 k, m = h.get("kod"), max(v)
                 if k in en_iyi and m > en_iyi[k]:
                     sayac["rekor"] += 1
+                    rekor_gun += 1
                     olaylar.append({"id": f"rekor:{k}:{t}", "tarih": t, "tur": "rekor", "kod": k, "deger": m, "onceki": en_iyi[k]})
                 en_iyi[k] = max(m, en_iyi.get(k, 0))
                 ilk.setdefault(k, {})
@@ -248,6 +360,15 @@ def _hesapla():
             if pt_ == t:
                 olaylar.append({"id": f"program:{pk}:{t}", "tarih": t, "tur": "program", "kod": pk})
         sayac["program"] = sum(1 for x, _ in biten_prog if x <= t)
+        puan, kalemler = gun_puani(t, d, hedef, G, bag, {"rekor": rekor_gun, "basamak": sum(1 for x in basamak_gunleri if x == t), "hedef": hedef_tamam.get(t, 0)})
+        sayac["puan"] += puan
+        if t >= hafta_bas:
+            hafta_puan += puan
+        if bugun_mu:
+            bugun_kalemler = kalemler
+            sunulan = ek_gorevler_gun(t, bag)
+            isaretli = d.get("ek_gorev") or {}
+            bugun_ek = [{"kod": k, "ad": EK[k][0], "puan": EK[k][1], "aciklama": EK[k][2], "tamam": k in isaretli} for k in sunulan]
         if tamam or t in onarilan:
             durum = "tamam" if tamam else "onarildi"
             seri += 1
@@ -273,7 +394,7 @@ def _hesapla():
             seri = ardisik = 0
         en_uzun = max(en_uzun, seri)
         sayac["en_uzun"] = en_uzun
-        kayitlar.append({"tarih": t, "durum": durum, "hedef": hedef, "dk": sum(int(s.get("sure_dk") or 0) for s in d.get("seanslar") or [] if s.get("bitti"))})
+        kayitlar.append({"tarih": t, "durum": durum, "hedef": hedef, "dk": sum(int(s.get("sure_dk") or 0) for s in d.get("seanslar") or [] if s.get("bitti")), "puan": puan})
         if g_.weekday() == 6 and not bugun_mu:                  # biten hafta: yedi gün de korumasız tamam mı?
             son7 = kayitlar[-7:]
             if len(son7) == 7 and all(x["durum"] == "tamam" for x in son7):
@@ -314,7 +435,10 @@ def _hesapla():
             "koruma_sonraki": (KORUMA_ARALIK - ardisik % KORUMA_ARALIK) if koruma < KORUMA_EN_COK else None,
             "bugun": bugun_k, "onarim": onarim, "kopus": kopus, "sonraki_esik": sonraki, "gunler": kayitlar, "olaylar": olaylar,
             "rozetler": rozetler, "aileler": _aileler(rozetler, sayac), "sayac": sayac, "mukemmel_haftalar": hafta_tam,
-            "baslangic": bas.isoformat(), "gorevler": bugun_gorev, "gorev_gunleri": gorev_gunleri}
+            "baslangic": bas.isoformat(), "gorevler": bugun_gorev, "gorev_gunleri": gorev_gunleri,
+            "puan": {"bugun": bugun_k.get("puan", 0), "hedef": GUNLUK_PUAN_HEDEF, "hafta": hafta_puan, "toplam": sayac["puan"], "seviye": seviye_bul(sayac["puan"]),
+                     "kalemler": bugun_kalemler, "ek_gorevler": bugun_ek, "gun_tamam": bugun_k.get("puan", 0) >= GUNLUK_PUAN_HEDEF,
+                     "hedefli_gun": sum(1 for x in kayitlar if x.get("puan", 0) >= GUNLUK_PUAN_HEDEF)}}
 
 
 def _aileler(rozetler, sayac):
@@ -429,7 +553,7 @@ def ozet():
             "koruma_sonraki": h["koruma_sonraki"], "bugun": {**b, "metin": hedef_metni(b["hedef"], b["durum"])},
             "risk": b["durum"] == "bekliyor" and h["seri"] >= 2 and saat >= 18, "onarim": h["onarim"], "sonraki_esik": h["sonraki_esik"],
             "hafta": _hafta(h), "yeni": yeni_olaylar(h), "rozet_sayi": sum(1 for r in h["rozetler"] if r["kazanildi"]), "rozet_toplam": len(h["rozetler"]),
-            "gorevler": h["gorevler"], "gorev_gun": h["sayac"]["gorev"], "halka": hafta_halkasi(h)}
+            "gorevler": h["gorevler"], "gorev_gun": h["sayac"]["gorev"], "halka": hafta_halkasi(h), "puan": h["puan"]}
 
 
 def tam(gun_sayisi=84):
@@ -444,6 +568,9 @@ def tam(gun_sayisi=84):
                 f"Koruma yokken seri koparsa, {ONARIM_GUN} gün içinde 10 dakikalık telafi antrenmanıyla geri getirebilirsiniz.",
                 "Mükemmel hafta: Pazartesi'den Pazar'a korumasız, eksiksiz yedi gün.",
                 "Her gün üç görev var; ilki günün hedefi. Üçü de bitince o gün görev günü sayılır; görev rozetleri bunlardan.",
+                f"Her kayıt puan getirir: antrenman {PUAN['seans']} + dakika başına 1 (en çok {PUAN['seans_dk_ust']}), sabah kontrolü {PUAN['sabah']}, öğün {PUAN['ogun']}, "
+                f"görev {PUAN['gorev']} (üçü birden +{PUAN['gorev_hepsi']}), rekor {PUAN['rekor']}, basamak {PUAN['basamak']}, hedef {PUAN['hedef']}. Günlük hedef {GUNLUK_PUAN_HEDEF} puan.",
+                "Ek görevler isteğe bağlıdır; her gün üç tane sunulur, işaretleyince puanı gelir. Toplam puan seviyenizi belirler.",
                 "Rozetlerin seviyeleri var: her ailede bir sonraki seviye neyi istiyor, rozete dokununca görünür."]}
 
 
