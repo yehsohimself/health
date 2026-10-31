@@ -195,11 +195,21 @@ def pencere_durumu(p=None, tarih=None):
     simdi = dt.datetime.now()
     durum = "once" if simdi < acilis and not kapattim else "acik" if simdi < kapanis and not kapattim else "kapandi"
     oruc_bas = _oruc_basi(tarih)
-    return {"acilis": acilis.strftime("%H:%M"), "kapanis": kapanis.strftime("%H:%M"), "acilis_t": int(acilis.timestamp()),
+    if durum == "kapandi" and not oruc_bas:                    # yeme saati kendiliğinden bitti: oruç son yemekten (yoksa kapanıştan) sayılır
+        son = max([y.get("t") or 0 for y in d.get("yemekler") or []] or [0])
+        oruc_bas = min(son or kapanis.timestamp(), kapanis.timestamp())
+    yarin = gun0 + dt.timedelta(days=1, minutes=_dk(b.get("pencere_bas")))
+    sonuc = {"acilis": acilis.strftime("%H:%M"), "kapanis": kapanis.strftime("%H:%M"), "acilis_t": int(acilis.timestamp()),
             "kapanis_t": int(kapanis.timestamp()), "durum": durum, "saat": saat, "kaydirildi": bool(d.get("pencere_bas")),
             "acildi": bool(d.get("oruc_acildi")), "kapattim": kapattim,
             "acildi_t": d.get("oruc_acildi"), "kapandi_t": d.get("oruc_kapandi"),
-            "oruc_bas_t": int(oruc_bas) if oruc_bas else None, "hedef_oruc": 24 - saat}
+            "oruc_bas_t": int(oruc_bas) if oruc_bas else None, "hedef_oruc": 24 - saat, "sonraki_acilis_t": int(yarin.timestamp())}
+    try:
+        import pt_oruc
+        sonuc["oruc"] = pt_oruc.durum(sonuc)
+    except Exception:  # noqa: BLE001
+        sonuc["oruc"] = None
+    return sonuc
 
 
 def _oruc_basi(tarih):

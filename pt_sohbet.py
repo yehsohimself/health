@@ -33,6 +33,7 @@ SABAH KONTROLÜ: {sabah}
 BU HAFTA: {hafta}
 SON KAYITLAR: {son}
 APPLE SAĞLIK (son günler): {saglik}
+ORUÇ (koddan; oruç, otofaji, açlık, yemek saati sorulursa bunu kullan, saatleri yaklaşık söyle, otofajinin insanlarda başlama saatinin ölçülemediğini açıkça söyle; spor varsa birlikte yorumla): {oruc}
 BU HAFTANIN SAĞLIK DOZU: {doz}
 MODÜLLER: {moduller}
 KURALLAR (kodda, değiştirme): {kurallar}
@@ -46,7 +47,7 @@ JSON döndür:
   "kartlar": ["gerekirse göster: seans (bugünün seansı, başlat düğmesiyle) | doz (haftalık sağlık dozu) | nefes (nefes çalışması başlat) | program (haftalık yapı) | kilo (kilo eğrisi) | hareket:<kod> (hareketin kartı)"],
   "kayitlar": [{{"tur": "aktivite|yemek|kilo|uyku|su", "tarih": "YYYY-MM-DD",
      "spor": "futbol|basketbol|tenis|voleybol|padel|yuzme|kosu|yuruyus|bisiklet|jiujitsu|yoga|fitness|dans|diger", "ad": "kısa ad: 'Futbol (büyük saha)'",
-     "sure_dk": sayı, "zorluk": 1-10, "not": "...", "metin": "yemek için: yenen her şey miktarıyla", "ogun": "kahvalti|ogle|aksam|ara",
+     "sure_dk": sayı, "zorluk": 1-10, "saat": "aktivite bittiği saat HH:MM, söylendiyse", "not": "...", "metin": "yemek için: yenen her şey miktarıyla", "ogun": "kahvalti|ogle|aksam|ara",
      "kilo_kg": sayı, "bel_cm": sayı, "uyku_saat": sayı, "ml": sayı}}],
   "soru": null ya da {{"soru": "...", "secenekler": ["3-5 kısa, aynı düzeyde seçenek"]}},
   "eylem": null ya da {{"tur": "bugun|hafta|tasi|profil|not|dinlenme", "aciklama": "kullanıcıya tek cümle: ne değişecek",
@@ -88,6 +89,15 @@ def kayit_isle(k):
         ad = str(k.get("ad") or ad0)[:60]
         seans = {"id": f"k{int(time.time() * 1000)}", "tur": st, "baslik": ad, "sure_dk": dk, "zorluk": zor, "kaynak": "sohbet", "spor": spor,
                  "not": str(k.get("not") or "")[:200]}
+        sa = str(k.get("saat") or "")
+        if len(sa) >= 4 and ":" in sa:                          # "bitti" saati söylendiyse oruç fazına doğru yerleşsin
+            try:
+                h, m = (int(x) for x in sa.split(":")[:2])
+                bt = dt.datetime.combine(dt.date.fromisoformat(t), dt.time(h % 24, m % 60)).timestamp()
+                if bt <= time.time() + 60:
+                    seans["bitis_t"] = int(bt)
+            except ValueError:
+                pass
         if st in ("spor", "kardiyo", "bisiklet"):
             yog = "aralik" if zor >= 7 else "orta" if zor >= 5 else "kolay"
             seans["bisiklet" if st == "bisiklet" else "kardiyo"] = {"tur": spor, "sure_dk": dk, "yogunluk": yog}
@@ -206,7 +216,8 @@ def baglam():
         hafta=json.dumps([{"id": g.get("id"), "tarih": g["tarih"], "tur": g["tur"], "baslik": g.get("baslik")} for g in pl.get("gunler") or []], ensure_ascii=False),
         son=json.dumps(son[:20], ensure_ascii=False), kurallar=" ".join(pt.KURALLAR_METNI), bolgeler="|".join(pt.BOLGELER),
         saglik=_g(_saglik_ozet, "yok"), doz=_g(lambda: json.dumps(__import__("pt_uzun").doz_ozeti().get("satirlar"), ensure_ascii=False), "yok"),
-        moduller=_g(lambda: ", ".join(f"{m['ad']}{' (bugün yapıldı)' if m.get('bitti') else ''}" for m in __import__("pt_modul").gunun()) or "yok", "yok"))
+        moduller=_g(lambda: ", ".join(f"{m['ad']}{' (bugün yapıldı)' if m.get('bitti') else ''}" for m in __import__("pt_modul").gunun()) or "yok", "yok"),
+        oruc=_g(lambda: __import__("pt_oruc").anlat(__import__("pt_beslenme").pencere_durumu(p).get("oruc")), "yok"))
 
 
 def _g(fn, v=""):

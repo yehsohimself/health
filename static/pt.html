@@ -759,6 +759,23 @@ body:has(.perde) #yazDock,body:has(.nfo) #yazDock,body:has(#oyn) #yazDock,body:h
 .hk-mini{flex:none;display:flex;gap:3px;align-items:flex-end;height:38px;width:44px}.hk-mini i{flex:1;border-radius:4px;background:var(--vurgu);animation:hkMini 1.6s ease-in-out infinite;animation-delay:calc(var(--g) * 160ms)}
 @keyframes hkMini{0%,100%{height:30%}50%{height:100%}}
 @media (prefers-reduced-motion: reduce){.hk-hik *,.hk-hik::before,.hk-mini i,.hs-av path,.hs-b .kel{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important}}
+/* Oruç fazları (2026-10-31): şu an hangi fazdasınız, vücutta ne oluyor, sıradaki yemek; spor birleşir */
+.orf{margin-top:14px;padding-top:14px;border-top:1px solid var(--cizgi)}
+.orf-ust{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.orf-ust b{font-size:16px}
+.orf-serit{position:relative;height:30px;margin:14px 0 4px}
+.orf-serit .bant{position:absolute;top:8px;height:8px;border-radius:4px;background:var(--yuzey3);opacity:.55}
+.orf-serit .bant.gecti{background:var(--vurgu);opacity:.35}
+.orf-serit .bant.su{background:var(--vurgu);opacity:1}
+.orf-serit .imle{position:absolute;top:2px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:var(--vurgu);box-shadow:0 0 0 0 rgba(var(--vurgu-rgb),.6);animation:orfNabiz 2.2s infinite}
+.orf-serit .yemek{position:absolute;top:0;margin-left:-11px;font-size:16px;line-height:24px;width:22px;text-align:center}
+.orf-etk{position:relative;height:16px;font-size:11.5px;color:var(--ink3)}
+.orf-etk span{position:absolute;white-space:nowrap;transform:translateX(-0%)}
+@keyframes orfNabiz{0%{box-shadow:0 0 0 0 rgba(var(--vurgu-rgb),.55)}70%{box-shadow:0 0 0 10px rgba(var(--vurgu-rgb),0)}100%{box-shadow:0 0 0 0 rgba(var(--vurgu-rgb),0)}}
+.orf ul{margin:10px 0 0;padding-left:18px}.orf li{margin:4px 0;font-size:14px;line-height:1.45}
+.orf .not{margin-top:10px}
+.orf .kucuk{font-size:12.5px;color:var(--ink3);margin-top:8px}
+@media (prefers-reduced-motion:reduce){.orf-serit .imle{animation:none}}
 </style>
 <link rel="stylesheet" href="/static/pt_gorsel.css?v=5">
 </head>
@@ -1259,11 +1276,48 @@ function pencereKart(sade){
   return `<div class="kart"><div class="satir" style="gap:16px;flex-wrap:nowrap">
     <div class="halka"><svg viewBox="0 0 86 86"><circle cx="43" cy="43" r="${r}" fill="none" stroke="var(--yuzey3)" stroke-width="7"/><circle cx="43" cy="43" r="${r}" fill="none" stroke="${pen.durum === 'acik' ? 'var(--vurgu)' : 'var(--ink3)'}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${cv}" stroke-dashoffset="${cv * (1 - oran)}"/></svg><div class="ic"><div><b>${ust}</b>${alt}</div></div></div>
     <div style="flex:1;min-width:0"><span class="mono">Yeme saatleri</span><div style="font-weight:600;font-size:16px;margin:2px 0">${pen.acilis} – ${pen.kapanis}</div>
-      <div class="gri2" style="font-size:13.5px">${pen.oruc_bas_t ? `Oruç ${sure(simdi - pen.oruc_bas_t)} · hedef ${pen.hedef_oruc} sa. ` : ''}${sade ? (pen.durum === 'once' ? 'İlk öğünde protein olsun.' : '') : top.kcal ? `${top.kcal} / ${h.kcal || '–'} kcal · ${top.protein} / ${h.protein || '–'} g protein` : (pen.durum === 'once' ? 'İlk öğünde protein olsun.' : 'Henüz yemek kaydı yok.')}</div>
+      <div class="gri2" style="font-size:13.5px">${pen.oruc_bas_t && !pen.oruc ? `Oruç ${sure(simdi - pen.oruc_bas_t)} · hedef ${pen.hedef_oruc} sa. ` : ''}${sade ? (pen.durum === 'once' ? 'İlk öğünde protein olsun.' : '') : top.kcal ? `${top.kcal} / ${h.kcal || '–'} kcal · ${top.protein} / ${h.protein || '–'} g protein` : (pen.durum === 'once' ? 'İlk öğünde protein olsun.' : 'Henüz yemek kaydı yok.')}</div>
       ${oructaSatir(pen)}
       ${sade ? '' : `<div class="satir" style="gap:14px;margin-top:4px">${hizliFotoHtml('metin')}<button class="metin" data-yemek>Yazarak ekle</button>${S.o.dun_ogun ? '<button class="metin" data-dunku>Dünkü gibi</button>' : ''}</div>`}</div></div>
-    ${oneri ? `<div class="not">${esc(oneri.neden)} <button class="metin" data-kaydir="${oneri.yeni}">Pencereyi bugün ${oneri.yeni}'de aç</button></div>` : ''}</div>`;
+    ${oneri ? `<div class="not">${esc(oneri.neden)} <button class="metin" data-kaydir="${oneri.yeni}">Pencereyi bugün ${oneri.yeni}'de aç</button></div>` : ''}
+    ${pen.oruc ? `<div class="orf" data-orf>${orucFazHtml(pen.oruc)}</div>` : ''}</div>`;
 }
+/* Şu an hangi fazdasınız: son yemekten geçen süre + oruçtaki antrenmanın glikojen eşdeğeri (kayma). Dakikada bir yerinde güncellenir. */
+function orucFazHtml(o){
+  const simdi = Date.now() / 1000, sa = (simdi - o.bas_t) / 3600, et = sa + (o.kayma_sa || 0);
+  const F = o.fazlar || [], fz = F.reduce((a, x) => et >= x.bas ? x : a, F[0]), sonraki = F.find(x => x.bas > et);
+  const oto = (o.otofaji || []).reduce((a, x) => et >= x.bas ? x : a, (o.otofaji || [])[0]);
+  const kalan = o.sonraki_t ? o.sonraki_t - simdi : null;
+  const ust = Math.max(24, Math.ceil((sa + Math.max(0, kalan || 0) / 3600 + (o.kayma_sa || 0)) / 4) * 4), yuz = h => Math.min(100, Math.max(0, h / ust * 100));
+  const sinir = F.map(x => x.bas).filter(b => b < ust).concat([ust]);
+  let serit = '';
+  for (let i = 0; i < sinir.length - 1; i++){ const a = sinir[i], b = sinir[i + 1], cls = et >= b ? 'gecti' : et >= a ? 'su' : '';
+    serit += `<i class="bant ${cls === 'su' ? '' : cls}" style="left:calc(${yuz(a)}% + 1px);width:calc(${yuz(b) - yuz(a)}% - 2px)"></i>`;
+    if (cls === 'su') serit += `<i class="bant su" style="left:calc(${yuz(a)}% + 1px);width:max(0px,calc(${yuz(et) - yuz(a)}% - 1px))"></i>`; }
+  serit += `<i class="imle" style="left:${yuz(et)}%" title="Şu an"></i>`;
+  if (kalan > 0) serit += `<span class="yemek" style="left:${yuz(et + kalan / 3600)}%" title="Sıradaki yemek">🍽</span>`;
+  const etk = F.filter(x => x.bas < ust && x.bas <= 24).map(x => `<span style="left:${yuz(x.bas)}%">${x.bas ? x.bas + ' sa' : 'son yemek'}</span>`).join('');
+  const saat = t => new Date(t * 1000).toLocaleTimeString('tr-TR', {hour: '2-digit', minute: '2-digit'});
+  const sp = o.spor || [];
+  let spor = '';
+  if (sp.length){
+    const ad = sp.map(x => `${esc(x.ad)} (${x.dk} dk)`).join(', ');
+    spor = `<div class="not">${ad} orucun içinde yapıldı. Kaslar ve karaciğer şeker deposunu daha erken harcadı; bu yüzden faz yaklaşık ${virgul(o.kayma_sa)} saat ileride sayılıyor.`
+      + (sp.some(x => x.guc || x.yogunluk === 'aralik') ? ` Kasların onarımı için ilk öğünü proteinle açın${o.protein_g ? ` (yaklaşık ${o.protein_g} g)` : ''}.` : '')
+      + (et >= 16 && sp.some(x => x.yogunluk === 'aralik') ? ' Uzun oruçta zorlu antrenman toparlanmayı yavaşlatır; bugün yeme saatini erkene almak iyi bir seçenek.' : '') + '</div>';
+  }
+  return `<div class="orf-ust"><div><span class="mono">Şu an</span><br><b>${esc(fz.ad)}</b> <span class="gri">· son yemekten ${sure(sa * 3600)}</span></div>
+      <div style="text-align:right">${kalan > 0 ? `<span class="mono">Sıradaki yemek</span><br><b>${sure(kalan)}</b> <span class="gri">sonra · ${saat(o.sonraki_t)}</span>` : kalan !== null ? '<b>Yeme saatiniz geldi</b>' : ''}</div></div>
+    <div class="orf-serit">${serit}</div><div class="orf-etk">${etk}</div>
+    <div style="margin-top:12px;font-weight:600;font-size:14px">Vücudunuzda şu an</div>
+    <ul>${fz.simdi.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    ${oto ? `<div style="font-size:14px;margin-top:8px"><b>Otofaji:</b> ${esc(oto.metin)}</div>` : ''}
+    ${sonraki ? `<div class="kucuk">Sıradaki faz: ${esc(sonraki.ad)} · yaklaşık ${sure((sonraki.bas - et) * 3600)} sonra</div>` : ''}
+    ${spor}
+    <div class="kucuk">Saatler yaklaşık; kişiden kişiye, son yemeğin içeriğine ve hareketinize göre değişir.</div>`;
+}
+setInterval(() => { const o = S.o && S.o.beslenme && S.o.beslenme.hedef && S.o.beslenme.hedef.pencere && S.o.beslenme.hedef.pencere.oruc;
+  if (o && !document.hidden) document.querySelectorAll('[data-orf]').forEach(el => { el.innerHTML = orucFazHtml(o); }); }, 60000);
 /* Oruç tek dokunuşları (2026-10-28): yemek kaydı olmasa da açılış ve kapanış işaretlenir; pencere ve oruç süresi buna göre. */
 function oructaSatir(pen){
   const yemek = (S.o.bugun.yemekler || S.o.gunluk && S.o.gunluk.yemekler || []).length;

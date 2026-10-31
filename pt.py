@@ -1404,6 +1404,7 @@ def seans_kaydet(tarih, seans):
     seans["tarih"] = tarih
     seans.setdefault("id", f"s{int(time.time() * 1000)}")
     seans["bitti"] = True
+    seans.setdefault("bitis_t", int(time.time()) if tarih == bugun().isoformat() else None)   # oruç fazı hesabı için
     try:
         seans["yuk"] = int(float(seans.get("zorluk") or 0) * float(seans.get("sure_dk") or 0))   # seans zorluğu × dakika
     except (TypeError, ValueError):
