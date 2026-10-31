@@ -147,6 +147,90 @@ function nasilSayfa(){
   return p;
 }
 
+/* ---------- diğer sekmeler: amaç başlığı + "Bu sayfada" + bölüm açıklamaları (2026-10-31, aynı istek, ikinci tur) ----------
+   Sekmeler kendi içeriklerini (bazıları geç gelen veriyle) çizer; burada #main değiştikçe üstüne sayfa başlığı eklenir. İçerik silinmez. */
+const SAYFA = {
+  plan: {ayak: 'hareket', ad: 'Antrenman', amac: 'Hareket işinin planı. Health haftanızı güç, kardiyo ve denge dozuna göre kurar; burada görür, değiştirir ve başlatırsınız.'},
+  beslenme: {ayak: 'beslenme', ad: 'Beslenme', amac: 'Beslenme işinin yeri. Ne yediğinizi kaydedin; kalori ve proteini Health hesaplar, yeme saatlerinizi ve oruçta vücudunuzda olanları gösterir.'},
+  ilerleme: {ayak: null, ad: 'İlerleme', amac: 'Uzun ve sağlıklı yaşamın göstergeleri: kondisyon, güç, denge, kilo. Yaptıklarınız burada birikir; neyin değiştiğini görürsünüz.',
+    ikon: '<svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>'}
+};
+const ALT_ACIK = {
+  program: 'Bu haftanın günleri. Bir güne dokunun: neden o gün, hangi hareketler; oradan başlatın ya da başka güne taşıyın.',
+  hizli: 'Vaktiniz az ya da plan dışı bir gün mü? Süreyi ve yeri seçin, seviyenize göre kısa bir antrenman kurulur.',
+  programlar: 'Bir hedefe giden birkaç haftalık hazır yollar: ilk barfiks, amut, hareketlilik… Katılırsanız haftalık planınıza girer.',
+  hareketler: 'Bütün hareketler: nasıl yapılır, hangi kası çalıştırır, sizin seviyeniz neresi.'
+};
+const BOLUM_ACIK = {
+  'Öğünler': 'Fotoğraf çekin ya da yazın; miktarı ve besin değerini Health hesaplar.',
+  'Kilo': 'Haftada birkaç kez, sabah aç karna tartılın. Tek gün değil, çizgi önemli.',
+  'Yeme saatleri': 'Ne zaman yiyip ne zaman ara verdiğiniz. Oruçtayken hangi fazda olduğunuzu ve sıradaki yemeğe kalan süreyi gösterir.',
+  'Haftalık menü': 'Hedefinize ve yeme saatlerinize göre yazılmış bir hafta; alışveriş listesiyle.',
+  'Takviyeler': 'Bilgi için; reçete değil. Kullanmadan önce doktorunuza danışın.',
+  'Uzun ömür': 'Yaşla en çok kaybedilen yetenekler. Hangisini ölçtüğünüzü ve yaşıtlarınıza göre nerede olduğunuzu gösterir.',
+  'Rozetler': 'Düzenli kaldıkça kazanılır: seri, görevler, rekorlar.',
+  'Kas toparlanması': 'Hangi kas grubu dinlendi, hangisi yorgun. Kısa antrenman bu bilgiyle kurulur.',
+  'Hedef becerileriniz': 'Hedef hareketlere giden basamaklar ve sıradakinin şartı.',
+  'Son değişiklikler': 'Antrenmanlarınıza bakıp Health\'in programda değiştirdikleri.',
+  'Testler': 'Ara ara yapılan ölçümler; program başlangıç noktasını bunlardan alır.',
+  'Dinlenmiş mi, yorgun mu?': 'Son haftaların yükü. Fazla yüklendiğinizde hafif hafta gelir.',
+  'Bir şey değişirse': 'Plan beklenmedik durumlara kendiliğinden şöyle uyar.',
+  'Jiu-jitsu': 'Derslerde zorlandığınız pozisyonlar ve onlar için evde çalışmalar.',
+  'Form kontrolü': 'Bir setinizi kaydedin; açıları ölçüp tek bir düzeltme önereyim.',
+  'Fotoğraflar': 'Yalnız bu cihazda saklanır.',
+  'Koçunuzun haftalık mesajı': 'Her pazar: geçen hafta ne oldu, gelecek hafta ne değişecek.'
+};
+const bolumAdi = h => (h.childNodes[0] && h.childNodes[0].nodeType === 3 ? h.childNodes[0].textContent : h.textContent).trim();
+function sayfaSusle(){
+  const sk = S.sek, C = SAYFA[sk], m = $('#main');
+  if (!C || !m || !m.firstElementChild) return;
+  if (m.children.length < 2 && m.querySelector('.donen')) return;                              // içerik henüz gelmedi
+  const A = C.ayak ? AYAK[C.ayak] : {renk: 'var(--ink)', ikon: C.ikon};
+  let head = m.querySelector(':scope > .an-sayfa');
+  if (!head){
+    let ek = '';
+    const ilk = [...m.children].slice(0, 4), mono = ilk.find(e => e.matches('p.mono')), h1 = ilk.find(e => e.matches('h1.bas')), alt = ilk.find(e => e.matches('p.alti'));
+    if (sk === 'ilerleme' || sk === 'beslenme'){                                                // sekmenin eski başlığı yerine bu başlık
+      ek = sk === 'ilerleme' ? (mono || {}).textContent || '' : (alt || {}).textContent || '';
+      [mono, h1, alt].forEach(e => e && e.remove());
+    }
+    head = document.createElement('section'); head.className = 'an-sayfa';
+    head.innerHTML = `<div class="an-sbas"><span class="an-dik buyuk" style="color:${A.renk}">${A.ikon}</span><div>
+        ${C.ayak ? `<span class="mono">Üç işten biri · ${esc(A.ad)}</span>` : '<span class="mono">Üç işin toplamı</span>'}<h1 class="bas">${esc(C.ad)}</h1></div></div>
+      <p class="an-amac">${esc(C.amac)}${ek ? ` <span class="gri">${esc(ek)}</span>` : ''}</p><div class="an-git"></div>`;
+    m.insertBefore(head, m.firstElementChild);
+  }
+  if (sk === 'beslenme'){                                                                       // başlıksız iki büyük kart için bölüm adı
+    const pk = [...m.querySelectorAll(':scope > .kart')].find(k => /Yeme saatleri/.test((k.querySelector('.mono') || {}).textContent || ''));
+    if (pk && !(pk.previousElementSibling || {}).matches?.('h2.bolum')) pk.insertAdjacentHTML('beforebegin', '<h2 class="bolum">Yeme saatleri</h2>');
+    const mk = m.querySelector(':scope > #menuKart');
+    if (mk && !(mk.previousElementSibling || {}).matches?.('h2.bolum')) mk.insertAdjacentHTML('beforebegin', '<h2 class="bolum">Haftalık menü</h2>');
+  }
+  const altsek = m.querySelector(':scope > .altsek');
+  if (altsek && ALT_ACIK[S.alt]){
+    const sonra = [];
+    for (let e = altsek.nextElementSibling; e && sonra.length < 4; e = e.nextElementSibling) sonra.push(e);
+    const kendi = sonra.find(e => e.matches('h1.bas')), mevcut = m.querySelector('.an-altacik');
+    if (kendi && S.alt === 'program'){ kendi.classList.add('an-altbas'); const a2 = kendi.nextElementSibling;
+      if (mevcut && mevcut.previousElementSibling !== (a2 && a2.matches('p.alti') ? a2 : kendi)) mevcut.remove();
+      if (!m.querySelector('.an-altacik')) (a2 && a2.matches('p.alti') ? a2 : kendi).insertAdjacentHTML('afterend', `<p class="alti an-altacik">${esc(ALT_ACIK.program)}</p>`); }
+    else if (kendi){ if (mevcut) mevcut.remove(); kendi.classList.add('an-altbas');
+      const a2 = kendi.nextElementSibling; if (S.alt !== 'program' && a2 && a2.matches('p.alti') && !a2.dataset.an){ a2.textContent = ALT_ACIK[S.alt]; a2.dataset.an = 1; } }
+    else if (!mevcut) altsek.insertAdjacentHTML('afterend', `<p class="alti an-altacik">${esc(ALT_ACIK[S.alt])}</p>`);
+  }
+  $$('h2.bolum', m).forEach(h => { const ad = bolumAdi(h), a = BOLUM_ACIK[ad];
+    if (a && !(h.nextElementSibling && h.nextElementSibling.classList.contains('an-bacik'))) h.insertAdjacentHTML('afterend', `<p class="an-bacik">${esc(a)}</p>`);
+    if (!h.id) h.id = 'b-' + ad.toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]+/g, '-'); });
+  const B = $$('h2.bolum', m).map(h => [h.id, bolumAdi(h)]), git = head.querySelector('.an-git'), imza = B.map(x => x[0]).join('|');
+  if (git.dataset.imza !== imza){
+    git.dataset.imza = imza;
+    git.innerHTML = B.length > 1 ? `<span class="mono">Bu sayfada</span>${B.map(([id, ad]) => `<button data-git="${id}">${esc(ad)}</button>`).join('')}` : '';
+    $$('[data-git]', git).forEach(b => b.onclick = () => { const h = document.getElementById(b.dataset.git); if (h) h.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'}); });
+  }
+}
+const mainEl = document.getElementById('main');
+if (mainEl){ let bekle = 0; new MutationObserver(() => { clearTimeout(bekle); bekle = setTimeout(sayfaSusle, 30); }).observe(mainEl, {childList: true, subtree: true}); }
+
 window.bugunCiz = function(){
   const o = S.o, m = $('#main');
   const {h, N} = anaHtml();

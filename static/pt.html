@@ -778,7 +778,7 @@ body:has(.perde) #yazDock,body:has(.nfo) #yazDock,body:has(#oyn) #yazDock,body:h
 @media (prefers-reduced-motion:reduce){.orf-serit .imle{animation:none}}
 </style>
 <link rel="stylesheet" href="/static/pt_gorsel.css?v=5">
-<link rel="stylesheet" href="/static/pt_ana.css?v=3">
+<link rel="stylesheet" href="/static/pt_ana.css?v=5">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="alevGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd84d"/><stop offset="1" stop-color="#ff7a1a"/></linearGradient></defs></svg>
@@ -3731,7 +3731,7 @@ async function hizliCiz(){
   const on = S.hz.onerilen || {}, OD = [...S.hz.odaklar].sort((a, b) => (b.kod === on.odak) - (a.kod === on.odak));
   if (HZ.odak === 'onerilen' || !OD.find(x => x.kod === HZ.odak)) HZ.odak = on.odak || 'tum';
   const kart = (kod, ad, alt, rozet) => `<button class="odak ${HZ.odak === kod ? 'on' : ''}" data-odak="${kod}" style="${odakGorsel(kod) ? `background-image:url('${odakGorsel(kod)}')` : ''}">${rozet ? `<span class="oner">${rozet}</span>` : ''}<span><b>${esc(ad)}</b><small>${esc(alt)}</small></span></button>`;
-  m.innerHTML = altSekHtml() + `<h1 class="bas">Hızlı antrenman.</h1><p class="alti">Süreyi ve odağı seçin; seans seviyenize ve ekipmanınıza göre hemen kurulur.</p>
+  m.innerHTML = altSekHtml() + `<h1 class="bas">Kısa antrenman.</h1><p class="alti">Süreyi ve odağı seçin; seans seviyenize ve ekipmanınıza göre hemen kurulur.</p>
     <span class="etk">Süre</span><div class="surebtn" id="hzSure">${S.hz.sureler.map(d => `<button data-v="${d}" class="${HZ.sure === d ? 'on' : ''}">${d}<small>dk</small></button>`).join('')}</div>
     <span class="etk">Odak</span><div class="odaklar" id="hzOdak">${OD.map(x => x.kod === on.odak ? kart(x.kod, x.ad, on.neden || x.aciklama, 'Önerilen') : kart(x.kod, x.ad, x.aciklama)).join('')}</div>
     <span class="etk">Nerede?</span><div class="seg" id="hzYer">${[['ev', 'Evde'], ['park', 'Parkta'], ['yolda', 'Yolda, ekipmansız']].map(([k, a]) => `<button data-v="${k}" class="${HZ.nerede === k ? 'on' : ''}">${a}</button>`).join('')}</div>
@@ -3898,7 +3898,7 @@ if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.reg
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !mesgul()) yukle(true); });
 yukle();
 </script>
-<script src="/static/pt_ana.js?v=4"></script>
+<script src="/static/pt_ana.js?v=9"></script>
 <script src="/static/pt_gorsel.js?v=6"></script>
 </body>
 </html>

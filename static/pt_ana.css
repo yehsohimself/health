@@ -63,3 +63,20 @@
 @media (prefers-reduced-motion:reduce){.an-dol,.an-dg{animation:none}.an-nok{animation:none}.an-isik{display:none}}
 .an-daha{margin-bottom:12px}.an-daha summary{cursor:pointer;color:var(--ink2);font-size:14px;padding:6px 0 12px;list-style:none}
 .an-daha summary::-webkit-details-marker{display:none}.an-daha summary::before{content:'＋ ';color:var(--vurgu)}.an-daha[open] summary::before{content:'－ '}
+
+/* diğer sekmelerin başı */
+.an-sayfa{margin-bottom:6px}
+.an-sbas{display:flex;gap:14px;align-items:center}
+.an-sbas h1.bas{margin:2px 0 0}
+.an-dik.buyuk{width:52px;height:52px;border-radius:16px}
+.an-dik.buyuk svg{width:28px;height:28px}
+.an-sayfa .an-amac{margin-bottom:10px}
+.an-git{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 18px}
+.an-git:empty{margin:0 0 8px}
+.an-git .mono{margin-right:4px}
+.an-git button{border:1px solid var(--cizgi2);background:none;color:var(--ink2);border-radius:99px;padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+.an-git button:hover{color:var(--ink);border-color:var(--ink3)}
+.an-bacik{margin:-6px 0 10px;color:var(--ink2);font-size:14px;line-height:1.45}
+h2.bolum{scroll-margin-top:calc(var(--navh,60px) + 70px)}
+.an-altbas{font-size:22px !important;margin-top:14px !important}
+@media (max-width:520px){.an-git{flex-wrap:nowrap;overflow-x:auto;margin-left:-16px;margin-right:-16px;padding:0 16px 2px;scrollbar-width:none}.an-git::-webkit-scrollbar{display:none}.an-git button,.an-git .mono{flex:none}}
