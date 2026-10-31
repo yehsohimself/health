@@ -1,43 +1,63 @@
 <div align="center">
 
-<img src="static/logo/pt.svg" width="72" alt="PT logo">
+<img src="static/logo/pt.svg" width="72" alt="Health logo">
 
-# PT
+# Health
 
-**A personal trainer and nutrition coach that lives on your Mac.**
+**A health team that lives on your Mac: trainer, endurance coach, dietitian, physio, sleep coach, longevity specialist and a mind-body coach.**
 
-It gets to know you, decides what your week should be made of, tests where you are, writes your week, adjusts every morning to how you slept,
-counts your sets out loud, and tells you *why* it changed something.
+You describe your needs and your life. Health decides what your week is made of, tells you *why*, adjusts every morning,
+counts your sets out loud, and keeps nudging you toward a long, healthy life.
 
 ![macOS](https://img.shields.io/badge/macOS-Apple%20silicon-111?logo=apple)
 ![Local-first](https://img.shields.io/badge/data-stays%20on%20your%20Mac-c4f23a)
 ![Python](https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-<img src="docs/library.jpg" alt="PT exercise library: 78 movements with photo storyboards and highlighted muscles" width="900">
+<img src="docs/library.jpg" alt="Health exercise library: movements with photo storyboards and highlighted muscles" width="900">
 
 </div>
 
 > **Heads-up:** the app interface is in **Turkish** today. The code, docs and this page are in English, and
-> [translations are the most wanted contribution](#contributing).
+> [translations are the most wanted contribution](#contributing). Formerly called *PT*.
 
 ---
 
-## Why PT
+## Why Health
 
-Most fitness apps hand you a list of workouts. A good coach does something else: they ask questions, test you,
-watch how you respond, and change the plan for a reason they can explain. PT tries to be that coach.
+Most fitness apps hand you a list of workouts. A good team of specialists does something else: they ask about your life,
+measure where you are, decide the mix, watch how you respond, and change it for a reason they can explain.
 
-- **It adapts to today, not to an average you.** A 30-second morning check (sleep, energy, aches) turns the day
-  green, yellow or red. Yellow drops a set and keeps reps in reserve. Red turns the session into mobility or an
-  easy ride.
-- **The rules are code, not vibes.** Progression, regression, pain limits and deload weeks are fixed rules you
-  can read in the app. Claude writes the plan *within* those rules and explains every change. Every change can be undone.
-- **The numbers come from tables, not from a language model.** Meal estimates are matched to the German food
-  database (BLS 4.0); the model only picks which food it is and how many grams.
+- **You never pick methods.** Setup asks what you enjoy, which days you have, how stressed you are, how you sleep, what
+  hurts. Health composes the program: strength, easy cardio, one hard session, balance, mobility, your classes as fixed days.
+- **Modular, and it follows your trajectory.** On top of training, Health adds small *modules* when your signals call for
+  them: slow breathing, mindfulness, tai chi and qigong, morning light, a sleep routine, movement breaks, a nature walk,
+  eating to 80% full. Each one shows where it comes from (science, modern medicine, East Asian traditions, nature), how strong
+  the evidence is, and the reason it was chosen for you. When a need disappears the module leaves; when a new one shows up
+  it joins, and every change can be undone.
+- **Built for a long, healthy life.** A weekly longevity dose, ageing markers, and a chart that shows the two roads your
+  cardio fitness can take with age.
+- **The rules are code, not vibes.** Progression, pain limits, deload weeks and safety rules are fixed code you can read.
+  Claude writes and explains within them.
+- **The numbers come from tables.** Meals are matched to the German food database (BLS 4.0).
 - **Your data stays home.** Profile, workouts, weight, meal photos: all in a folder on your Mac.
 
-## A day with PT
+## Motion that explains
+
+- **Weekly rings** fill as you train (strength, cardio, balance), with the planned part shown faintly behind, and a line
+  telling you what today's session does to them.
+- **The team diagram**: light flows from each specialist to the part of the program they own.
+- **The two roads**: estimated cardio fitness against age, sedentary versus with the weekly dose, with the independent-living
+  threshold and your own point pulsing on it.
+- **A breathing player**: a glowing sphere that grows on the inhale and shrinks on the exhale, with a progress halo.
+- **Movement storyboards** that flow back and forth between start, middle and end pose.
+
+<p align="center"><img src="docs/program.jpg" width="760" alt="Here is the program I'm writing for you: the specialist team and what each one owns"></p>
+<p align="center"><img src="docs/modules.jpg" width="760" alt="Modules chosen from your signals, with source, evidence level and reason"></p>
+<p align="center"><img src="docs/longevity.jpg" width="760" alt="Cardio fitness with age: sedentary versus the weekly dose"></p>
+<p align="center"><img src="docs/breathing.jpg" width="760" alt="Breathing player"></p>
+
+## A day with Health
 
 **Morning.** Three taps for the morning check, and the session for today appears, already adjusted: the right progression step for each movement, the right number of sets, a 10-minute version if you are short on time. Your streak counts any finished session, even 10 minutes.
 
@@ -58,27 +78,27 @@ watch how you respond, and change the plan for a reason they can explain. PT tri
 On Sunday you get a short coach message (what went well, what changes next week, one habit to keep) and next
 week's plan is written with it.
 
-**You describe your life, PT composes the program.** Setup never asks *"how many calisthenics sessions do you want?"*.
+**You describe your life, Health composes the program.** Setup never asks *"how many calisthenics sessions do you want?"*.
 It asks what you enjoy (jiu-jitsu, walking, cycling, bodyweight at home…), which days you have, how long, what hurts. Then a
 team of specialists (trainer, endurance coach, dietitian, physio, sleep coach, longevity specialist, habit coach, and a
 jiu-jitsu coach if you train) answers with *"here is the program I'm writing for you"*: two strength sessions, easy cardio,
 one hard session, balance and mobility, with your classes as fixed days, one reason per line, and counts you can change.
 
 **Built for a long, healthy life.** Every week has a minimum *longevity dose*: at least two strength sessions, easy cardio
-minutes, one breathless session, balance on three days, seven hours of sleep. PT measures it from what you actually logged and
+minutes, one breathless session, balance on three days, seven hours of sleep. Health measures it from what you actually logged and
 shows it next to the plan. It also tracks the markers that best predict healthy ageing: estimated VO2max (from Apple Health or
 resting heart rate), the sit-to-stand floor test, one-leg balance, grip (dead hang), push-up and squat strength, waist-to-height
 ratio and resting heart rate. The weakest one shapes the next block.
 
-**After the intake, PT tells you what it concluded.** Like a real trainer at the end of a first session: how it sees you, which training
+**After the intake, Health tells you what it concluded.** Like a real trainer at the end of a first session: how it sees you, which training
 approach and which nutrition approach fit you and *why*, what to watch, the first three steps. The numbers in it (calories, protein, test
 results, progression steps) come from code; the model only explains them.
 
-**Three goals, set together.** Four weeks, three months, one year. PT proposes measurable candidates it can actually track (weight trend, a
+**Three goals, set together.** Four weeks, three months, one year. Health proposes measurable candidates it can actually track (weight trend, a
 test result, the next progression step, number of sessions, a streak), you accept, swap or write your own. Progress is measured from your
 records, not from your feeling.
 
-**A check-in every 14 days.** PT reads the last two weeks (adherence, effort ratings, pain, sleep, weight trend against the expected pace,
+**A check-in every 14 days.** Health reads the last two weeks (adherence, effort ratings, pain, sleep, weight trend against the expected pace,
 goal progress), asks three or four short questions and decides, with reasons, whether the program stays or changes. Safe changes are
 applied (session length, number of days, weight-loss pace); the rest goes into next week's plan.
 
@@ -97,7 +117,7 @@ applied (session length, number of days, weight-loss pace); the rest goes into n
 - Setup by tap, not by form: one question per screen, a free-text note only if you want to add something.
 - Pre-exercise health screening (PAR-Q+) and a hard stop with clear instructions if you report warning signs.
 - Two-question pain check after sessions; joint pain is followed up the next morning, muscle burn is not.
-- Talk to PT in plain language (*"my knee hurts"*, *"I only have 15 minutes"*, *"I'm travelling this week"*);
+- Talk to Health in plain language (*"my knee hurts"*, *"I only have 15 minutes"*, *"I'm travelling this week"*);
   it asks one follow-up question and proposes a change you can apply with one tap.
 
 **Nutrition**
@@ -128,16 +148,16 @@ English interface today.
 You need a Mac with Apple silicon (M1 or newer), macOS 14 or newer, [Homebrew](https://brew.sh) and Git.
 
 ```bash
-git clone https://github.com/yehsohimself/pt.git
-cd pt
+git clone https://github.com/yehsohimself/health.git
+cd health
 ./kurulum.sh
 .venv/bin/python pt_sunucu.py
 ```
 
-Open **http://127.0.0.1:8771**. From then on, double-click `PT.command`.
+Open **http://127.0.0.1:8771**. From then on, double-click `Health.command`.
 
 `kurulum.sh` installs `ffmpeg` and `uv` with Homebrew, creates a Python 3.12 environment in `.venv` and downloads the
-exercise pictures and coach voice (about 45 MB) from the [latest release](https://github.com/yehsohimself/pt/releases/latest).
+exercise pictures and coach voice (about 45 MB) from the [latest release](https://github.com/yehsohimself/health/releases/latest).
 No `sudo`, nothing installed outside the folder except the two Homebrew tools.
 
 ### Connect Claude (for plans and meal photos)
@@ -149,13 +169,13 @@ subscription. Install [Claude Code](https://claude.com/claude-code) and sign in 
 claude auth login
 ```
 
-Without it PT still runs the morning check, the player, the progression rules, streaks and manual logging,
+Without it Health still runs the morning check, the player, the progression rules, streaks and manual logging,
 but it cannot write a new plan.
 
 ### First run
 
 About two minutes of questions (goal, experience, schedule, equipment, aches, eating habits, health screening),
-then a seven-step **first week**: two short tests that set your level, then 10–15 minute sessions. After that PT
+then a seven-step **first week**: two short tests that set your level, then 10–15 minute sessions. After that Health
 writes full weeks.
 
 ## Your data
@@ -193,10 +213,11 @@ flowchart LR
 | `pt_beslenme.py`, `pt_bls.py`, `pt_yemek.py` | Targets, meal estimates, BLS lookup, weekly menu |
 | `pt_oyun.py` | Streak, freezes, badges, daily tasks |
 | `pt_uzun.py` | Weekly program mix from needs, longevity dose, ageing markers |
+| `pt_modul.py` | Modules chosen from your signals (breathing, tai chi, sleep, light…), evidence levels, safety rules |
 | `pt_hedef.py`, `pt_kontrol.py` | Three-horizon goals, intake assessment, 14-day check-ins |
 | `static/pt.html` | The whole interface, vanilla JS |
 
-Identifiers and comments are in Turkish (the project started as a personal tool). Tests:
+Identifiers and comments are in Turkish (the project started as a personal tool, then called PT, hence the `pt_` file names). Tests:
 
 ```bash
 .venv/bin/python -m pytest tests -q
@@ -207,7 +228,7 @@ Identifiers and comments are in Turkish (the project started as a personal tool)
 - Interface in Turkish only, for now.
 - Apple silicon only (macOS Vision for form checks, MLX for the coach voice).
 - Coach voice clips ship pre-generated; new sentences need the optional local voice model.
-- Not a medical device. PT gives general training and nutrition guidance; it does not diagnose.
+- Not a medical device. Health gives general training and nutrition guidance; it does not diagnose.
 
 ## Contributing
 
@@ -231,7 +252,7 @@ Barcodes: [Open Food Facts](https://openfoodfacts.org).
 
 MIT. See [LICENSE](LICENSE).
 
-> **Not medical advice.** PT is a training and nutrition helper, not a doctor or physiotherapist. If you have a
+> **Not medical advice.** Health is a training and nutrition helper, not a doctor or physiotherapist. If you have a
 > medical condition, pain that does not go away, or you are unsure whether exercise is safe for you, talk to a
 > doctor first.
 
@@ -240,9 +261,9 @@ MIT. See [LICENSE](LICENSE).
 <details>
 <summary><b>Türkçe</b></summary>
 
-PT, Mac'inizde çalışan kişisel antrenör ve beslenme koçu. Seçenekli sorularla ihtiyacınızı ve şartlarınızı öğrenir, programın
+Health, Mac'inizde çalışan kişisel antrenör ve beslenme koçu. Seçenekli sorularla ihtiyacınızı ve şartlarınızı öğrenir, programın
 yapısını kendisi kurar ("Size şöyle bir program yazıyorum"), uzun ve sağlıklı yaşam için haftalık dozu (güç, kolay kardiyo, denge)
-ve yaşlanma göstergelerini ölçer, başlangıç testiyle
+ve yaşlanma göstergelerini ölçer, bilimden, modern tıptan ve Uzak Doğu geleneklerinden modülleri (nefes, tai chi, uyku düzeni, sabah ışığı) ihtiyacınıza göre kendisi ekleyip çıkarır, başlangıç testiyle
 seviyenizi ölçer, haftanızı yazar, her sabah uyku ve enerjinize göre günü ayarlar, setleri sesli sayar ve bir
 şeyi neden değiştirdiğini söyler. İlerleme kuralları kodda ve uygulamada görünür; kalori değerleri BLS 4.0
 tablosundan gelir. Verileriniz Mac'inizde kalır. Kurulum: yukarıdaki dört komut, sonra tarayıcıda

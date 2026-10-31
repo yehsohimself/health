@@ -1,4 +1,4 @@
-"""pt_oyun.py - PT'nin seri, koruma ve rozet motoru (2026-10-27; kullanıcı: "Duolingo'nun seri oyunlaştırması çok iyi, iyice düşün").
+"""pt_oyun.py - Health'in seri, koruma ve rozet motoru (2026-10-27; kullanıcı: "Duolingo'nun seri oyunlaştırması çok iyi, iyice düşün").
 
 İlke: seri antrenmanı cezalandırmamalı. Her günün tek bir HEDEFİ var:
   - antrenman günü (planda seans var, sabah ışığı kırmızı değil): bir seans bitirmek (10 dakikalık asgari antrenman, BJJ dersi, saatten gelen

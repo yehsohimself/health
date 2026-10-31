@@ -1,4 +1,4 @@
-"""pt_kitaplik.py - PT hareket kitaplığı (2026-10-27; Lyfta / Nike Training Club esinli).
+"""pt_kitaplik.py - Health hareket kitaplığı (2026-10-27; Lyfta / Nike Training Club esinli).
 
 - Kaydedilenler: yer imi gibi; hızlı antrenmanda "Kaydettiklerimden" seçeneği bunları kullanır (pt/kaydedilenler.json).
 - Hareket özeti: her hareketin kaç seansta yapıldığı, son tarih, kişisel rekor; hareket geçmişi (set set, grafik için).

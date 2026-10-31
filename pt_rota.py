@@ -1,4 +1,4 @@
-"""pt_rota.py - PT bisiklet döngüsü (2026-10-25): konumdan çıkıp aynı yere dönen rota.
+"""pt_rota.py - Health bisiklet döngüsü (2026-10-25): konumdan çıkıp aynı yere dönen rota.
 
 BRouter (brouter.de herkese açık sunucu, anahtar yok; ileride Mac'e kurulabilir) `engineMode=4` döngü modu: `roundTripDistance` YARIÇAP gibi
 davranır (Berlin denemesi: 8000 → 38 km), bu yüzden hedef uzunluğa bir düzeltme turuyla yaklaşılır. 3 aday yön; rüzgâr (Open-Meteo, anahtarsız)
@@ -135,8 +135,8 @@ def gpx(rid, no):
     if not a:
         return None
     nok = "\n".join(f'<trkpt lat="{la}" lon="{lo}">' + (f"<ele>{e}</ele>" if e is not None else "") + "</trkpt>" for la, lo, e in a["koordinat"])
-    ad = f"PT {r.get('sure_dk')} dk {r.get('yogunluk')} döngü {no}"
-    return (f'<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Video Hub PT" xmlns="http://www.topografix.com/GPX/1/1">'
+    ad = f"Health {r.get('sure_dk')} dk {r.get('yogunluk')} döngü {no}"
+    return (f'<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Video Hub Health" xmlns="http://www.topografix.com/GPX/1/1">'
             f"<metadata><name>{ad}</name></metadata><trk><name>{ad}</name><trkseg>\n{nok}\n</trkseg></trk></gpx>\n"), ad
 
 

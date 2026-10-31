@@ -1,4 +1,4 @@
-"""pt_ses.py - PT koçunun sesi: önceden üretilmiş doğal Türkçe ses parçaları (2026-10-25; kullanıcı: "Türkçe ses aşırı robotik, çok kötü").
+"""pt_ses.py - Health koçunun sesi: önceden üretilmiş doğal Türkçe ses parçaları (2026-10-25; kullanıcı: "Türkçe ses aşırı robotik, çok kötü").
 
 Tarayıcının/telefonun yerleşik sesi yerine bu Mac'teki sinir ağı ses modeli (Chatterbox Multilingual, MLX; Studio'nun dublajıyla aynı model,
 .venv-mlxtts) ile cümle parçaları önceden seslendirilir. Ses: modelin varsayılan sesi (`conds.pt` → pt_medya/_ses_model/conds.safetensors);

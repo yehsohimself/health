@@ -1,7 +1,7 @@
 {
-  "name": "PT",
-  "short_name": "PT",
-  "description": "Kişisel antrenör ve diyetisyen: plan, antrenman oynatıcısı, beslenme, bisiklet rotası.",
+  "name": "Health",
+  "short_name": "Health",
+  "description": "Uzun ve sağlıklı yaşam için antrenör, diyetisyen ve uzman ekibi: program, antrenman, beslenme, uyku ve nefes.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

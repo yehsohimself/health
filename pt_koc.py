@@ -1,4 +1,4 @@
-"""pt_koc.py - PT'nin koçluk akışı (2026-10-25; kullanıcı: "PT + diyetisyenim varmış gibi hissetmeliyim; bana neler sorar, hayatımı nasıl düzenler,
+"""pt_koc.py - Health'in koçluk akışı (2026-10-25; kullanıcı: "Health + diyetisyenim varmış gibi hissetmeliyim; bana neler sorar, hayatımı nasıl düzenler,
 neler önerir, beni nasıl programlar").
 
 - Günün akışı (`gun_akisi`): kalkıştan yatışa saat saat: sabah kontrolü, pencere, menüdeki öğünler, antrenman (saatli ya da gün düzenine göre),

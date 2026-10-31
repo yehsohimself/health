@@ -1,4 +1,4 @@
-"""pt_kanit.py - PT'nin kanıt dosyası ve aylık güncelleme önerisi (2026-10-25). Video Hub'ın gelişim deseni: sistem kendini DEĞİŞTİRMEZ, öneri getirir.
+"""pt_kanit.py - Health'in kanıt dosyası ve aylık güncelleme önerisi (2026-10-25). Video Hub'ın gelişim deseni: sistem kendini DEĞİŞTİRMEZ, öneri getirir.
 
 - KANIT: her kuralın dayanağı, yılı ve güven derecesi (araştırma raporu reports/PT özellik araştırması.md; "doğrulanmadı" olanlar düşük).
 - Aylık tarama: PubMed E-utilities (anahtarsız; son 35 gün, konu başına en çok 8 makale, özetler) → Claude (sonnet) hangisinin bir kuralı değiştirmesi
@@ -21,7 +21,7 @@ KANIT = [
     {"id": "tre_protein", "kural": "Asıl risk proteini eksik yemek; orucu proteinle açmak.", "kaynak": "TREAT deneyi (Lowe ve ark.)", "yil": 2020, "guven": "orta", "not": "Antrenmansız 16:8'de kaybın %65'i yağsız kütle."},
     {"id": "kilo_hizi", "kural": "Haftada vücut ağırlığının %0,5-1'i; yağ oranı düştükçe yavaş.", "kaynak": "Helms ve ark.", "yil": 2014, "guven": "dusuk", "not": "Bu oturumda yeniden doğrulanmadı."},
     {"id": "rir", "kural": "Yükü RIR/RPE ile ayarlamak sabit yüzdelerden belirgin üstün değil; vücut ağırlığında pratik ölçü.", "kaynak": "Sports Med Open", "yil": 2021, "guven": "orta", "not": "Kanıt çelişkili."},
-    {"id": "deload", "kural": "Hafif hafta: yorgunluğu atmak için bilerek azaltılmış dönem; sıklığı bilinmiyor (PT: 5. hafta ya da yorgunluk).", "kaynak": "Delphi uzlaşısı (Bell ve ark.)", "yil": 2023, "guven": "dusuk", "not": "Sıklık koç alışkanlığı."},
+    {"id": "deload", "kural": "Hafif hafta: yorgunluğu atmak için bilerek azaltılmış dönem; sıklığı bilinmiyor (Health: 5. hafta ya da yorgunluk).", "kaynak": "Delphi uzlaşısı (Bell ve ark.)", "yil": 2023, "guven": "dusuk", "not": "Sıklık koç alışkanlığı."},
     {"id": "agri", "kural": "Ağrı izleme: hareket sırasında ≤5/10, ertesi sabah eski düzey, haftadan haftaya artmıyor.", "kaynak": "Aşil tendinopatisi çalışması (Silbernagel)", "yil": 2007, "guven": "orta", "not": "Klinik muayenenin yerini tutmaz."},
     {"id": "fms", "kural": "Hareket taraması sakatlık öngörmez; başlangıç basamağını seçmek için kullanılır.", "kaynak": "Dorrel ve ark.", "yil": 2015, "guven": "yuksek", "not": "Duyarlılık %24,7."},
     {"id": "eger_ise", "kural": "Eğer-ise planları fiziksel aktiviteyi küçük ama güvenilir biçimde artırır (0,24-0,31).", "kaynak": "Meta-analiz (McMaster özeti)", "yil": 2014, "guven": "orta", "not": ""},
@@ -37,7 +37,7 @@ SORGULAR = ["resistance training hypertrophy trained", "time-restricted eating r
             "concurrent training interference cycling", "tendinopathy load management pain monitoring", "calisthenics bodyweight training",
             "Brazilian jiu-jitsu training load", "sleep extension athletes performance", "deload resistance training", "heart rate variability guided training"]
 
-ISTEM = """Sen spor bilimi kanıtlarını izleyen bir editörsün. PT'nin kuralları ve dayanakları aşağıda. Son ayın PubMed makaleleri (başlık + özet) ekte.
+ISTEM = """Sen spor bilimi kanıtlarını izleyen bir editörsün. Health'in kuralları ve dayanakları aşağıda. Son ayın PubMed makaleleri (başlık + özet) ekte.
 Görev: yalnızca bir kuralı DEĞİŞTİRMEYİ, inceltmeyi ya da güvenini yükseltip düşürmeyi gerektiren makaleleri seç. Tek küçük çalışma, hayvan ya da
 hücre çalışması, kullanıcıyla ilgisiz popülasyon (hastalar, yaşlılar, elit kadın kürekçiler...) tek başına kural değiştirmez; sistematik derleme,
 meta-analiz, görüş bildirgesi, büyük RKÇ ağırlıklı. Hiçbiri yeterli değilse boş liste. Türkçe, sade dil.

@@ -1,4 +1,4 @@
-"""pt_beslenme.py - PT'nin diyetisyen tarafı (2026-10-25).
+"""pt_beslenme.py - Health'in diyetisyen tarafı (2026-10-25).
 
 - Hedefler: Mifflin-St Jeor + etkinlik çarpanı ile başlangıç harcaması; haftalık kilo hızı (varsayılan vücut ağırlığının %0,7'si, en çok %1)
   açığa çevrilir. Protein ISSN 2026 aralığı: kilo başına 1,6-2,2 g (fazla kiloluysa HEDEF kiloya göre); varsayılan 2,0 g/kg.

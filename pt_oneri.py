@@ -1,4 +1,4 @@
-"""pt_oneri.py - PT'nin önerileri: sıradaki program ve "şuna ihtiyacınız var" (2026-10-27; kullanıcı: "spor programı önerme, ihtiyaç önerme, tüm
+"""pt_oneri.py - Health'in önerileri: sıradaki program ve "şuna ihtiyacınız var" (2026-10-27; kullanıcı: "spor programı önerme, ihtiyaç önerme, tüm
 tarafları geliştir"; araştırma: reports/PT yeni özellik taraması.md).
 
 İlkeler (araştırmadan): tek seferde tek öneri ve tek cümlelik neden (rakipler çoğunlukla yalnız puan ya da ısı haritası gösteriyor); program yalnız
@@ -200,8 +200,8 @@ def _agri(G):
         bol |= {a.get("bolge") for a in ((g.get("sabah") or {}).get("agri") or []) if (a.get("puan") or 0) >= 3}
         c.update(b for b in bol if b)
     return [{"kod": f"agri_{b}", "tur": "saglik", "oncelik": 90, "baslik": f"{b.capitalize()} ağrısı tekrarlıyor",
-             "neden": f"Son iki haftada {n} gün {b} ağrısı kaydettiniz. PT o bölgeyi kolay basamakta tutuyor; geçmiyorsa bir fizyoterapiste görünün.",
-             "eylem": {"tur": "sohbet", "ad": "PT'ye anlat"}} for b, n in c.items() if n >= 3]
+             "neden": f"Son iki haftada {n} gün {b} ağrısı kaydettiniz. Health o bölgeyi kolay basamakta tutuyor; geçmiyorsa bir fizyoterapiste görünün.",
+             "eylem": {"tur": "sohbet", "ad": "Health'e anlat"}} for b, n in c.items() if n >= 3]
 
 
 def ihtiyaclar():
@@ -248,7 +248,7 @@ def ihtiyaclar():
     sd = p.get("saglik_degerleri") or {}
     if "kolesterol" in metin and not sd:
         out.append({"kod": "tahlil_lipid", "tur": "saglik", "oncelik": 35, "baslik": "Kolesterol değerleriniz",
-                    "neden": "Kolesterolünüzün yüksek olduğunu yazdınız ama değerler PT'de yok. Son tahlil değerlerini girerseniz menü ona göre ayarlanır; "
+                    "neden": "Kolesterolünüzün yüksek olduğunu yazdınız ama değerler Health'te yok. Son tahlil değerlerini girerseniz menü ona göre ayarlanır; "
                              "uzun süredir bakılmadıysa doktorunuza sorun.", "eylem": {"tur": "diyetisyen", "ad": "Değerleri gir"}})
     d = _durum()
     out = [o for o in out if not gizli_mi(o["kod"], d)]

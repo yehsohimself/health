@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PT</title>
+<title>Health</title>
 <link rel="icon" href="/static/logo/pt.svg" type="image/svg+xml">
 <link rel="manifest" href="/static/pt.webmanifest">
 <link rel="apple-touch-icon" href="/static/pt-ikon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="PT">
+<meta name="apple-mobile-web-app-title" content="Health">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#08080a">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600&display=swap">
 <style>
-/* PT (2026-10-25): kişisel antrenör + diyetisyen. Telefon önce: altta sekme çubuğu (Bugün · Plan · Beslenme · İlerleme · Siz), tam ekran oynatıcı.
+/* Health (2026-10-25): kişisel antrenör + diyetisyen. Telefon önce: altta sekme çubuğu (Bugün · Plan · Beslenme · İlerleme · Siz), tam ekran oynatıcı.
    Tanıtım filmlerinin dili (v20): koyu, ince çizgi, mono etiket, noktalı çizgi; vurgu limon yeşili. Tek birincil düğme, başlık düz ad. */
 :root{
   --bg:#08080a; --yuzey:#111114; --yuzey2:#18181c; --yuzey3:#202026; --cizgi:rgba(255,255,255,.1); --cizgi2:rgba(255,255,255,.2);
@@ -591,13 +591,70 @@ label.btn,label.metin{cursor:pointer}
 .dekip span{font-family:var(--mono);font-size:11px;color:var(--ink3)}.dekip p{margin:2px 0 0;font-size:14px;line-height:1.45}
 @media (max-width:520px){.rcekip{flex-wrap:nowrap;overflow-x:auto;margin-left:-16px;margin-right:-16px;padding:0 16px 4px;scrollbar-width:none}.rcekip::-webkit-scrollbar{display:none}.rcekip span{flex:none}
   .rcrow{grid-template-columns:36px 1fr}.rcsay{grid-column:2;flex-direction:row;justify-self:start;gap:8px}.rcsabit{min-width:0;font-size:17px}.rcik{width:36px!important;height:36px!important}.dozs{grid-template-columns:88px 1fr auto}}
+/* Hareketli görseller, modüller, nefes oynatıcısı (2026-10-31) */
+.hh{display:grid;grid-template-columns:132px 1fr;gap:18px;align-items:center;padding:16px 18px;background:radial-gradient(ellipse 70% 90% at 0% 50%,rgba(var(--vurgu-rgb),.08),transparent 70%),var(--yuzey)}
+.hh-sol{position:relative;width:132px;height:132px}.hh-svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.hh-iz{fill:none;stroke:var(--yuzey3)}.hh-plan{fill:none;opacity:.22;stroke-linecap:round}
+.hh-dol{fill:none;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1) var(--g,0s)}
+.hh-ok{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;color:var(--vurgu);animation:hhok 1.6s ease 1.2s both}
+@keyframes hhok{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.hh.tam .hh-svg{animation:hhnab 2.6s ease-in-out 1.6s infinite}@keyframes hhnab{50%{filter:drop-shadow(0 0 14px rgba(var(--vurgu-rgb),.55))}}
+.hh-lej{display:flex;flex-direction:column;gap:3px;margin:6px 0 8px}.hh-lej span{font-size:14px;display:flex;align-items:center;gap:7px}
+.hh-lej i{width:8px;height:8px;border-radius:50%}.hh-lej b{font-variant-numeric:tabular-nums;margin-left:auto}.hh-lej small{color:var(--ink3);min-width:52px}
+.hh-etki{margin:0 0 10px;font-size:13.5px;line-height:1.45;color:var(--ink2)}.hh-etki b{color:var(--ink)}
+.hhbtn{width:100%;position:relative;overflow:hidden}
+.hhbtn.ana::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:hhparla 3.4s ease-in-out 2s infinite}
+@keyframes hhparla{40%,100%{transform:translateX(120%)}}
+@media (max-width:420px){.hh{grid-template-columns:104px 1fr;gap:12px;padding:14px}.hh-sol{width:104px;height:104px}}
+.esema{margin:4px -4px 14px;border:1px solid var(--cizgi);border-radius:16px;padding:10px 6px;background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 0) 0 0/14px 14px,var(--yuzey)}
+.esema svg{width:100%;height:auto;display:block}
+.es-cz{fill:none;stroke:rgba(var(--vurgu-rgb),.16);stroke-width:1}
+.es-ak{fill:none;stroke:var(--vurgu);stroke-width:1.8;stroke-dasharray:22 190;stroke-dashoffset:212;stroke-linecap:round;filter:drop-shadow(0 0 3px rgba(var(--vurgu-rgb),.9));animation:esak 2.6s linear infinite}
+@keyframes esak{to{stroke-dashoffset:0}}
+.es-n{fill:var(--ink3)}.es-n2{fill:var(--vurgu);filter:drop-shadow(0 0 4px rgba(var(--vurgu-rgb),.8))}
+.es-t{fill:var(--ink2);font-size:10.5px;font-family:inherit}.es-t2{fill:var(--ink);font-size:11px;font-weight:600;font-family:inherit}
+.knt{display:inline-flex;align-items:center;gap:3px}.knt i{width:14px;height:4px;border-radius:2px;background:var(--yuzey3)}.knt i.on{background:var(--vurgu)}.knt small{margin-left:6px;font-size:11.5px;color:var(--ink3)}
+.mdr,.mdr2{display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--cizgi)}
+.mdr2{grid-template-columns:36px 1fr;align-items:start;padding:14px 0}.mdr:first-of-type,.mdr2:first-child{border-top:0}
+.mdik{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:rgba(var(--vurgu-rgb),.1);color:var(--vurgu)}
+.mdik svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mdik.a-dogu{background:rgba(255,204,51,.1);color:var(--sari)}.mdik.a-doga{background:rgba(52,199,123,.12);color:var(--yesil)}.mdik.a-tip{background:rgba(255,93,93,.1);color:var(--kirmizi)}.mdik.a-gelenek{background:rgba(255,159,67,.1);color:var(--turuncu)}
+.mdm{min-width:0}.mdm b{display:block;font-size:15px}.mdm small{display:block;color:var(--ink3);font-size:12.5px;line-height:1.4;margin-top:1px}
+.mdm p{margin:6px 0 0;font-size:13.5px;line-height:1.45;color:var(--ink2)}.mdm .mdneden{color:var(--ink);font-weight:500}.mdm .mdkn{font-size:12.5px;color:var(--ink3)}
+.mdr.bitti{opacity:.55}.mdok{color:var(--vurgu);font-size:18px;padding:0 6px}
+.yg{margin-top:4px}.yg svg{width:100%;max-width:600px;height:auto;display:block;overflow:visible;margin:0 auto}
+.yg-esik{stroke:var(--kirmizi);stroke-width:1;stroke-dasharray:3 4;opacity:.7}.yg-et{fill:var(--kirmizi);font-size:10px;opacity:.85}
+.yg-otur{fill:none;stroke:var(--ink3);stroke-width:2;stroke-dasharray:600;stroke-dashoffset:600;animation:ygciz 2.2s ease .2s forwards}
+.yg-aktif{fill:none;stroke:var(--vurgu);stroke-width:2.6;stroke-dasharray:600;stroke-dashoffset:600;filter:drop-shadow(0 0 5px rgba(var(--vurgu-rgb),.6));animation:ygciz 2.2s ease .6s forwards}
+@keyframes ygciz{to{stroke-dashoffset:0}}
+.yg-kes{fill:var(--kirmizi)}.yg-e{fill:var(--ink3);font-size:10px}
+.yg-siz{fill:var(--ink);stroke:var(--vurgu);stroke-width:2}.yg-dalga{fill:none;stroke:var(--vurgu);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:ygdalga 2.4s ease-out infinite}
+@keyframes ygdalga{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(3.4)}}
+.yg-lej{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--ink2);margin-top:6px}.yg-lej i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.yg-lej i.a{background:var(--vurgu)}.yg-lej i.o{background:var(--ink3)}.yg-lej i.s{width:8px;height:8px;border-radius:50%;background:var(--ink);border:2px solid var(--vurgu)}
+.nfo{position:fixed;inset:0;z-index:90;background:radial-gradient(ellipse 60% 50% at 50% 45%,rgba(var(--vurgu-rgb),.10),transparent 70%),#060607;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(20px + var(--ust)) 20px calc(26px + var(--alt));color:#f2f2f4}
+.nfo .kapatx{position:absolute;top:calc(14px + var(--ust));right:14px}
+.nf-ust{text-align:center}.nf-ust b{display:block;font-size:34px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:4px}
+.nf-sahne{position:relative;width:min(78vw,340px);aspect-ratio:1}.nf-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.nf-iz{fill:none;stroke:rgba(255,255,255,.08);stroke-width:2}.nf-ilerle{fill:none;stroke:var(--vurgu);stroke-width:2.5;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(var(--vurgu-rgb),.9));transition:stroke-dashoffset .25s linear}
+.nf-nok{fill:rgba(255,255,255,.18)}
+.nf-top{position:absolute;inset:13%;border-radius:50%;background:radial-gradient(circle at 50% 40%,rgba(var(--vurgu-rgb),.95),rgba(var(--vurgu-rgb),.35) 55%,rgba(var(--vurgu-rgb),.05) 72%);box-shadow:0 0 40px rgba(var(--vurgu-rgb),.25);transform:scale(.5)}
+.nf-top.dolu{box-shadow:0 0 90px rgba(var(--vurgu-rgb),.55)}
+.nf-yazi{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.nf-yazi b{font-size:22px;letter-spacing:-.01em;color:#0b1200;text-shadow:0 0 18px rgba(var(--vurgu-rgb),.6)}.nf-yazi span{font-size:15px;color:#142004;opacity:.75;margin-top:2px;font-variant-numeric:tabular-nums}
+.nf-alt{max-width:420px;text-align:center;color:#a1a1aa;font-size:14.5px;line-height:1.5;margin:0}
+.nf-dug{min-height:48px;display:flex;align-items:center}.nf-dug .btn{min-width:200px}
+.sb{background:#0b0b0d}.sb img{transition:opacity .9s cubic-bezier(.4,0,.2,1),transform 6s linear;transform:scale(1.0)}.sb img.on{transform:scale(1.045)}
+.sb-cizgi{position:absolute;left:0;bottom:0;height:2px;background:var(--vurgu);box-shadow:0 0 8px rgba(var(--vurgu-rgb),.9);width:0}
+.sb-nok i{background:rgba(255,255,255,.3)}.sb-nok i.on{background:var(--vurgu)}.sb-ad{color:rgba(255,255,255,.55)}
+@media (prefers-reduced-motion: reduce){.es-ak,.yg-dalga,.hhbtn.ana::after,.hh.tam .hh-svg{animation:none}.yg-otur,.yg-aktif{animation:none;stroke-dashoffset:0}.sb img{transition:opacity .3s}.sb img.on{transform:none}}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="alevGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd84d"/><stop offset="1" stop-color="#ff7a1a"/></linearGradient></defs></svg>
 <nav class="nav">
   <div class="navsol" id="navSol"></div>
-  <div class="markaGrup"><a class="brand" href="#"><img src="/static/logo/pt.svg" alt=""><span class="bt">PT</span><span class="alt">TRAINER</span></a><button type="button" class="urunbtn" id="urunBtn" aria-label="Diğer ürünler" title="Diğer ürünler"><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg></button><div class="urunMenu" id="urunMenu"></div></div>
+  <div class="markaGrup"><a class="brand" href="#"><img src="/static/logo/pt.svg" alt=""><span class="bt">Health</span></a><button type="button" class="urunbtn" id="urunBtn" aria-label="Diğer ürünler" title="Diğer ürünler"><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg></button><div class="urunMenu" id="urunMenu"></div></div>
   <div class="navsag"><button class="sizbtn hidden" id="sizBtn" aria-label="Siz" title="Profiliniz ve ayarlar"></button><button class="tema" id="tema" title="Açık ya da koyu görünüm" aria-label="Görünüm">◐</button></div>
 </nav>
 <div class="sekmeler hidden" id="sekmeler"></div>
@@ -656,11 +713,11 @@ async function api(yol, s = {}){
 function toast(m, eylem, fn){ $$('.toast').forEach(x => x.remove()); const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); t.innerHTML = `<span>${esc(m)}</span>${eylem ? `<button>${esc(eylem)}</button>` : ''}`; document.body.appendChild(t); if (eylem) $('button', t).onclick = () => { t.remove(); fn(); }; setTimeout(() => t.remove(), eylem ? 6000 : 3200); }
 function temaUygula(){ if (store.get('tema_v20', 'dark') === 'light') document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme; }
 temaUygula(); $('#tema').onclick = () => { store.set('tema_v20', store.get('tema_v20', 'dark') === 'light' ? 'dark' : 'light'); temaUygula(); };
-(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'PT', 8771]];
+(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'Health', 8771]];
   const m = $('#urunMenu'); const yerel = /^(127\.|localhost|192\.168\.|10\.|.*\.local$)/.test(location.hostname);
   const kurulu = (document.documentElement.dataset.urunler || '').split(',').filter(Boolean);
-  if (kurulu.length === 1) { $('#urunBtn').style.display = 'none'; return; }   // tek başına PT: başka ürün yok
-  m.innerHTML = yerel ? U.filter(([k]) => !kurulu.length || kurulu.includes(k)).map(([k, a, p]) => `<a href="${location.protocol}//${location.hostname}:${p}/" class="${String(p) === location.port ? 'on' : ''}"><img src="/static/logo/${k}.svg" alt="">${a}</a>`).join('') : '<a class="on"><img src="/static/logo/pt.svg" alt="">PT</a>';
+  if (kurulu.length === 1) { $('#urunBtn').style.display = 'none'; return; }   // tek başına Health: başka ürün yok
+  m.innerHTML = yerel ? U.filter(([k]) => !kurulu.length || kurulu.includes(k)).map(([k, a, p]) => `<a href="${location.protocol}//${location.hostname}:${p}/" class="${String(p) === location.port ? 'on' : ''}"><img src="/static/logo/${k}.svg" alt="">${a}</a>`).join('') : '<a class="on"><img src="/static/logo/pt.svg" alt="">Health</a>';
   $('#urunBtn').onclick = e => { e.stopPropagation(); m.classList.toggle('acik'); };
   document.addEventListener('click', e => { if (!e.target.closest('#urunBtn,#urunMenu')) m.classList.remove('acik'); }); })();
 function md(m){
@@ -725,7 +782,7 @@ async function yukle(sessiz){
     if (!S.kat){ S.kat = await api('/api/pt/katalog'); store.set('pt_kat', JSON.stringify(S.kat)); }
   }catch(e){
     if (!S.o){ try{ S.o = JSON.parse(store.get('pt_son', 'null')); S.kat = JSON.parse(store.get('pt_kat', 'null')); }catch(_){ /* yok */ } }
-    if (!S.o){ $('#main').innerHTML = `<div class="kart">PT'ye ulaşılamadı. Mac açık ve bağlı mı? <button class="metin" onclick="yukle()">Yeniden dene</button></div>`; return; }
+    if (!S.o){ $('#main').innerHTML = `<div class="kart">Health'e ulaşılamadı. Mac açık ve bağlı mı? <button class="metin" onclick="yukle()">Yeniden dene</button></div>`; return; }
     if (!sessiz) toast('Bağlantı yok; son kayıtlı hali gösteriliyor.');
   }
   if (!sessiz || (!mesgul() && !S.kurulum)) ciz();
@@ -735,7 +792,7 @@ async function yukle(sessiz){
 function mesgul(){ const a = document.activeElement; return $('.perde') || $('.oyn') || (a && /INPUT|TEXTAREA|SELECT/.test(a.tagName)); }
 function ciz(){
   if (!S.o.kurulu || S.kurulum) return kurulumCiz();
-  /* 2026-10-29 sadeleştirme: dört sekme. Koç (görüşmeler, PT'nin hafızası) Siz sayfasının içinde; sohbet Bugün'de. */
+  /* 2026-10-29 sadeleştirme: dört sekme. Koç (görüşmeler, Health'in hafızası) Siz sayfasının içinde; sohbet Bugün'de. */
   const T = [['bugun', 'Bugün'], ['plan', 'Antrenman'], ['beslenme', 'Beslenme'], ['ilerleme', 'İlerleme']];
   const sb = $('#sizBtn'); sb.classList.remove('hidden'); sb.classList.toggle('on', S.sek === 'siz' || S.sek === 'koc'); sb.textContent = ((S.o.profil.ad || 'S').trim()[0] || 'S').toLocaleUpperCase('tr');
   sb.onclick = () => { S.sek = 'siz'; store.set('pt_sek', 'siz'); window.scrollTo(0, 0); ciz(); };
@@ -771,14 +828,14 @@ function sayacBagla(k){ $$('.sayac', k).forEach(s => { const b = $('b', s), en =
   $$('button', s).forEach(x => x.onclick = () => { b.textContent = Math.max(en, Math.min(ust, (+b.textContent || 0) + (x.dataset.d === '+' ? adim : -adim))); }); }); }
 const sayacHtml = (ad, v, en = 0, ust = 14, adim = 1) => `<span class="sayac" data-ad="${ad}" data-en="${en}" data-ust="${ust}" data-adim="${adim}"><button data-d="-">−</button><b>${v}</b><button data-d="+">+</button></span>`;
 
-/* ------------------------------------------------------------------ KURULUM: PT soru sorar, siz seçersiniz (2026-10-25, kullanıcı: "PT bana sorular sorsun,
+/* ------------------------------------------------------------------ KURULUM: Health soru sorar, siz seçersiniz (2026-10-25, kullanıcı: "Health bana sorular sorsun,
    ben seçeyim; ekstra belirtmem gereken bir şey varsa onun için chat olsun"). Her ekranda tek soru; altında isteğe bağlı not satırı. Sonra Claude'un
    cevaplara göre seçtiği 2-4 ek soru, sonra "Sizi böyle tanıdım" özeti (her satır değiştirilebilir), sonra ilk hafta. */
 const B_ = p => p.beslenme || (p.beslenme = {});
 function yasHesap(t){ const d = new Date(t + 'T12:00'), b = new Date(); let y = b.getFullYear() - d.getFullYear(); if (b.getMonth() < d.getMonth() || (b.getMonth() === d.getMonth() && b.getDate() < d.getDate())) y--; return y; }
 const SECIM_GUN = [['0', 'Pzt'], ['1', 'Sal'], ['2', 'Çar'], ['3', 'Per'], ['4', 'Cum'], ['5', 'Cmt'], ['6', 'Paz']];
 const SORULAR = [
-  {id: 'ad', baslik: 'Tanışma', soru: 'Merhaba, ben PT. Size nasıl hitap edeyim?', alt: 'Birkaç kısa soru; iki dakika sürer.',
+  {id: 'ad', baslik: 'Tanışma', soru: 'Merhaba, ben Health. Size nasıl hitap edeyim?', alt: 'Birkaç kısa soru; iki dakika sürer.',
    tip: 'metin', yer: 'Adınız', al: p => p.ad || '', ver: (p, v) => { p.ad = v; }},
   {id: 'hedef', baslik: 'Hedef', soru: 'Sizi buraya ne getirdi?', alt: 'Birden fazla seçebilirsiniz.', tip: 'coklu',
    sec: [['uzun_omur', 'Uzun ve sağlıklı yaşamak', 'Yıllar sonra da güçlü, dengeli ve bağımsız'], ['kilo', 'Kilo vermek'], ['kas', 'Kas ve güç kazanmak'], ['beceri', 'Beceri öğrenmek', 'Muscle-up, amut, pistol gibi'], ['kondisyon', 'Kondisyon ve dayanıklılık'],
@@ -797,7 +854,7 @@ const SORULAR = [
    sec: [['0.5', 'Yavaş', 'Haftada vücut ağırlığının %0,5\'i · kas en iyi korunur'], ['0.7', 'Orta', 'Haftada %0,7 · çoğu kişi için doğru'], ['1', 'Hızlı', 'Haftada %1 · kısa süre için, daha zor']],
    al: p => B_(p).kilo_hizi != null ? String(B_(p).kilo_hizi) : null, ver: (p, v) => { B_(p).kilo_hizi = +v; }},
   /* 2026-10-31: disiplin sorulmaz (kullanıcı: "bana bunları sormamalı, ben bunlardan anlamam"); sevdikleri ve hayatındakiler sorulur, programın
-     bileşimini PT kurar (pt_uzun.recete) ve kurulumun son adımında "Size şöyle bir program yazıyorum" diye gösterir. */
+     bileşimini Health kurar (pt_uzun.recete) ve kurulumun son adımında "Size şöyle bir program yazıyorum" diye gösterir. */
   {id: 'sevdik', baslik: 'Sevdikleriniz', soru: 'Hangilerini seversiniz ya da hayatınızda var?', alt: 'Programı ben kurarım; bunları içine katarım. Bilmiyorsanız "Fark etmez" deyin.', tip: 'coklu', yok: 'Fark etmez, siz seçin',
    sec: [['jiujitsu', 'Jiu-jitsu ya da dövüş sporu'], ['bisiklet', 'Bisiklete binmek'], ['yuruyus', 'Yürüyüş, doğa'], ['kosu', 'Koşu'], ['ev', 'Evde ya da parkta vücut ağırlığıyla'], ['flow', 'Yere yakın akış hareketleri', 'Animal flow gibi'], ['esneme', 'Esneme, yoga']],
    al: p => { if (Array.isArray(p.sevdikleri) && (p.sevdikleri.length || p._sevSoruldu)) return p.sevdikleri; const y = p.yontemler || {}, L = [];
@@ -817,6 +874,16 @@ const SORULAR = [
    al: p => p.gunluk_dk ? String(p.gunluk_dk) : null, ver: (p, v) => { p.gunluk_dk = +v; }},
   {id: 'saat', baslik: 'Saat', sonra: true, soru: 'Genelde günün hangi saatinde?', tip: 'tek', sec: [['sabah', 'Sabah'], ['ogle', 'Öğle'], ['aksam', 'Akşam'], ['degisir', 'Değişiyor']],
    al: p => p.antrenman_saati, ver: (p, v) => { p.antrenman_saati = v; }},
+  /* İhtiyaç soruları (2026-10-31): yöntem değil durum sorulur; modüller (nefes, uyku düzeni, hareket molası...) bunlardan seçilir. */
+  {id: 'is_duzeni', baslik: 'Gününüz', soru: 'Gününüz çoğunlukla nasıl geçiyor?', tip: 'tek',
+   sec: [['oturarak', 'Oturarak', 'Masa başı, bilgisayar'], ['karisik', 'Karışık', 'Biraz oturarak, biraz ayakta'], ['ayakta', 'Ayakta ve hareket hâlinde']],
+   al: p => p.is_duzeni, ver: (p, v) => { p.is_duzeni = v; }},
+  {id: 'stres', baslik: 'Stres', soru: 'Günleriniz ne kadar yoğun ya da stresli?', tip: 'tek',
+   sec: [['sakin', 'Çoğunlukla sakin'], ['orta', 'Arada bir yoğun'], ['yogun', 'Çoğu gün stresli']],
+   al: p => p.stres, ver: (p, v) => { p.stres = v; }},
+  {id: 'uyku_kalite', baslik: 'Uyku', soru: 'Uykunuz nasıl?', tip: 'tek',
+   sec: [['iyi', 'İyi uyuyorum'], ['bolunuyor', 'Bazen bölünüyor', 'Ya da geç dalıyorum'], ['kotu', 'Çoğu gece kötü']],
+   al: p => p.uyku_kalite, ver: (p, v) => { p.uyku_kalite = v; }},
   {id: 'ekipman', baslik: 'Ekipman', soru: 'Elinizde neler var?', alt: 'Yalnızca vücut ağırlığıyla da olur; hiçbiri yoksa boş bırakın.', tip: 'coklu', secKat: 'ekipman',
    al: p => p.ekipman || [], ver: (p, v) => { p.ekipman = v; }},
   {id: 'agri', baslik: 'Ağrı', soru: 'Ağrıyan ya da sakatlığı olan bir yer var mı?', tip: 'coklu', secKat: 'bolgeler', yok: 'Yok',
@@ -864,7 +931,7 @@ function kurulumCiz(){
   $('#sekmeler').classList.add('hidden');
   if (!S.kurulum){ try{ S.kurulum = JSON.parse(sessionStorage.getItem('pt_kurulum') || 'null'); }catch(e){ /* yok */ } }
   if (!S.kurulum){ const p = JSON.parse(JSON.stringify(S.o.profil));
-    if (!S.o.kurulu){ Object.assign(p, {yontemler: {}, sevdikleri: [], ekipman: [], gunler: [], gunluk_dk: null, antrenman_saati: null, diyet: null, motivasyon: null, deneyim: null});   // ilk kurulumda varsayılanlar seçili gelmesin: siz seçin
+    if (!S.o.kurulu){ Object.assign(p, {yontemler: {}, sevdikleri: [], stres: null, uyku_kalite: null, is_duzeni: null, ekipman: [], gunler: [], gunluk_dk: null, antrenman_saati: null, diyet: null, motivasyon: null, deneyim: null});   // ilk kurulumda varsayılanlar seçili gelmesin: siz seçin
       p.beslenme = {...p.beslenme, pencere_saat: null, pencere_bas: null, ogun_sayisi: null, kilo_hizi: null, hassasiyetler: []}; }
     S.kurulum = {adim: 'soru', i: 0, p, notlar: [], ek: null}; }
   const K = S.kurulum; kurulumKaydet(K);
@@ -1030,7 +1097,7 @@ function ilkKart(){
 function bjjSoruKart(){
   const p = S.o.profil, b = p.bjj_ders || {};
   if (b.soruldu || (b.gunler || []).length || !((p.yontemler || {}).bjj_solo > 0)) return '';
-  return `<div class="kart" id="bjjSoru"><span class="mono">PT soruyor</span><h3 style="margin:2px 0 4px">Salonda jiu-jitsu dersine gidiyor musunuz?</h3>
+  return `<div class="kart" id="bjjSoru"><span class="mono">Health soruyor</span><h3 style="margin:2px 0 4px">Salonda jiu-jitsu dersine gidiyor musunuz?</h3>
     <p class="gri2" style="margin:0 0 10px;font-size:14px">Günlerini seçin, planı derslere göre kurayım.</p>
     <div class="cipler" data-coklu id="bj_g">${SECIM_GUN.map(([v, a]) => `<button data-v="${v}">${a}</button>`).join('')}</div>
     <div class="satir" style="margin-top:10px;gap:8px;flex-wrap:nowrap"><input class="alan" type="time" id="bj_s" value="19:00" style="width:104px;flex:none" aria-label="Ders saati">${sayacHtml('bj_d', 90, 30, 180, 15)}<span class="gri">dk</span></div>
@@ -1115,7 +1182,7 @@ function sabahKart(){
   return `<div class="kart vurgulu"><div class="kbas"><h3>Günaydın. Bugün nasılsınız?</h3><span class="mono">yarım dakika</span></div><p class="gri2" style="margin:0 0 10px;font-size:14px">Cevaplarınıza göre bugünkü seansı ayarlarım.</p><button class="btn ana genis" data-sabah>Başla</button></div>`;
 }
 function bugunCiz(){
-  /* 2026-10-28 sadeleştirme: önce "şimdi ne yapmalıyım" (sabah kontrolü → bugünün seansı), sonra gün; PT'nin notlarından
+  /* 2026-10-28 sadeleştirme: önce "şimdi ne yapmalıyım" (sabah kontrolü → bugünün seansı), sonra gün; Health'in notlarından
      (öneri, soru, alışkanlık, tanışma, haftalık mesaj) yalnız en önemli BİRİ; ekranda tek birincil düğme. */
   const o = S.o, b = o.bugun, m = $('#main'), p = o.profil;
   const saat = new Date().getHours(), selam = saat < 12 ? 'Günaydın' : saat < 18 ? 'İyi günler' : 'İyi akşamlar';
@@ -1124,6 +1191,7 @@ function bugunCiz(){
   // Seri ilk tamamlanan günden sonra görünür; 0 gösteren bir sayaç ilk gün motivasyon değil yük.
   const y = o.oyun, seriVar = y && (y.seri || y.en_uzun || (y.bugun || {}).durum === 'tamam' || ((y.puan || {}).toplam || 0) > 0);
   if (seriVar) h += puanSerit();
+  h += haftaHalka(!!(o.ilk || {}).aktif);                                     // ilk haftada düğmesiz: tek adımı ilk hafta kartı verir
   if (o.tarama.bekliyor) h += `<div class="kart"><div class="not uyari" style="margin:0">Sağlık sorularından birine "evet" dediniz. Doktorunuzla konuştuktan sonra planı başlatın.</div><button class="btn genis" style="margin-top:10px" data-doktor>Doktorumla konuştum, onay aldım</button></div>`;
   if ((o.calisan || {}).plan) h += `<div class="kart"><div class="satir"><span class="donen"></span><b>Haftanızı yazıyorum</b></div><p class="gri2" style="margin:6px 0 0;font-size:14px">Bir iki dakika sürer; bu sırada sabah sorularını cevaplayabilirsiniz.</p></div>`;
   h += kutlamaKart();
@@ -1134,10 +1202,10 @@ function bugunCiz(){
   if (ilk){                                                                    // ilk hafta: tek adım, gerisi sade
     (b.seanslar || []).filter(x => x.tur === 'bjj_ders').forEach(x => h += seansKart(x, false));
     h += bjjSoruKart();
-    h += hedefKart(true) + gunPlaniKart() + kontrolKart() + pencereKart() + (o.oyun ? gorevKart() : '') + '<div id="telKart"></div>' + suKart() + sohbetKart();
+    h += hedefKart(true) + gunPlaniKart() + kontrolKart() + pencereKart() + modulOlayKart() + modulKart() + (o.oyun ? gorevKart() : '') + '<div id="telKart"></div>' + suKart() + sohbetKart();
     m.innerHTML = h;
     $$('.btn.ana', m).slice(1).forEach(x => x.classList.remove('ana'));
-    telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); seriBagla(m); yeniBagla(m);
+    haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); seriBagla(m); yeniBagla(m);
     $$('[data-sekme]', m).forEach(x => x.onclick = () => { S.sek = 'plan'; S.alt = 'program'; store.set('pt_sek', 'plan'); store.set('pt_alt', 'program'); window.scrollTo(0, 0); ciz(); });
     const ss = (o.ilk.simdi || {}).seans; if (ss) sesHazirla(ss);
     return;
@@ -1153,6 +1221,7 @@ function bugunCiz(){
   if (new Date().getHours() >= 17) h += aksamKart();
   h += kontrolKart();
   h += pencereKart();
+  h += modulOlayKart() + modulKart();
   if (o.oyun) h += gorevKart();
   h += hedefKart(true);
   const notlar = [bjjSoruKart(), haftalikKart(), o.mesaj && o.mesaj.hafta && Date.now() / 1000 - o.mesaj.zaman < 4 * 86400 ? `<div class="kart"><div class="kbas"><h3>Haftalık mesajınız</h3><span class="mono">${esc(haftaYazi(o.mesaj.hafta))}</span></div><p class="gri2" style="margin:0 0 6px;font-size:14px">${esc(o.mesaj.degisecek || '')}</p><button class="metin" data-mesaj>Oku</button></div>` : '', o.oyun ? oneriKart() : '', araSoruKart(), aliskanlikKart(), tanismaKart()].filter(Boolean);
@@ -1162,7 +1231,7 @@ function bugunCiz(){
   h += sohbetKart();
   m.innerHTML = h;
   $$('.btn.ana', m).slice(1).forEach(x => x.classList.remove('ana'));          // tek birincil düğme
-  telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); oneriBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); kocBagla(m); seriBagla(m); yeniBagla(m);
+  haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); oneriBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); kocBagla(m); seriBagla(m); yeniBagla(m);
   (b.seanslar || []).forEach(s => (s.bolumler || []).length && !s.bitti && sesHazirla(s));
 }
 function bugunBagla(m){
@@ -1189,7 +1258,7 @@ function bugunBagla(m){
 const KIRMIZI = () => ({tur: 'mobilite', baslik: 'Hareketlilik', sure_dk: 20, bolumler: [{ad: 'Hareketlilik', bicim: 'sure', hareketler: ['kedi_inek', 'dunya_esneme', 'kalca_9090', 'gogus_donus', 'derin_squat_tutus', 'kanepe_esneme'].map(k => ({kod: k, sure_sn: 75}))}]});
 async function planYaz(istek, hafta){ try{ await api('/api/pt/program/uret', json({istek, hafta})); toast('Haftanızı yazıyorum; bir iki dakika sürer.'); yukle(); }catch(e){ toast(e.message); } }
 
-/* ------------------------------------------------------------------ görüşmeler: PT sorar, siz seçersiniz (diyetisyen, gün düzeni, akşam, pazar) */
+/* ------------------------------------------------------------------ görüşmeler: Health sorar, siz seçersiniz (diyetisyen, gün düzeni, akşam, pazar) */
 function gorusme({mono, baslik, giris, sorular, son, bitir}){
   const C = {}; let i = 0;
   const p = sayfa('<div id="gr"></div>');
@@ -1356,7 +1425,7 @@ function aliskanlikKart(){
 }
 function araSoruKart(){
   const q = S.o.ara_soru; if (!q) return '';
-  return `<div class="kart"><span class="mono">PT soruyor</span><div style="font-weight:600;font-size:15.5px;margin:3px 0 8px">${esc(q.soru)}</div><div class="cipler">${q.secenekler.map(s => `<button data-ara="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>`;
+  return `<div class="kart"><span class="mono">Health soruyor</span><div style="font-weight:600;font-size:15.5px;margin:3px 0 8px">${esc(q.soru)}</div><div class="cipler">${q.secenekler.map(s => `<button data-ara="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>`;
 }
 function kutlamaKart(){
   const L = S.o.kutlama || []; if (!L.length) return '';
@@ -1367,10 +1436,10 @@ function kocBagla(m){
   $$('[data-haftalikg]', m).forEach(x => x.onclick = haftalikGorusme);
   $$('[data-gorus]', m).forEach(x => x.onclick = () => (x.dataset.gorus === 'diyet' ? diyetGorusmesi : gunGorusmesi)());
   $$('[data-alis]', m).forEach(x => x.onclick = async () => { const v = !x.classList.contains('on'); x.classList.toggle('on', v); x.textContent = v ? '✓' : ''; try{ S.o.aliskanlik = await gonder('/api/pt/aliskanlik', {tarih: bugunT(), tamam: v}); if (v) toast('İşaretlendi.'); }catch(e){ toast(e.message); } });
-  $$('[data-ara]', m).forEach(x => x.onclick = async () => { const k = x.closest('.kart'); try{ const r = await api('/api/pt/ara-soru', json({kod: S.o.ara_soru.kod, cevap: x.dataset.ara})); S.o.ara_soru = null; k.innerHTML = '<span class="mono">PT soruyor</span><div style="font-size:14.5px;margin-top:4px">Not aldım; planlarken dikkate alırım.</div>'; }catch(e){ toast(e.message); } });
+  $$('[data-ara]', m).forEach(x => x.onclick = async () => { const k = x.closest('.kart'); try{ const r = await api('/api/pt/ara-soru', json({kod: S.o.ara_soru.kod, cevap: x.dataset.ara})); S.o.ara_soru = null; k.innerHTML = '<span class="mono">Health soruyor</span><div style="font-size:14.5px;margin-top:4px">Not aldım; planlarken dikkate alırım.</div>'; }catch(e){ toast(e.message); } });
 }
 
-/* ------------------------------------------------------------------ KOÇ: görüşmeler, mesajlar, konuşma, PT'nin hafızası */
+/* ------------------------------------------------------------------ KOÇ: görüşmeler, mesajlar, konuşma, Health'in hafızası */
 /* "2026-W43" gibi ISO hafta kimliğini insanca yazar: "20–26 Ekim". */
 function haftaYazi(w){ const m = /^(\d{4})-W(\d{1,2})$/.exec(w || ''); if (!m) return w || '';
   const y = +m[1], n = +m[2], j4 = new Date(Date.UTC(y, 0, 4)), pz = new Date(j4); pz.setUTCDate(j4.getUTCDate() - ((j4.getUTCDay() + 6) % 7) + (n - 1) * 7);
@@ -1389,7 +1458,7 @@ function kocCiz(){
   const BA = {ilk_ogun: 'İlk öğün', ogle: 'Öğle', aksam: 'Akşam', atistirma: 'Atıştırma', atistirma_ne: 'Atıştırdıkları', icecek: 'İçecekler', alkol: 'Alkol', pisirme: 'Yemek yapma', pisirme_sure: 'Öğüne ayrılan vakit', toplu: 'Toplu hazırlık', disari: 'Dışarıda yeme', protein: 'Sevdiği proteinler', sevmez: 'Sevmedikleri', butce: 'Bütçe', zor: 'En zorlayan'};
   let h = `<button class="metin sessiz" data-kocgeri style="padding:0">‹ Siz</button><h1 class="bas">Koçunuz.</h1><p class="alti">Antrenörünüz ve diyetisyeniniz. Sizi tanıdıkça planı daha iyi kurarım.</p>`;
   const dg = o.degerlendirme || {}, kn = o.kontrol || {}, hd = o.hedefler || {};
-  h += `<div class="kart"><div class="kbas"><h3>PT'nin değerlendirmesi</h3>${dg.var ? `<span class="mono">${dg.eski ? 'profiliniz değişti' : 'güncel'}</span>` : ''}</div>
+  h += `<div class="kart"><div class="kbas"><h3>Health'in değerlendirmesi</h3>${dg.var ? `<span class="mono">${dg.eski ? 'profiliniz değişti' : 'güncel'}</span>` : ''}</div>
     ${dg.var ? `<p class="gri2" style="margin:0 0 8px;font-size:14px">${esc(dg.mesaj || '')}</p><div class="hsatir"><span>Antrenman</span><span>${esc(dg.antrenman || '')}</span></div><div class="hsatir"><span>Beslenme</span><span>${esc(dg.beslenme || '')}</span></div><div class="satir" style="margin-top:8px"><button class="btn kucuk" data-deger>Oku</button><button class="metin sessiz" data-deger-yenile style="font-size:13px">Yeniden yaz</button></div>`
       : dg.hazirlaniyor ? '<div class="satir gri"><span class="donen"></span> Yazılıyor</div>' : '<p class="gri2" style="margin:0 0 8px;font-size:14px">Sizi nasıl gördüğüm, antrenman ve beslenme yaklaşımınız.</p><button class="btn kucuk" data-deger-yenile>Şimdi yaz</button>'}</div>`;
   h += `<div class="kart"><div class="kbas"><h3>Hedefler</h3><span class="mono">4 hafta · 3 ay · 1 yıl</span></div>${(hd.aktif || []).map(x => hedefSatir(x)).join('') || '<p class="gri2" style="margin:0 0 8px;font-size:14px">Henüz belirlenmedi.</p>'}<button class="btn kucuk" style="margin-top:8px" data-hedef>${hd.var ? 'Düzenle' : 'Birlikte belirleyelim'}</button></div>`;
@@ -1401,7 +1470,7 @@ function kocCiz(){
   h += `<div class="kart"><div class="kbas"><h3>Görüşmeler</h3></div>${G.map(([k, a, alt, d]) => `<div class="lsatir"><div class="lgovde"><b>${a}</b><small>${esc(alt)}</small></div><button class="btn kucuk ${k === 'hafta' && o.haftalik_gorusme ? 'ana' : ''}" data-kg="${k}">${d}</button></div>`).join('')}</div>`;
   if (o.mesaj && o.mesaj.hafta) h += `<div class="kart"><div class="kbas"><h3>Haftalık mesajınız</h3><span class="mono">${esc(haftaYazi(o.mesaj.hafta))}</span></div><p class="gri2" style="margin:0 0 6px;font-size:14px">${esc(o.mesaj.degisecek || '')}</p><button class="metin" data-mesaj>Oku ya da dinle</button></div>`;
   h += '<div class="kart" id="ihtiyacKart"><div class="satir gri"><span class="donen"></span></div></div>';
-  h += `<div class="kart hafiza"><div class="kbas"><h3>PT'nin bildikleri</h3></div><p class="gri2" style="margin:0 0 8px;font-size:13.5px">Plan yazarken bunları bilirim. Yanlış ya da eskimiş olanı silin.</p>
+  h += `<div class="kart hafiza"><div class="kbas"><h3>Health'in bildikleri</h3></div><p class="gri2" style="margin:0 0 8px;font-size:13.5px">Plan yazarken bunları bilirim. Yanlış ya da eskimiş olanı silin.</p>
     ${Object.keys(BA).filter(k => ba[k] && !(Array.isArray(ba[k]) && !ba[k].length)).map(k => `<div class="hsatir"><span>${BA[k]}</span><span>${esc(sv(k, ba[k]))}</span></div>`).join('')}
     ${(p.saglik_degerleri || []).map(x => `<div class="hsatir"><span>${esc(x.ad)}</span><span>${esc(x.deger)} ${esc(x.birim || '')}</span></div>`).join('')}
     ${(p.sinirlar || []).map(x => `<div class="hsatir"><span>Sağlık notu</span><span>${esc(x)}</span></div>`).join('')}
@@ -1417,18 +1486,18 @@ function kocCiz(){
   $$('[data-notsil]', m).forEach(b => b.onclick = async () => { const n = notlar[+b.dataset.notsil]; await api('/api/pt/profil', json({notlar: (p.notlar || []).filter(x => x !== n)})); toast('Silindi.'); yukle(); });
 }
 
-/* ------------------------------------------------------------------ PT önerileri (2026-10-27): sıradaki program ve "şuna ihtiyacınız var". Bugün'de günde tek kart,
+/* ------------------------------------------------------------------ Health önerileri (2026-10-27): sıradaki program ve "şuna ihtiyacınız var". Bugün'de günde tek kart,
    tek cümlelik nedenle; Sonra (7 gün) / Bana göre değil (kalıcı). Koç'ta hepsi ve sıklık ayarı; Programlar'da "Sizin için". */
 const ONERI_TUR = {ekipman: 'Ekipman', beslenme: 'Beslenme', toparlanma: 'Toparlanma', olcum: 'Ölçüm', saglik: 'Sağlık', hareketlilik: 'Hareketlilik'};
 function oneriSatir(o, buyuk){
   const e = o.eylem || {};
-  return `<div class="oneri" data-okod="${esc(o.kod)}"><span class="mono">${buyuk ? 'PT önerisi · ' : ''}${esc(ONERI_TUR[o.tur] || '')}</span><b>${esc(o.baslik)}</b><p>${esc(o.neden)}</p>
+  return `<div class="oneri" data-okod="${esc(o.kod)}"><span class="mono">${buyuk ? 'Health önerisi · ' : ''}${esc(ONERI_TUR[o.tur] || '')}</span><b>${esc(o.baslik)}</b><p>${esc(o.neden)}</p>
     <div class="satir">${e.ad ? `<button class="btn kucuk" data-oeylem="${esc(o.kod)}">${esc(e.ad)}</button>` : ''}<button class="metin sessiz" data-osonra="${esc(o.kod)}">Sonra</button><button class="metin sessiz" data-odegil="${esc(o.kod)}">Bana göre değil</button></div></div>`;
 }
 function oneriKart(){
   const o = S.o.oneri; if (!o) return '';
   if (o.tip === 'program'){ const P = o.program;
-    return `<div class="kart"><div class="oneri" data-okod="${esc(o.kod)}"><span class="mono">PT önerisi · Program</span><b>${esc(P.ad)} · ${P.hafta} hafta</b><p>${esc(P.neden)}${P.eksik_ekipman.length ? ` ${esc(P.eksik_ekipman.join(', '))} yoksa yerine benzer hareketler konur.` : ''}</p>
+    return `<div class="kart"><div class="oneri" data-okod="${esc(o.kod)}"><span class="mono">Health önerisi · Program</span><b>${esc(P.ad)} · ${P.hafta} hafta</b><p>${esc(P.neden)}${P.eksik_ekipman.length ? ` ${esc(P.eksik_ekipman.join(', '))} yoksa yerine benzer hareketler konur.` : ''}</p>
       <div class="satir"><button class="btn kucuk" data-oprog="${esc(P.kod)}">Programa bak</button><button class="metin sessiz" data-osonra="${esc(o.kod)}">Sonra</button><button class="metin sessiz" data-odegil="${esc(o.kod)}">Bana göre değil</button></div>
       ${(o.alternatif || []).length ? `<p class="gri" style="font-size:12.5px;margin:8px 0 0">Ya da: ${o.alternatif.map(a => `<button class="metin" data-oprog="${esc(a.kod)}">${esc(a.ad)}</button>`).join(' · ')}</p>` : ''}</div></div>`; }
   return `<div class="kart">${oneriSatir(o, true)}</div>`;
@@ -1468,10 +1537,10 @@ async function ihtiyacKart(){
   segBagla(k, async g => { try{ await api('/api/pt/oneri/siklik', json({siklik: segDeger(g)})); toast('Kaydedildi.'); }catch(e){ toast(e.message); } });
 }
 
-/* ------------------------------------------------------------------ PT ile konuşma: hazır seçenekler, PT gerekirse seçenekli sorar, değişikliği önerir, siz onaylarsınız */
+/* ------------------------------------------------------------------ Health ile konuşma: hazır seçenekler, Health gerekirse seçenekli sorar, değişikliği önerir, siz onaylarsınız */
 const SOHBET_HAZIR = ['Vaktim az', 'Bir yerim ağrıyor', 'Çok yorgunum'];
 function sohbetKart(){
-  return `<div class="kart"><div class="sohbetsatir"><input id="sohbetGir" placeholder="PT'ye yazın: planı değiştir, ne yesem…" enterkeyhint="send"><button id="sohbetGon" aria-label="Gönder">↑</button></div>
+  return `<div class="kart"><div class="sohbetsatir"><input id="sohbetGir" placeholder="Health'e yazın: planı değiştir, ne yesem…" enterkeyhint="send"><button id="sohbetGon" aria-label="Gönder">↑</button></div>
     <div class="cipler kaydir" style="margin-top:10px">${SOHBET_HAZIR.map(x => `<button data-sohbet="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`;
 }
 function sohbetBagla(m){
@@ -1481,7 +1550,7 @@ function sohbetBagla(m){
   $('#sohbetGon', m).onclick = git; g.onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); git(); } };
 }
 async function sohbetSayfa(ilk){
-  const p = sayfa(`<h3>PT</h3><div id="sb" class="sohbetakis"></div><div class="sohbetsatir" style="margin-top:10px"><input id="sbGir" placeholder="Yazın…" enterkeyhint="send"><button id="sbGon" aria-label="Gönder">↑</button></div>`, {kapaninca: () => yukle(true)});
+  const p = sayfa(`<h3>Health</h3><div id="sb" class="sohbetakis"></div><div class="sohbetsatir" style="margin-top:10px"><input id="sbGir" placeholder="Yazın…" enterkeyhint="send"><button id="sbGon" aria-label="Gönder">↑</button></div>`, {kapaninca: () => yukle(true)});
   const sb = $('#sb', p);
   let L = [];
   try{ L = (await api('/api/pt/sohbet')).mesajlar || []; }catch(e){ /* yok */ }
@@ -1577,7 +1646,7 @@ function sabahSayfa(){
 function durSayfa(){
   sayfa(`<h3 style="color:var(--kirmizi)">Bugün antrenman yok.</h3><p style="font-size:15px">Şu belirtilerden biri varsa spor yapmayın ve bir doktora başvurun. Göğüste baskı ya da sıkışma gibi belirtiler sürüyorsa hemen <b>112</b>'yi arayın.</p>
     <ul style="padding-left:18px;color:var(--ink2);font-size:14px">${S.kat.uyari.map(x => `<li style="margin:4px 0">${esc(x)}</li>`).join('')}</ul>
-    <p class="gri" style="font-size:13px">PT teşhis koymaz; bu ekran yalnızca güvenlik içindir.</p><div class="salt"><button class="btn" data-kapat>Anladım</button></div>`);
+    <p class="gri" style="font-size:13px">Health teşhis koymaz; bu ekran yalnızca güvenlik içindir.</p><div class="salt"><button class="btn" data-kapat>Anladım</button></div>`);
 }
 
 /* ------------------------------------------------------------------ OYNATICI */
@@ -1943,7 +2012,7 @@ async function planCiz(hafta){
   if ((pl.eger_ise || []).length) h += `<h2 class="bolum">Bir şey değişirse</h2><div class="kart">${pl.eger_ise.map(x => `<div class="lsatir" style="font-size:14.5px">${esc(x)}</div>`).join('')}</div>`;
   h += `<div class="sohbetsatir" style="margin-top:6px"><input id="p_istek" placeholder="Değişiklik isteyin: perşembe yoldayım…" enterkeyhint="send"><button data-yaz aria-label="Haftayı yeniden yaz">↑</button></div>
     <div class="satir" style="margin-top:10px">${r.geri_var ? '<button class="metin" data-geri>Önceki plana dön</button>' : ''}<a class="metin" href="/api/pt/takvim.ics?hafta=${esc(r.hafta)}">Takvime ekle</a></div>`;
-  h += `<details class="kart" style="margin-top:18px"><summary class="gri2" style="cursor:pointer;font-size:14.5px">PT nasıl karar veriyor?</summary>${(o.kurallar || []).map(x => `<div class="lsatir" style="font-size:14px;color:var(--ink2)">${esc(x)}</div>`).join('')}</details>`;
+  h += `<details class="kart" style="margin-top:18px"><summary class="gri2" style="cursor:pointer;font-size:14.5px">Health nasıl karar veriyor?</summary>${(o.kurallar || []).map(x => `<div class="lsatir" style="font-size:14px;color:var(--ink2)">${esc(x)}</div>`).join('')}</details>`;
   m.innerHTML = altSekHtml() + h; altSekBagla();
   $$('#haftaSec button', m).forEach(b => b.onclick = () => planCiz(b.dataset.v === r.bu ? null : b.dataset.v));
   $$('[data-yaz]', m).forEach(b => b.onclick = () => planYaz(($('#p_istek') || {}).value || '', r.hafta));
@@ -2068,7 +2137,7 @@ function oneriHtml(o){ return `<div class="kart"><div class="kbas"><h3>Bugün i�
 /* Yemek ekle (2026-10-27; kullanıcı: "yediklerimin fotoğrafını atayım, kaloriyi çözümlesin"): fotoğraf seçilince tahmin kendiliğinden başlar;
    en çok 3 fotoğraf (farklı açı ya da yemekten sonra tabakta kalan). Model gram + 100 g değerlerini verir; gram değişince kalori ve protein
    kendiliğinden güncellenir (kcal/protein elle değişirse o satır elle sayılır). Sorunun hazır cevapları yeniden tahmin ettirir. Kaydederken ilk
-   tahmin de gider: PT düzeltmelerinizden porsiyon alışkanlığınızı öğrenir. `duzenle`: Paylaş menüsünden gelmiş, kontrol bekleyen öğün. */
+   tahmin de gider: Health düzeltmelerinizden porsiyon alışkanlığınızı öğrenir. `duzenle`: Paylaş menüsünden gelmiş, kontrol bekleyen öğün. */
 function yemekSayfa(hazir, {dosyalar, duzenle} = {}){
   const p = sayfa(`<h3>${duzenle ? 'Öğünü kontrol edin' : 'Yemek ekle'}</h3>
     ${duzenle ? `<p class="gri2" style="margin:0 0 10px;font-size:14px">Telefonunuzdan gelen fotoğraftan tahmin ettim. Gramları düzeltip kaydedin.</p>` : `<p class="gri2" style="margin:0 0 10px;font-size:14px">Fotoğraf çekin; isterseniz bir cümle ekleyin. Yemekten sonra tabakta kalanı da çekerseniz onu düşerim.</p>`}
@@ -2201,7 +2270,7 @@ async function yorgunlukKart(){
       <polyline points="${cz('kondisyon')}" fill="none" stroke="var(--vurgu)" stroke-width="2.2"/><polyline points="${cz('yorgunluk')}" fill="none" stroke="var(--turuncu)" stroke-width="1.6" stroke-dasharray="4 3"/>
       <text x="0" y="${H - 4}">${tarihKisa(L[0].tarih)}</text><text x="${W - 60}" y="${H - 4}">Bugün</text></svg>
     <div class="satir" style="gap:14px;font-size:12.5px;color:var(--ink2)"><span><b style="color:var(--vurgu)">—</b> Kondisyon (6 hafta)</span><span><b style="color:var(--turuncu)">- -</b> Yorgunluk (1 hafta)</span><span>▮ Günlük yük</span></div>
-    <p class="gri" style="font-size:12.5px;margin:6px 0 0">Yük = seans zorluğu × dakika. Yorgunluk kondisyonun belirgin üstüne çıkınca PT o hafta hafif gider.</p>`;
+    <p class="gri" style="font-size:12.5px;margin:6px 0 0">Yük = seans zorluğu × dakika. Yorgunluk kondisyonun belirgin üstüne çıkınca Health o hafta hafif gider.</p>`;
 }
 async function ilerlemeCiz(){
   const m = $('#main'), sek0 = S.sek;
@@ -2298,7 +2367,7 @@ async function kanitKart(){
   const r = await api('/api/pt/kanit').catch(() => null); if (!r) return;
   const G = {yuksek: ['yesil', 'Güçlü'], orta: ['vurgu', 'Orta'], dusuk: ['sari', 'Zayıf']};
   const bek = (r.oneriler || []).filter(o => o.durum === 'bekliyor'), onay = (r.oneriler || []).filter(o => o.durum === 'kabul');
-  k.innerHTML = `<p class="gri2" style="margin:0 0 8px;font-size:14px">PT'nin her kuralı bir kaynağa dayanır. Ayda bir yeni araştırmalara bakarım; bir kuralın değişmesi gerekiyorsa size sorarım.${r.son_tarama ? ` Son tarama: ${new Date(r.son_tarama * 1000).toLocaleDateString('tr-TR', {day: 'numeric', month: 'long'})}${r.son_makale != null ? `, ${r.son_makale} makale` : ''}.` : ''}</p>
+  k.innerHTML = `<p class="gri2" style="margin:0 0 8px;font-size:14px">Health'in her kuralı bir kaynağa dayanır. Ayda bir yeni araştırmalara bakarım; bir kuralın değişmesi gerekiyorsa size sorarım.${r.son_tarama ? ` Son tarama: ${new Date(r.son_tarama * 1000).toLocaleDateString('tr-TR', {day: 'numeric', month: 'long'})}${r.son_makale != null ? `, ${r.son_makale} makale` : ''}.` : ''}</p>
     ${bek.map(o => `<div class="eylemkart" style="margin-bottom:8px"><b>${esc(o.oneri)}</b><span class="gri2" style="font-size:13.5px">${esc(o.neden)}</span><span class="gri" style="font-size:12px">${esc(o.baslik)} · <a href="https://pubmed.ncbi.nlm.nih.gov/${esc(o.pmid)}/" target="_blank" rel="noopener">PubMed</a> · güven ${esc(o.guven)}</span><div class="satir" style="margin-top:6px"><button class="btn ana kucuk" data-kk="${o.id}">Uygula</button><button class="btn kucuk" data-kr="${o.id}">Gerek yok</button></div></div>`).join('')}
     ${onay.length ? `<span class="etk">Onayladığınız güncellemeler</span>${onay.map(o => `<div class="not">${esc(o.oneri)}</div>`).join('')}` : ''}
     <details style="margin-top:8px"><summary class="gri2" style="font-size:14px;cursor:pointer">Kurallar ve dayanakları (${r.kanit.length})</summary>${r.kanit.map(x => `<div class="lsatir" style="align-items:flex-start"><span class="rozet ${G[x.guven][0]}" style="flex:none">${G[x.guven][1]}</span><div class="lgovde"><span style="font-size:14px">${esc(x.kural)}</span><small>${esc(x.kaynak)}, ${x.yil}${x.not ? ' · ' + esc(x.not) : ''}</small></div></div>`).join('')}</details>
@@ -2306,7 +2375,7 @@ async function kanitKart(){
   $$('[data-kk],[data-kr]', k).forEach(b => b.onclick = async () => { await api('/api/pt/kanit/karar', json({id: b.dataset.kk || b.dataset.kr, kabul: !!b.dataset.kk})); toast(b.dataset.kk ? 'Uygulandı; sonraki plan buna göre yazılır.' : 'Tamam.'); kanitKart(); });
   $('#kanitTara').onclick = async () => { try{ await api('/api/pt/kanit/tara', json({})); toast('Yeni araştırmalara bakıyorum; birkaç dakika sürer.'); kanitKart(); }catch(e){ toast(e.message); } };
 }
-/* PT telefonda (2026-10-28): kurulumun sonunda ve eşleşmiş telefonu olmayana Bugün'de; telefonda ana ekrana ekleme ve bildirim izni. */
+/* Health telefonda (2026-10-28): kurulumun sonunda ve eşleşmiş telefonu olmayana Bugün'de; telefonda ana ekrana ekleme ve bildirim izni. */
 const tekUygulama = () => navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
 const iPhoneMu = () => /iPhone|iPad/.test(navigator.userAgent);
 async function telKartYukle(){
@@ -2316,10 +2385,10 @@ async function telKartYukle(){
   if (!$('#telKart')) return;
   let h = '';
   if (t.uzak){
-    if (iPhoneMu() && !tekUygulama()) h = gizli ? '' : `<div class="kart"><b>PT'yi ana ekranınıza ekleyin</b><p class="gri2" style="margin:4px 0 0;font-size:14px">Safari'de Paylaş düğmesi → <b>Ana Ekrana Ekle</b>. Ana ekrandan açınca tam ekran çalışır ve bildirim gönderebilirim.</p><p style="margin:8px 0 0"><button class="metin sessiz" data-telsonra style="padding:0">Sonra</button></p></div>`;
+    if (iPhoneMu() && !tekUygulama()) h = gizli ? '' : `<div class="kart"><b>Health'i ana ekranınıza ekleyin</b><p class="gri2" style="margin:4px 0 0;font-size:14px">Safari'de Paylaş düğmesi → <b>Ana Ekrana Ekle</b>. Ana ekrandan açınca tam ekran çalışır ve bildirim gönderebilirim.</p><p style="margin:8px 0 0"><button class="metin sessiz" data-telsonra style="padding:0">Sonra</button></p></div>`;
     else if (await PUSH.durum() === 'kapali' && !gizli) h = `<div class="kart"><b>Bildirimleri açın</b><p class="gri2" style="margin:4px 0 10px;font-size:14px">Sabah sorusu, antrenmandan 10 dakika önce, yeme pencereniz kapanmadan 30 dakika önce. Günde birkaç tane, fazlası değil.</p><div class="satir"><button class="btn" data-pushac>Bildirimleri aç</button><button class="metin sessiz" data-telsonra>Sonra</button></div></div>`;
   } else if (t.tunel && !t.telefon_yok && !(t.cihazlar || []).length && !gizli){
-    h = `<div class="kart"><b>PT'yi telefonunuza alın</b><p class="gri2" style="margin:4px 0 10px;font-size:14px">Antrenmanı parkta ya da evde telefondan yaparsınız; bildirimler de telefona gelir. Bir kez QR okutmanız yeter.</p><div class="satir"><button class="btn" data-telac>Telefonumu eşleştir</button><button class="metin sessiz" data-telsonra>Sonra</button><button class="metin sessiz" data-telyok>Yalnız bilgisayarda kullanacağım</button></div></div>`;
+    h = `<div class="kart"><b>Health'i telefonunuza alın</b><p class="gri2" style="margin:4px 0 10px;font-size:14px">Antrenmanı parkta ya da evde telefondan yaparsınız; bildirimler de telefona gelir. Bir kez QR okutmanız yeter.</p><div class="satir"><button class="btn" data-telac>Telefonumu eşleştir</button><button class="metin sessiz" data-telsonra>Sonra</button><button class="metin sessiz" data-telyok>Yalnız bilgisayarda kullanacağım</button></div></div>`;
   }
   el.innerHTML = h;
   const sn = $('[data-telsonra]', el); if (sn) sn.onclick = () => { store.set('pt_telgizle', String(Date.now() + 7 * 864e5)); el.innerHTML = ''; };
@@ -2332,9 +2401,9 @@ async function telefonSayfa(kurulumdan){
   if (t.uzak) return;
   if (!t.tunel){ if (!kurulumdan) toast('Dış bağlantı kapalı: Meet → Ayarlar → Davetler bölümünden açılır.'); return; }
   const once = (t.cihazlar || []).length;
-  const p = sayfa(`<span class="mono">${kurulumdan ? 'Son adım' : 'Telefon'}</span><h3 style="margin:2px 0 6px">PT'yi telefonunuza alın</h3>
-    <ol class="tadim"><li><b>iPhone'un kamerasıyla bu kodu okutun.</b> Açılan sayfada PT gelir.<div id="tqr" class="tqr"><span class="donen"></span></div></li>
-    <li><b>Paylaş → Ana Ekrana Ekle.</b> PT telefonunuzda uygulama gibi açılır; Wi-Fi'da olmasanız da çalışır.</li>
+  const p = sayfa(`<span class="mono">${kurulumdan ? 'Son adım' : 'Telefon'}</span><h3 style="margin:2px 0 6px">Health'i telefonunuza alın</h3>
+    <ol class="tadim"><li><b>iPhone'un kamerasıyla bu kodu okutun.</b> Açılan sayfada Health gelir.<div id="tqr" class="tqr"><span class="donen"></span></div></li>
+    <li><b>Paylaş → Ana Ekrana Ekle.</b> Health telefonunuzda uygulama gibi açılır; Wi-Fi'da olmasanız da çalışır.</li>
     <li><b>Ana ekrandan açın, "Bildirimleri aç"a dokunun.</b> Sabah sorusu ve antrenman hatırlatması telefona gelir.</li></ol>
     <label class="satir" style="margin-top:6px;font-size:14px"><input type="checkbox" id="tuyanik" ${t.uyanik ? 'checked' : ''}> Prizdeyken Mac uyumasın <span class="gri" style="font-size:12.5px">(Mac uyursa telefondan açılmaz)</span></label>
     <p class="gri" id="tdurum" style="font-size:13px;margin:10px 0 0">Kod 10 dakika geçerli, tek kullanımlık.</p>
@@ -2359,7 +2428,7 @@ const PUSH = {
 async function bildirimKart(){
   const k = $('#bildirimKart'); if (!k) return;
   const d = await PUSH.durum(); let cihaz = 0; try{ cihaz = (await api('/api/pt/push/anahtar')).cihaz || 0; }catch(e){ /* yok */ }
-  const yazi = {yok: 'Bu tarayıcıda açılamıyor: telefonda PT\'yi ana ekrana ekleyip oradan açın (güvenli adres gerekir).', red: 'Bildirim izni reddedilmiş; iPhone Ayarlar → Bildirimler → PT.', acik: 'Bu cihazda açık.', kapali: 'Bu cihazda kapalı.'}[d];
+  const yazi = {yok: 'Bu tarayıcıda açılamıyor: telefonda Health\'i ana ekrana ekleyip oradan açın (güvenli adres gerekir).', red: 'Bildirim izni reddedilmiş; iPhone Ayarlar → Bildirimler → Health.', acik: 'Bu cihazda açık.', kapali: 'Bu cihazda kapalı.'}[d];
   k.innerHTML = `<p class="gri2" style="margin:0 0 8px;font-size:14px">Sabah soruları, yeme pencerenizin kapanmasına 30 dakika kala, saati belli antrenmandan 10 dakika önce ve pazar akşamı haftalık mesaj.</p>
     <div class="satir ara"><span>${esc(yazi)} <span class="gri">· kayıtlı cihaz: ${cihaz}</span></span><span class="satir">${d === 'kapali' ? '<button class="btn ana kucuk" id="pAc">Aç</button>' : d === 'acik' ? '<button class="metin sessiz" id="pKapat">Kapat</button>' : ''}${cihaz ? '<button class="metin" id="pDene">Deneme gönder</button>' : ''}</span></div>`;
   const a = $('#pAc'); if (a) a.onclick = async () => { a.disabled = true; try{ await PUSH.ac(); toast('Bildirimler açık.'); }catch(e){ toast(e.message); } bildirimKart(); };
@@ -2378,15 +2447,15 @@ async function sizCiz(){
     ${(p.sakatliklar || []).length ? `<div class="hsatir"><span>Sakatlıklar</span><span>${esc(p.sakatliklar.join(', '))}</span></div>` : ''}
     <div style="margin-top:10px"><button class="btn kucuk" id="duzenle">Düzenle</button></div></div>`;
   /* 2026-10-29 sadeleştirme: Koç bu sayfanın içinde; telefona özgü bölümler (eşleştirme, bildirim, kısayol, Apple Sağlık) yalnız telefon kullanılıyorsa. */
-  h += `<div class="kart"><button class="lsatir dugmesatir" data-recete><div class="lgovde"><b>Programınız</b><small>${esc(S.o.recete_var ? 'Haftanızın yapısı ve nedenleri; sayıları değiştirebilirsiniz' : 'PT\'nin size önerdiği haftalık yapı')}</small></div><span class="gri">›</span></button>
-    <button class="lsatir dugmesatir" data-koc><div class="lgovde"><b>Koçunuz</b><small>Görüşmeler ve PT'nin sizin hakkınızda bildikleri</small></div><span class="gri">›</span></button>
+  h += `<div class="kart"><button class="lsatir dugmesatir" data-recete><div class="lgovde"><b>Programınız</b><small>${esc(S.o.recete_var ? 'Haftanızın yapısı ve nedenleri; sayıları değiştirebilirsiniz' : 'Health\'in size önerdiği haftalık yapı')}</small></div><span class="gri">›</span></button>
+    <button class="lsatir dugmesatir" data-koc><div class="lgovde"><b>Koçunuz</b><small>Görüşmeler ve Health'in sizin hakkınızda bildikleri</small></div><span class="gri">›</span></button>
     <button class="lsatir dugmesatir" id="videoEkle"><div class="lgovde"><b>Kendi hareket videolarınız</b><small>${kendi.length ? kendi.length + ' video' : 'Bir hareketi kendiniz çekip ekleyin'}</small></div><span class="gri">›</span></button>
     ${kendi.length ? `<div class="hareketsir" style="flex-wrap:wrap;margin-top:8px">${kendi.map(x => `<div class="hk" data-hareket="${x.kod}" style="cursor:pointer"><img class="kucukresim" src="${x.kapak}" alt="">${esc(x.ad)}</div>`).join('')}</div>` : ''}</div>`;
   h += '<div id="telBolum"></div>';
   h += `<h2 class="bolum">Verileriniz</h2><div class="kart"><p class="gri2" style="margin:0 0 10px;font-size:14px">Kayıtlarınız bu bilgisayarda durur ve her gece yedeklenir. Plan ve yemek tahmini için yalnızca gereken bilgiler yapay zekâya gider.</p>
     <a class="btn kucuk" href="/api/pt/disa-aktar">Verilerimi indir</a></div>`;
   h += `<h2 class="bolum">Sağlık</h2><div class="kart"><p class="gri2" style="margin:0 0 8px;font-size:14px">Yeni bir tanı, ilaç değişikliği ya da ameliyattan sonra sağlık sorularını yeniden cevaplayın.</p><button class="btn kucuk" id="tarama">Sağlık sorularını yeniden cevapla</button> <button class="metin red" id="belirti">Uyarı belirtileri</button></div>`;
-  h += `<h2 class="bolum">PT nasıl karar veriyor?</h2><div class="kart" id="kanitKart"><div class="satir gri"><span class="donen"></span></div></div>`;
+  h += `<h2 class="bolum">Health nasıl karar veriyor?</h2><div class="kart" id="kanitKart"><div class="satir gri"><span class="donen"></span></div></div>`;
   m.innerHTML = h;
   bugunBagla(m);
   $('#duzenle').onclick = () => { S.kurulum = {adim: 'ozet', i: 0, p: JSON.parse(JSON.stringify(p)), notlar: (p.notlar || []).map((n, i) => ({...n, id: 'eski', t: 'e' + i})), ek: []}; ciz(); };
@@ -2400,7 +2469,7 @@ async function sizCiz(){
     if (!r.uzak && r.telefon_yok){ tb.innerHTML = `<div class="kart"><button class="lsatir dugmesatir" id="telAc"><div class="lgovde"><b>Telefonda kullanmak</b><small>Şu an yalnızca bu bilgisayarda</small></div><span class="gri">›</span></button></div>`;
       $('#telAc').onclick = async () => { await api('/api/pt/telefon-yok', json({geri: true})).catch(() => {}); sizCiz(); }; return; }
     tb.innerHTML = `<h2 class="bolum">Telefon</h2><div class="kart" id="erisim"></div><h2 class="bolum">Bildirimler</h2><div class="kart" id="bildirimKart"><div class="satir gri"><span class="donen"></span></div></div>
-      <h2 class="bolum">Yemek fotoğrafı gönderme</h2><div class="kart"><p class="gri2" style="margin:0 0 10px;font-size:14px">Telefonda yemeğin fotoğrafını <b>Paylaş → PT'ye yemek</b> ile gönderin; PT öğünü kaydeder.</p>
+      <h2 class="bolum">Yemek fotoğrafı gönderme</h2><div class="kart"><p class="gri2" style="margin:0 0 10px;font-size:14px">Telefonda yemeğin fotoğrafını <b>Paylaş → Health'e yemek</b> ile gönderin; Health öğünü kaydeder.</p>
       <div class="satir"><a class="btn ana" href="/api/pt/yemek/kisayol" download>Kısayolu indir</a><a class="btn" href="/api/pt/yemek/kisayol?yer=ev" download>Yalnız ev ağı için</a></div></div>
       <h2 class="bolum">Apple Sağlık</h2><div class="kart" id="saglikKart"></div>`;
     bildirimKart(); erisimCiz(r); }).catch(() => {});
@@ -2408,7 +2477,7 @@ async function sizCiz(){
 function saglikCiz(s){
   const e = $('#saglikKart'); if (!e || !s) return;
   const son = s.son_gonderim ? new Date(s.son_gonderim * 1000).toLocaleString('tr-TR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) : '';
-  e.innerHTML = `<p class="gri2" style="margin:0 0 8px;font-size:14px">Saatinizin ve telefonunuzun ölçtüğü uyku, nabız değişkenliği, sabah nabzı, kilo, adım ve antrenmanlar her sabah PT'ye gelir. Sabah soruları kısalır, ışık bunları da hesaba katar; saatle yaptığınız sürüşler kendiliğinden kaydedilir.</p>
+  e.innerHTML = `<p class="gri2" style="margin:0 0 8px;font-size:14px">Saatinizin ve telefonunuzun ölçtüğü uyku, nabız değişkenliği, sabah nabzı, kilo, adım ve antrenmanlar her sabah Health'e gelir. Sabah soruları kısalır, ışık bunları da hesaba katar; saatle yaptığınız sürüşler kendiliğinden kaydedilir.</p>
     ${son ? `<div class="hsatir"><span>Son gönderim</span><span>${son} · ${s.gun_sayisi} gün</span></div>` : '<div class="not uyari">Henüz veri gelmedi.</div>'}
     <details style="margin-top:8px"><summary class="gri2" style="cursor:pointer;font-size:14.5px">${son ? 'Kurulum adımları' : 'Nasıl kurulur?'}</summary>
     <span class="etk">Yol 1 · Health Auto Export uygulaması (en kolayı)</span>
@@ -2423,19 +2492,19 @@ function saglikCiz(s){
 function erisimCiz(t){
   saglikCiz(t.saglik);
   const e = $('#erisim'); if (!e) return;
-  if (t.uzak){ e.innerHTML = `<p style="margin:0 0 6px">Şu an PT'ye dışarıdan, eşleştirilmiş telefonunuzla giriyorsunuz.</p><p class="gri2" style="font-size:13.5px;margin:0">Ana ekrana eklemek için: Paylaş → Ana Ekrana Ekle. Mac uyursa bu adres açılmaz; Mac yeniden başlarsa adres değişir ve yeni giriş linki e-postanıza gelir.</p>`; return; }
+  if (t.uzak){ e.innerHTML = `<p style="margin:0 0 6px">Şu an Health'e dışarıdan, eşleştirilmiş telefonunuzla giriyorsunuz.</p><p class="gri2" style="font-size:13.5px;margin:0">Ana ekrana eklemek için: Paylaş → Ana Ekrana Ekle. Mac uyursa bu adres açılmaz; Mac yeniden başlarsa adres değişir ve yeni giriş linki e-postanıza gelir.</p>`; return; }
   const c = t.cihazlar || [];
-  e.innerHTML = `<p class="gri2" style="margin:0 0 10px;font-size:14px">Parkta ya da bisikletteyken PT'yi açmak için telefonunuzu bir kez eşleştirin. Meet'teki telefon girişiyle aynı; ayrıca bir şey kurmanız gerekmez.</p>
+  e.innerHTML = `<p class="gri2" style="margin:0 0 10px;font-size:14px">Parkta ya da bisikletteyken Health'i açmak için telefonunuzu bir kez eşleştirin. Meet'teki telefon girişiyle aynı; ayrıca bir şey kurmanız gerekmez.</p>
     ${!t.tunel ? '<div class="not uyari">Dış bağlantı şu an kapalı. Meet → Ayarlar → Davetler bölümünden açılır.</div>' : ''}
     ${c.length ? `<div class="hsatir"><span>Eşleşmiş telefonlar</span><span>${esc(c.map(x => x.ad).join(', '))}</span></div>` : ''}
-    ${t.adres && c.length ? `<span class="etk">Telefonda PT adresi</span><div class="mono" style="text-transform:none;font-size:12.5px;color:var(--ink);word-break:break-all">${esc(t.adres)}</div>` : ''}
+    ${t.adres && c.length ? `<span class="etk">Telefonda Health adresi</span><div class="mono" style="text-transform:none;font-size:12.5px;color:var(--ink);word-break:break-all">${esc(t.adres)}</div>` : ''}
     <div class="satir" style="margin-top:12px">${t.tunel ? `<button class="btn kucuk" id="esles">${c.length ? 'Başka bir telefon eşleştir' : 'Telefonumu eşleştir'}</button>` : ''}${t.adres && c.length ? '<button class="btn kucuk" id="adresKop">Adresi kopyala</button>' : ''}</div>
     <div id="qr"></div>
     <label class="satir" style="margin-top:12px;font-size:14px"><input type="checkbox" id="uyanik" ${t.uyanik ? 'checked' : ''}> Prizdeyken Mac uyumasın <span class="gri" style="font-size:12.5px">(kapak kapalıyken yine uyur)</span></label>`;
   const k = $('#adresKop'); if (k) k.onclick = () => navigator.clipboard.writeText(t.adres).then(() => toast('Kopyalandı.'));
   $('#uyanik').onchange = async ev => { try{ await api('/api/sahip-cihaz/ayar', json({uyanik: ev.target.checked})); toast(ev.target.checked ? 'Mac prizdeyken uyanık kalacak.' : 'Kapatıldı.'); }catch(er){ toast(er.message); ev.target.checked = !ev.target.checked; } };
   const b = $('#esles'); if (b) b.onclick = async () => { try{ const r = await api('/api/pt/esles', json({ad: 'iPhone'}));
-    $('#qr').innerHTML = `<div style="background:#fff;border-radius:14px;padding:10px;width:max-content;margin-top:12px">${r.qr}</div><p class="gri2" style="font-size:13.5px;margin:8px 0 0">iPhone'un kamerasıyla okutun; açılan sayfada PT gelir. Sonra Paylaş → Ana Ekrana Ekle. Kod 10 dakika geçerli, tek kullanımlık.</p>`; }catch(er){ toast(er.message); } };
+    $('#qr').innerHTML = `<div style="background:#fff;border-radius:14px;padding:10px;width:max-content;margin-top:12px">${r.qr}</div><p class="gri2" style="font-size:13.5px;margin:8px 0 0">iPhone'un kamerasıyla okutun; açılan sayfada Health gelir. Sonra Paylaş → Ana Ekrana Ekle. Kod 10 dakika geçerli, tek kullanımlık.</p>`; }catch(er){ toast(er.message); } };
 }
 function videoSayfa(kod, pozisyon){
   const k = kod ? kat(kod) : null;
@@ -2462,12 +2531,20 @@ function videoSayfa(kod, pozisyon){
 function sbKutu(kod, sinif = ''){ const K = kat(kod).kareler || []; if (!K.length) return '';
   return `<div class="sb ${sinif}" data-sb="${esc(kod)}">${K.map((x, i) => `<img src="${x.b}" alt="" class="${i ? '' : 'on'}" ${i ? 'loading="lazy"' : ''}>`).join('')}
     ${K.length > 1 ? `<div class="sb-nok">${K.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div><span class="sb-ad mono">1 / ${K.length}</span>` : ''}</div>`; }
+/* Hareket kareleri ileri-geri akar (1 → 2 → 3 → 2 → 1): başlangıç ve bitiş pozunda kısa bekleme, aralarda yumuşak geçiş ve hafif yakınlaşma;
+   altta limon yeşili ilerleme çizgisi. Dokununca durur ve tek tek ilerler. */
 function sbBaslat(k){ $$('[data-sb]', k).forEach(e => { if (e.dataset.basladi) return; e.dataset.basladi = 1;
   const im = $$('img', e), n = $$('.sb-nok i', e), ad = $('.sb-ad', e); if (im.length < 2) return; let i = 0, dur = false;
+  const cz = document.createElement('i'); cz.className = 'sb-cizgi'; e.appendChild(cz);
+  const sira = im.length > 2 ? [...im.keys(), ...[...im.keys()].slice(1, -1).reverse()] : [0, 1]; let si = 0;
   const git = j => { i = (j + im.length) % im.length; im.forEach((x, t) => x.classList.toggle('on', t === i)); n.forEach((x, t) => x.classList.toggle('on', t === i)); if (ad) ad.textContent = `${i + 1} / ${im.length}`;
     $$(`[data-sbadim="${e.dataset.sb}"]`).forEach((x, t) => x.classList.toggle('on', t === i)); };
-  e.onclick = () => { dur = true; git(i + 1); };
-  const t = setInterval(() => { if (!e.isConnected) return clearInterval(t); if (!dur && !document.hidden) git(i + 1); }, 1700);
+  e.onclick = () => { dur = true; cz.style.width = '0'; git(i + 1); };
+  const adim = () => { if (!e.isConnected) return; if (dur || document.hidden) return setTimeout(adim, 800);
+    si = (si + 1) % sira.length; git(sira[si]); const uc = sira[si] === 0 || sira[si] === im.length - 1, sure = uc ? 1500 : 1000;
+    cz.style.transition = 'none'; cz.style.width = (si / sira.length * 100) + '%'; requestAnimationFrame(() => { cz.style.transition = `width ${sure}ms linear`; cz.style.width = ((si + 1) / sira.length * 100) + '%'; });
+    setTimeout(adim, sure); };
+  setTimeout(adim, 1400);
   e._git = j => { dur = true; git(j); }; }); }
 function sbKucuk(kod){ const K = kat(kod).kareler || []; return K.length ? K[0].k : ''; }
 const ytSure = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
@@ -2523,7 +2600,7 @@ function hareketSayfa(kod, yeni){
     <span class="etk">Adı</span><input class="alan" id="h_ad" value="${esc(k.ad)}">
     <span class="etk">Nasıl yapılır</span><textarea class="alan" id="h_ac" rows="2">${esc(k.aciklama || '')}</textarea>
     <span class="etk">Form ipuçları (her satıra bir)</span><textarea class="alan" id="h_ip" rows="3">${esc((k.ipuclari || []).join('\n'))}</textarea>
-    ${k.kendi ? '<p class="gri" style="font-size:12.5px">Bu hareket katalogda yok; PT planı yazarken bunu da kullanabilir.</p>' : ''}
+    ${k.kendi ? '<p class="gri" style="font-size:12.5px">Bu hareket katalogda yok; Health planı yazarken bunu da kullanabilir.</p>' : ''}
     <div class="salt"><button class="btn" id="h_sil" style="color:var(--kirmizi)">Kaldır</button><button class="btn ana" id="h_kaydet">Kaydet</button></div>`);
   if (oynatici) p.kapaninca = oynatici;
   $('#h_kaydet', p).onclick = async () => { await api('/api/pt/hareket/' + kod, json({ad: $('#h_ad', p).value, aciklama: $('#h_ac', p).value, ipuclari: $('#h_ip', p).value.split('\n').map(x => x.trim()).filter(Boolean)})); p.kapat(); S.kat = null; toast('Kaydedildi.'); yukle(); };
@@ -2583,7 +2660,7 @@ function degerlendirmeKart(){
   const d = S.o.degerlendirme || {};
   if (d.hazirlaniyor && !d.var) return `<div class="kart"><div class="satir"><span class="donen"></span><b>Değerlendirmenizi yazıyorum</b></div><p class="gri2" style="margin:6px 0 0;font-size:14px">Sizi nasıl gördüğümü, hangi antrenman ve beslenme yaklaşımının size uyduğunu ve nedenlerini yazıyorum; bir dakika sürer.</p></div>`;
   if (!d.var || d.okundu) return '';
-  return `<div class="kart vurgulu deger"><span class="mono">PT'nin değerlendirmesi</span><h3>Sizi böyle gördüm.</h3><p>${esc(d.mesaj || '')}</p>
+  return `<div class="kart vurgulu deger"><span class="mono">Health'in değerlendirmesi</span><h3>Sizi böyle gördüm.</h3><p>${esc(d.mesaj || '')}</p>
     <div class="hsatir"><span>Antrenman</span><span>${esc(d.antrenman || '')}</span></div><div class="hsatir"><span>Beslenme</span><span>${esc(d.beslenme || '')}</span></div>
     <button class="btn ana genis" style="margin-top:10px" data-deger>Tamamını oku</button></div>`;
 }
@@ -2595,7 +2672,7 @@ async function degerlendirmeSayfa(){
     const y = $('#dgYaz', p); if (y) y.onclick = async () => { await api('/api/pt/degerlendirme', json({yenile: true})); p.kapat(); toast('Yazıyorum; bir dakika sürer.'); yukle(); }; return; }
   const H = S.o.hedefler || {}, bekleyen = H.bekleyen_oneri;
   const blok = (bas, x) => x && (x.yaklasim || x.aciklama) ? `<h4 class="dbas">${bas}</h4><p class="dyak">${esc(x.yaklasim || '')}</p><p class="gri2" style="margin:4px 0 0;font-size:14.5px">${esc(x.aciklama || '')}</p>${x.neden ? `<div class="not">Neden: ${esc(x.neden)}</div>` : ''}` : '';
-  $('.sayfa', p).innerHTML = `<div class="tutac"></div><span class="mono">PT'nin değerlendirmesi${d.eski ? ' · profiliniz değişti' : ''}</span><h3>Sizi böyle gördüm.</h3><p style="margin:4px 0 2px;font-size:15.5px">${esc(d.mesaj)}</p>
+  $('.sayfa', p).innerHTML = `<div class="tutac"></div><span class="mono">Health'in değerlendirmesi${d.eski ? ' · profiliniz değişti' : ''}</span><h3>Sizi böyle gördüm.</h3><p style="margin:4px 0 2px;font-size:15.5px">${esc(d.mesaj)}</p>
     ${blok('Antrenman yaklaşımınız', d.antrenman)}${blok('Beslenme yaklaşımınız', d.beslenme)}
     ${d.uzun_omur && d.uzun_omur.ozet ? `<h4 class="dbas">Uzun ömür</h4><p class="gri2" style="margin:0;font-size:14.5px">${esc(d.uzun_omur.ozet)}</p>${d.uzun_omur.olcum ? `<div class="not">${esc(d.uzun_omur.olcum)}</div>` : ''}` : ''}
     ${(d.ekip || []).length ? `<h4 class="dbas">Ekibiniz ne diyor</h4><div class="dekip">${d.ekip.map(x => `<div><span>${esc(x.uzman)}</span><p>${esc(x.not)}</p></div>`).join('')}</div>` : ''}
@@ -2673,12 +2750,13 @@ function receteHtml(r, st, {ilk, uzunSor}){
     && (k !== 'bisiklet' || sev.has('bisiklet') || (P.ekipman || []).includes('bisiklet')) && (k !== 'bjj_solo' || sev.has('jiujitsu') || ((P.bjj_ders || {}).gunler || []).length));
   const dozH = [['Güç', d.guc, 'antrenman'], ['Kolay kardiyo', d.kolay_dk, 'dakika'], d.yogun ? ['Nefes nefese', d.yogun, 'kez'] : null, ['Denge', d.denge, 'gün'], ['Uyku', '7+', 'saat']].filter(Boolean);
   return `<span class="mono">Programınız</span><h1 class="bas">Size şöyle bir program yazıyorum.</h1><p class="alti">${esc(rc.ozet)}</p>
-    <div class="rcekip" aria-label="Programı yazan ekip">${(r.uzmanlar || []).map(u => `<span title="${esc(u.ne)}"><i></i>${esc(u.ad)}</span>`).join('')}</div>
+    ${ekipSema(r, rc)}
     <div class="kart rcliste">${rc.satirlar.map(x => rcSatir(x, st.ktur)).join('')}
       ${eklenebilir.length ? `<div class="rcekle"><span>Ekleyebilirsiniz</span>${eklenebilir.map(k => `<button data-rcekle="${k}">+ ${esc(k === 'kardiyo' ? (r.kardiyo_turleri || {})[st.ktur] || 'Kardiyo' : RC_AD[k])}</button>`).join('')}</div>` : ''}</div>
     <div class="kart rcdozk"><div class="kbas"><h3>Haftalık sağlık dozu</h3><span class="mono">uzun ömür</span></div>
       <div class="rcdoz">${dozH.map(([a, n, b]) => `<div><small>${esc(a)}</small><b>${n}</b><span>${esc(b)}</span></div>`).join('')}</div>
       <p class="gri2" style="margin:10px 0 0;font-size:13.5px">Yıllar sonra da güçlü, dengeli ve bağımsız kalmak için gereken en az miktar. Her hafta ne kadarını tamamladığınızı gösteririm.</p></div>
+    ${modulListe(rc)}
     ${(rc.eklemeler || []).length ? `<h4 class="dbas">Ayrıca</h4><ul class="rcmad">${rc.eklemeler.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
     ${(rc.uyarilar || []).map(x => `<div class="not uyari">${esc(x)}</div>`).join('')}
     ${uzunSor ? `<label class="rconay"><input type="checkbox" id="rcUzun" ${st.uzun ? 'checked' : ''}><span>Asıl hedefim uzun ve sağlıklı yaşamak; hedeflerime eklensin.</span></label>` : ''}
@@ -2688,6 +2766,16 @@ function receteHtml(r, st, {ilk, uzunSor}){
 async function receteCiz(el, {ilk, bitince, ust = ''} = {}){
   el.innerHTML = ust + '<div class="satir gri" style="margin-top:30px"><span class="donen"></span> Programınızı kuruyorum</div>';
   let r; try{ r = await api('/api/pt/recete'); }catch(e){ el.innerHTML = ust + `<div class="kart">Program alınamadı: ${esc(e.message)}</div>`; return; }
+  const P0 = r.profil || {}, eksikIhtiyac = SORULAR.filter(q => ['is_duzeni', 'stres', 'uyku_kalite'].includes(q.id) && !P0[q.id]);
+  if (!ilk && eksikIhtiyac.length && !el._ihtiyacSoruldu){         // eski kullanıcı: programı kurmadan önce üç ihtiyaç sorusu
+    el._ihtiyacSoruldu = true; const cev = {};
+    const ciz0 = () => { const q = eksikIhtiyac.find(x => !cev[x.id]); if (!q) return (async () => { el.innerHTML = ust + '<div class="satir gri" style="margin-top:30px"><span class="donen"></span> Programınızı kuruyorum</div>';
+        try{ await api('/api/pt/profil', json(cev)); S.o.profil = {...S.o.profil, ...cev}; }catch(e){ toast(e.message); } receteCiz(el, {ilk, bitince, ust}); })();
+      el.innerHTML = ust + `<span class="mono">Programınızı kurmadan önce · ${Object.keys(cev).length + 1}/${eksikIhtiyac.length}</span><h1 class="soru" style="margin-top:6px">${esc(q.soru)}</h1>
+        <p class="alti">Yöntemi ben seçerim; size uyanı bulmak için soruyorum.</p>${secenekHtml(q, null)}`;
+      $$('.secenek[data-v]', el).forEach(b => b.onclick = () => { cev[q.id] = b.dataset.v; setTimeout(ciz0, 140); }); };
+    return ciz0();
+  }
   const ilkRc = (r.kayitli && !ilk) ? r.kayitli : r.oneri;
   const st = {rc: ilkRc, ktur: ilkRc.kardiyo_tur || 'yuruyus', uzun: true, say: {...ilkRc.yontemler}};
   const uzunSor = !ilk && !((r.profil || {}).hedef_turleri || []).includes('uzun_omur');
@@ -2700,6 +2788,7 @@ async function receteCiz(el, {ilk, bitince, ust = ''} = {}){
     $$('.sayac[data-ad^="rc_"] button', el).forEach(b => b.addEventListener('click', () => { const s = b.closest('.sayac'); st.say[s.dataset.ad.slice(3)] = +$('b', s).textContent; clearTimeout(zam); zam = setTimeout(onizle, 380); }));
     $$('[data-rcekle]', el).forEach(b => b.onclick = () => { st.say[b.dataset.rcekle] = 1; onizle(); });
     $$('#rcKtur button', el).forEach(b => b.onclick = () => { st.ktur = b.dataset.v; onizle(); });
+    $$('[data-mcikar]', el).forEach(b => b.onclick = async () => { try{ await api('/api/pt/modul', json({kod: b.dataset.mcikar, islem: 'cikar'})); toast('Çıkardım; bir daha önermem.'); onizle(); }catch(e){ toast(e.message); } });
     const u = $('#rcUzun', el); if (u) u.onchange = () => { st.uzun = u.checked; };
     $('#rcBasla', el).onclick = async () => { const b = $('#rcBasla', el); b.disabled = true; b.innerHTML = '<span class="donen"></span> Kaydediyorum';
       try{ const x = await api('/api/pt/recete', json({islem: 'uygula', sayilar: st.say, kardiyo_tur: st.ktur, ilk: !!ilk, uzun_omur: uzunSor && st.uzun}));
@@ -2733,11 +2822,12 @@ async function uzunKartDoldur(){
   const G = r.gostergeler || [], olculen = G.filter(g => g.durum !== 'yok'), eksik = G.filter(g => g.durum === 'yok');
   const testler = [...new Set(eksik.flatMap(g => (g.test || '').split(',').filter(Boolean)))];
   const NERDEN = g => g.kod === 'uyku' ? 'sabah kontrolünden' : g.kod === 'vo2' ? 'nabızdan hesaplanır' : '';
-  el.innerHTML = `<div class="kart"><p class="gri2" style="margin:0 0 ${olculen.length ? 12 : 4}px;font-size:14px">Yaşlanmayı en iyi gösteren ölçüler. PT programı en zayıf olana göre ayarlar ve beş haftada bir yeniden ölçer.</p>
+  el.innerHTML = `<div class="kart"><p class="gri2" style="margin:0 0 ${olculen.length ? 12 : 4}px;font-size:14px">Yaşlanmayı en iyi gösteren ölçüler. Health programı en zayıf olana göre ayarlar ve beş haftada bir yeniden ölçer.</p>
     ${olculen.length ? `<div class="uzg">${olculen.map(g => { const [renk, ad] = UZ_DURUM[g.durum] || UZ_DURUM.yok; return `<div class="uzh ${g.durum}"><span class="mono">${esc(g.ad)}</span><b>${esc(String(g.deger).replace('.', ','))}<small>${String(g.birim || '').startsWith('/') ? '' : ' '}${esc(g.birim || '')}</small></b>
       <span class="rozet ${renk}"><i></i>${ad}</span><p>${esc(g.durum === 'iyi' ? g.neden || '' : g.nasil || g.neden || '')}</p>${g.hedef ? `<small class="gri">Hedef ${esc(g.hedef)}${g.kaynak && g.kaynak !== 'test' ? ' · ' + esc(g.kaynak) : ''}</small>` : ''}</div>`; }).join('')}</div>` : ''}
     ${eksik.length ? `<div class="uzeksik">${olculen.length ? '<span class="mono">Henüz ölçülmedi</span>' : ''}${eksik.map(g => `<div class="lsatir"><div class="lgovde"><b>${esc(g.ad)}</b><small>${esc(g.neden || '')}</small></div><span class="gri" style="font-size:12px;white-space:nowrap">${esc(NERDEN(g))}</span></div>`).join('')}</div>` : ''}
-    ${testler.length ? `<button class="btn ${olculen.length ? '' : 'ana'} genis" style="margin-top:12px" data-uzunolc="${esc(testler.join(','))}">Eksikleri ölç · ${testler.length} kısa test</button>` : ''}</div>${dozHtml(r.doz)}`;
+    ${testler.length ? `<button class="btn ${olculen.length ? '' : 'ana'} genis" style="margin-top:12px" data-uzunolc="${esc(testler.join(','))}">Eksikleri ölç · ${testler.length} kısa test</button>` : ''}</div>
+    <div class="kart"><div class="kbas"><h3>Yaşla kardiyo kapasitesi</h3><span class="mono">iki yol</span></div>${(() => { const v = G.find(g => g.kod === 'vo2') || {}, p = S.o.profil; return yaslanmaGrafik(v.deger, p.yas, p.cinsiyet === 'kadin', v.deger == null); })()}</div>${dozHtml(r.doz)}`;
   bugunBagla(el);
 }
 /* Bisiklet ya da yürüyüş gibi oynatıcısız seanslar: "Yaptım" → süre ve zorluk. */
@@ -2754,6 +2844,177 @@ function yaptimSayfa(s){
     if (s.kardiyo) seans.kardiyo = {...s.kardiyo, sure_dk: sure}; if (s.bisiklet) seans.bisiklet = {...s.bisiklet, sure_dk: sure};
     try{ await gonder('/api/pt/seans', {tarih: bugunT(), seans}); p.kapat(); toast('Kaydedildi. Elinize sağlık.'); yukle(); }catch(e){ toast(e.message); } };
 }
+/* ------------------------------------------------------------------ HAREKETLİ GÖRSELLER VE MODÜLLER (2026-10-31; kullanıcı: "deneyimin en önemli
+   unsurlarından biri doğru, anlatımı netleştiren, güzel görselleştirme; platformun görsel dünyasına uygun hareketli görüntüler; beni programımı
+   yapmaya itmeli"). Dil: koyu zemin, limon yeşili ışık, ince çizgiler, akan noktalar (ürünlerin tanıtım filmleri ve şemaları). Hareketi azalt
+   tercihinde animasyonlar durur. */
+const AZ_HAREKET = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const AILE = {bilim: ['Bilim', '<svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>'],
+  dogu: ['Uzak Doğu', '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a4.5 4.5 0 0 1 0 9 4.5 4.5 0 0 0 0 9"/><circle cx="12" cy="7.5" r=".9"/><circle cx="12" cy="16.5" r=".9"/></svg>'],
+  doga: ['Doğa', '<svg viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l7-7"/></svg>'],
+  tip: ['Tıp', '<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>'],
+  gelenek: ['Gelenek', '<svg viewBox="0 0 24 24"><path d="M12 3c3 4 5 6 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3 0-5.5 1-8.5z"/></svg>']};
+const KANIT = {'güçlü': [3, 'Güçlü kanıt'], 'orta': [2, 'Orta kanıt'], 'sınırlı': [1, 'Sınırlı kanıt']};
+const kanitHtml = k => { const [n, a] = KANIT[k] || [1, k]; return `<span class="knt" title="${esc(a)}">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}<small>${esc(a)}</small></span>`; };
+const aileIkon = a => (AILE[a] || AILE.bilim)[1];
+
+/* Bu hafta: üç halka (güç, kolay kardiyo, denge) dolarak açılır; yanında bugünkü seansın halkaya etkisi ve tek birincil düğme. */
+function haftaHalka(ctasiz){
+  const o = S.o, dz = o.doz; if (!dz || !(dz.satirlar || []).length || !o.kurulu) return '';
+  const D = Object.fromEntries(dz.satirlar.map(x => [x.kod, x]));
+  const R = [['guc', 'Güç', 'var(--vurgu)'], ['kolay_dk', 'Kardiyo', 'var(--mavi)'], ['denge', 'Denge', 'var(--sari)']].filter(([k]) => D[k]);
+  const s = (o.bugun.seanslar || []).find(x => !x.bitti && x.tur !== 'dinlenme');
+  let etki = '', cta = '';
+  const tam = R.every(([k]) => D[k].yapilan >= D[k].hedef);
+  if (s){
+    const tur = s.tur, dk = (s.kardiyo || s.bisiklet || {}).sure_dk || s.sure_dk || 0;
+    if (tur === 'kalistenik' && D.guc) etki = `Bugünkü antrenmanla güç halkası <b>${Math.min(D.guc.hedef, D.guc.yapilan + 1)}/${D.guc.hedef}</b> olur.`;
+    else if ((tur === 'kardiyo' || tur === 'bisiklet' || s.kardiyo || s.bisiklet) && D.kolay_dk) etki = `Bugünkü ${dk} dakika kardiyo halkasını <b>${Math.min(D.kolay_dk.hedef, D.kolay_dk.yapilan + dk)}/${D.kolay_dk.hedef} dk</b> yapar.`;
+    else if (tur === 'bjj_ders') etki = 'Bugünkü ders haftanın nefes nefese çalışmasını karşılar.';
+    else if (tur === 'mobilite' || tur === 'flow') etki = 'Bugünkü seans eklemlerinizi ve dengenizi besler.';
+    else if (tur === 'test') etki = 'Bugünkü testler başlangıç noktanızı ölçer; halkalar ona göre dolmaya başlar.';
+    else etki = 'Bugünkü seans haftanın dozuna eklenir.';
+    cta = (s.bolumler || []).length ? `<button class="btn ana hhbtn" data-basla="${esc(s.id || '')}">Başla${s.sure_dk ? ' · ' + s.sure_dk + ' dk' : ''}</button>`
+      : (s.kardiyo || s.bisiklet) ? `<button class="btn ana hhbtn" data-yaptim="${esc(s.id || '')}">Yaptım</button>`
+      : tur === 'bjj_ders' ? `<button class="btn ana hhbtn" data-bjj="${esc(s.id || '')}">Dersi kaydet</button>` : '';
+  } else if (!tam && D.kolay_dk && D.kolay_dk.yapilan < D.kolay_dk.hedef){
+    etki = `Bugün planda seans yok. 20 dakika yürüyüş kardiyo halkasını <b>${Math.min(D.kolay_dk.hedef, D.kolay_dk.yapilan + 20)}/${D.kolay_dk.hedef} dk</b> yapar.`;
+    cta = `<button class="btn hhbtn" data-yurudum>20 dakika yürüdüm</button>`;
+  } else if (tam) etki = 'Bu haftanın sağlık dozu tamam. Elinize sağlık.';
+  const r0 = 52, en = 9, ara = 3;
+  const halka = R.map(([k, a, renk], i) => { const r = r0 - i * (en + ara), c = 2 * Math.PI * r, v = Math.min(1, D[k].yapilan / D[k].hedef), p = Math.min(1, (D[k].plan || 0) / D[k].hedef);
+    return `<circle cx="64" cy="64" r="${r}" class="hh-iz" stroke-width="${en}"/>
+      <circle cx="64" cy="64" r="${r}" class="hh-plan" style="stroke:${renk}" stroke-width="${en}" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - p)}"/>
+      <circle cx="64" cy="64" r="${r}" class="hh-dol" stroke-width="${en}" stroke-dasharray="${c}" stroke-dashoffset="${c}" data-hedef="${c * (1 - v)}" style="stroke:${renk};--g:${i * 0.18}s;filter:drop-shadow(0 0 5px ${renk})"/>`; }).join('');
+  return `<div class="kart hh ${tam ? 'tam' : ''}" id="hhKart"><div class="hh-sol"><svg viewBox="0 0 128 128" class="hh-svg" aria-hidden="true">${halka}</svg>${tam ? '<span class="hh-ok">✓</span>' : ''}</div>
+    <div class="hh-sag"><span class="mono">Bu hafta · sağlık dozu</span>
+      <div class="hh-lej">${R.map(([k, a, renk]) => `<span><i style="background:${renk}"></i>${a} <b>${D[k].yapilan}</b><small>/${D[k].hedef}${k === 'kolay_dk' ? ' dk' : ''}</small></span>`).join('')}</div>
+      ${etki ? `<p class="hh-etki">${etki}</p>` : ''}${ctasiz ? '' : cta}</div></div>`;
+}
+function haftaHalkaBagla(m){
+  const k = $('#hhKart', m); if (!k) return;
+  requestAnimationFrame(() => setTimeout(() => $$('.hh-dol', k).forEach(c => { c.style.strokeDashoffset = c.dataset.hedef; }), AZ_HAREKET ? 0 : 120));
+  const y = $('[data-yurudum]', k); if (y) y.onclick = async () => { try{ await api('/api/pt/ek-gorev', json({kod: 'yuruyus', tamam: true})); toast('Kaydedildi. Kardiyo halkası doldu.'); yukle(); }catch(e){ toast(e.message); } };
+}
+
+/* Uzman ekibi şeması: her uzmandan programdaki parçasına akan ışık. Reçete ekranının başında. */
+function ekipSema(r, rc){
+  const S_ = rc.satirlar || [], M = rc.moduller || [], has = k => S_.some(x => x.kod === k);
+  const sag = [], baglar = [];
+  const ekle = (ad, uzman) => { let i = sag.indexOf(ad); if (i < 0){ sag.push(ad); i = sag.length - 1; } baglar.push([uzman, i]); };
+  S_.forEach(x => ekle(x.ad, {kalistenik: 'Antrenör', bisiklet: 'Dayanıklılık koçu', kardiyo: 'Dayanıklılık koçu', bjj_ders: 'Jiu-jitsu koçu', bjj_solo: 'Jiu-jitsu koçu', flow: 'Fizyoterapist', mobilite: 'Fizyoterapist'}[x.kod] || 'Antrenör'));
+  M.slice(0, 3).forEach(m => ekle(m.ad, ['uyku', 'isik'].includes(m.kod) ? 'Uyku ve toparlanma koçu' : m.kod === 'hara' ? 'Diyetisyen' : m.kod === 'mola' ? 'Fizyoterapist' : 'Zihin-beden uzmanı'));
+  ekle('Beslenme', 'Diyetisyen'); ekle('Haftalık sağlık dozu', 'Uzun ömür uzmanı'); ekle('Günlük görevler ve seri', 'Alışkanlık koçu');
+  const sol = (r.uzmanlar || []).map(u => u.ad).filter(a => baglar.some(b => b[0] === a) || a === 'Uyku ve toparlanma koçu');
+  if (!baglar.some(b => b[0] === 'Uyku ve toparlanma koçu')) ekle('Uyku', 'Uyku ve toparlanma koçu');
+  const n = Math.max(sol.length, sag.length), H = n * 30 + 16, yL = i => 16 + i * (H - 32) / Math.max(1, sol.length - 1), yR = i => 16 + i * (H - 32) / Math.max(1, sag.length - 1);
+  const yol = baglar.map(([u, j], k) => { const i = sol.indexOf(u); if (i < 0) return ''; const a = yL(i), b = yR(j);
+    const d = `M158 ${a} C 212 ${a}, 212 ${b}, 266 ${b}`;
+    return `<path d="${d}" class="es-cz"/><path d="${d}" class="es-ak" style="animation-delay:${(k * 0.41) % 2.8}s"/>`; }).join('');
+  return `<div class="esema"><svg viewBox="0 0 424 ${H}" role="img" aria-label="Programı yazan uzman ekibi ve her birinin programdaki payı">${yol}
+    ${sol.map((a, i) => `<circle cx="158" cy="${yL(i)}" r="3.2" class="es-n"/><text x="150" y="${yL(i) + 3.5}" text-anchor="end" class="es-t">${esc(a)}</text>`).join('')}
+    ${sag.map((a, i) => `<circle cx="266" cy="${yR(i)}" r="4" class="es-n2"/><text x="275" y="${yR(i) + 3.5}" class="es-t2">${esc(a)}</text>`).join('')}</svg></div>`;
+}
+
+/* Yaşla kardiyo kapasitesi: hareketsiz ve antrenmanlı iki yol, bağımsız yaşam eşiği, sizin noktanız. Yaklaşık; büyük izlem çalışmalarının ortalaması. */
+function yaslanmaGrafik(vo2, yas, kadin, tahmini){
+  yas = Math.max(25, Math.min(75, yas || 40));
+  const norm = a => (kadin ? 41 : 47) - (a - 25) * (kadin ? 0.30 : 0.36);
+  const v0 = vo2 || norm(yas), ESIK = 18;
+  const otur = a => { let v = v0; for (let x = yas; x < a; x++) v *= x < 50 ? 0.99 : x < 70 ? 0.985 : 0.97; return v; };
+  const aktif = a => { const k = Math.min(1, (a - yas) / 4), v1 = v0 * (1 + 0.1 * (1 - Math.pow(1 - k, 2))); let v = v1; for (let x = yas + 4; x < a; x++) v *= x < 70 ? 0.995 : 0.98; return v; };
+  const A0 = yas, A1 = 95, X = a => 34 + (a - A0) / (A1 - A0) * 300, vmax = Math.max(v0 * 1.15, 30), Y = v => 14 + (1 - Math.min(vmax, v) / vmax) * 150;
+  const yolu = f => Array.from({length: A1 - A0 + 1}, (_, i) => `${i ? 'L' : 'M'}${X(A0 + i).toFixed(1)} ${Y(f(A0 + i)).toFixed(1)}`).join(' ');
+  const kes = f => { for (let a = A0; a <= A1; a++) if (f(a) < ESIK) return a; return null; };
+  const ko = kes(otur), ka = kes(aktif);
+  const etk = [];
+  for (let a = Math.ceil(A0 / 10) * 10; a <= A1; a += 10) etk.push(`<text x="${X(a)}" y="184" class="yg-e" text-anchor="middle">${a}</text>`);
+  return `<div class="yg"><svg viewBox="0 0 340 192" role="img" aria-label="Yaşla kardiyo kapasitesi: hareketsiz ve düzenli antrenmanla">
+    <line x1="34" x2="334" y1="${Y(ESIK)}" y2="${Y(ESIK)}" class="yg-esik"/><text x="38" y="${Y(ESIK) + 13}" class="yg-et">bağımsız yaşam eşiği</text>
+    <path d="${yolu(otur)}" class="yg-otur"/><path d="${yolu(aktif)}" class="yg-aktif"/>
+    ${ko ? `<circle cx="${X(ko)}" cy="${Y(ESIK)}" r="3" class="yg-kes"/>` : ''}${etk.join('')}
+    <circle cx="${X(yas)}" cy="${Y(v0)}" r="5" class="yg-siz"/><circle cx="${X(yas)}" cy="${Y(v0)}" r="5" class="yg-dalga"/></svg>
+    <div class="yg-lej"><span><i class="a"></i>Haftalık doz tamam</span><span><i class="o"></i>Hareketsiz</span><span><i class="s"></i>Siz${tahmini ? ' (yaşınızın ortalaması)' : ''}</span></div>
+    <p class="gri2" style="margin:8px 0 0;font-size:13.5px">${ko ? `Hareketsiz yolda kardiyo kapasitesi yaklaşık <b>${ko}</b> yaşında bağımsız yaşam eşiğine iner; düzenli dozla ${ka ? `<b>${ka}</b> yaşına kadar` : '95 yaşından sonra da'} üstünde kalır.` : 'İki yol da eşiğin üstünde; fark yaşlandıkça açılır.'} Aradaki farkı haftalık doz yaratır.</p>
+    <small class="gri" style="font-size:11.5px">Yaklaşık: büyük izlem çalışmalarının ortalaması; kişiden kişiye değişir.</small></div>`;
+}
+
+/* Bugünün modülleri: nefes ve meditasyon oynatıcıda, tai chi videoyla, diğerleri tek dokunuşla işaretlenir. */
+function modulKart(){
+  const L = (S.o.moduller || []).filter(m => m.bugun || m.uygulama === 'not'); if (!L.length) return '';
+  return `<div class="kart" id="modulKart"><div class="kbas"><h3>Bugünün modülleri</h3><span class="mono">${L.filter(m => m.bitti).length}/${L.filter(m => m.uygulama !== 'not').length}</span></div>
+    ${L.map(m => `<div class="mdr ${m.bitti ? 'bitti' : ''}"><span class="mdik a-${esc(m.aile)}">${aileIkon(m.aile)}</span><div class="mdm"><b>${esc(m.ad)}</b><small>${esc(m.uygulama === 'not' ? m.ne : `${m.dk ? m.dk + ' dk · ' : ''}${m.neden || m.ne}`)}</small></div>
+      ${m.uygulama === 'not' ? '' : m.bitti ? '<span class="mdok">✓</span>' : m.uygulama === 'nefes' ? `<button class="btn kucuk" data-nefes="${m.kod}">Başla</button>` : m.uygulama === 'video' ? `<button class="btn kucuk" data-mvideo="${m.kod}">Video</button>` : `<button class="btn kucuk" data-myap="${m.kod}">Yaptım</button>`}</div>`).join('')}</div>`;
+}
+function modulOlayKart(){
+  const o = S.o.modul_olay; if (!o) return '';
+  const ek = o.degisim.filter(d => d.ne === 'eklendi'), cik = o.degisim.filter(d => d.ne === 'cikti');
+  return `<div class="kart" id="mOlay"><span class="mono">Programınız güncellendi</span>
+    ${ek.map(d => `<p style="margin:6px 0 0;font-size:14.5px"><b>${esc(d.ad)}</b> eklendi. <span class="gri2">${esc(d.neden)}</span></p>`).join('')}
+    ${cik.map(d => `<p style="margin:6px 0 0;font-size:14.5px"><b>${esc(d.ad)}</b> çıktı. <span class="gri2">${esc(d.neden)}</span></p>`).join('')}
+    <div class="satir" style="margin-top:10px;gap:8px"><button class="btn kucuk" data-molay="${o.t}">Tamam</button><button class="metin sessiz" data-molaygeri="${o.t}">Geri al</button></div></div>`;
+}
+function modulBagla(m){
+  $$('[data-nefes]', m).forEach(b => b.onclick = () => nefesOynat((S.o.moduller || []).find(x => x.kod === b.dataset.nefes)));
+  $$('[data-myap]', m).forEach(b => b.onclick = async () => { try{ await api('/api/pt/modul', json({kod: b.dataset.myap, islem: 'yap'})); toast('Kaydedildi.'); yukle(); }catch(e){ toast(e.message); } });
+  $$('[data-mvideo]', m).forEach(b => b.onclick = () => modulVideo(b.dataset.mvideo));
+  $$('[data-molay]', m).forEach(b => b.onclick = async () => { await api('/api/pt/modul/olay', json({t: +b.dataset.molay})); yukle(); });
+  $$('[data-molaygeri]', m).forEach(b => b.onclick = async () => { await api('/api/pt/modul/olay', json({t: +b.dataset.molaygeri, geri: true})); toast('Geri alındı; bu modülü bir daha önermem.'); yukle(); });
+}
+async function modulVideo(kod){
+  const md = (S.o.moduller || []).find(x => x.kod === kod) || {};
+  const p = sayfa(`<span class="mono">${esc(md.kaynak || '')}</span><h3>${esc(md.ad || '')}</h3><p class="gri2" style="margin:0 0 10px;font-size:14px">${esc(md.ne || '')}</p><div id="mvKutu"><div class="satir gri"><span class="donen"></span></div></div>
+    <div class="salt"><button class="btn ana" id="mvYap">Yaptım</button></div>`);
+  let v = null; try{ v = (await api('/api/pt/modul/video/' + kod)).video; }catch(e){ /* yok */ }
+  $('#mvKutu', p).innerHTML = v ? `<iframe class="yt" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen src="https://www.youtube-nocookie.com/embed/${esc(v.id)}?rel=0&playsinline=1"></iframe><div class="yt-bilgi"><span>${esc(v.baslik)}</span><small>${esc(v.kanal)} · ${ytSure(v.sure || 0)}</small></div>` : '<p class="gri2">Video bulunamadı.</p>';
+  $('#mvYap', p).onclick = async () => { await api('/api/pt/modul', json({kod, islem: 'yap'})); p.kapat(); toast('Kaydedildi. Elinize sağlık.'); yukle(); };
+}
+
+/* Nefes oynatıcısı: tam ekran, halka nefesle büyüyüp küçülür, çevresinde süre ışığı döner. 4 sn al, 6 sn ver (meditasyonda 5-5). */
+let NF = null;
+function nefesOynat(md){
+  md = md || {kod: 'nefes', ad: 'Nefes çalışması', dk: 5, desen: [4, 0, 6, 0]};
+  const [al, tut1, ver, tut2] = md.desen || [4, 0, 6, 0], toplam = (md.dk || 5) * 60, dongu = al + tut1 + ver + tut2;
+  const el = document.createElement('div'); el.className = 'nfo'; el.setAttribute('role', 'dialog');
+  el.innerHTML = `<button class="kapatx" aria-label="Kapat">×</button><div class="nf-ust"><span class="mono">${esc(md.ad)}</span><b id="nfKalan">${Math.floor(toplam / 60)}:00</b></div>
+    <div class="nf-sahne"><svg viewBox="0 0 300 300" class="nf-svg" aria-hidden="true"><circle cx="150" cy="150" r="138" class="nf-iz"/><circle cx="150" cy="150" r="138" class="nf-ilerle" id="nfIl" stroke-dasharray="867" stroke-dashoffset="867"/>
+      ${Array.from({length: 24}, (_, i) => `<circle cx="${150 + 118 * Math.cos(i / 24 * 2 * Math.PI)}" cy="${150 + 118 * Math.sin(i / 24 * 2 * Math.PI)}" r="1.4" class="nf-nok"/>`).join('')}</svg>
+      <div class="nf-top" id="nfTop"></div><div class="nf-yazi"><b id="nfFaz">Hazır</b><span id="nfSay"></span></div></div>
+    <p class="nf-alt">${esc(md.ne || 'Burnunuzdan alın, ağzınızdan yavaşça verin. Omuzlar gevşek.')}</p>
+    <div class="nf-dug"><button class="btn ana" id="nfBas">Başla</button></div>`;
+  document.body.appendChild(el);
+  const top = $('#nfTop', el), faz = $('#nfFaz', el), say = $('#nfSay', el), il = $('#nfIl', el), kal = $('#nfKalan', el);
+  let ac = null; const ses = (f) => { try{ ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0, ac.currentTime); g.gain.linearRampToValueAtTime(0.05, ac.currentTime + 0.08); g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 1.2); o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + 1.3); }catch(e){ /* yok */ } };
+  let bas = 0, zam = null, sayZam = null, bitti = false;
+  const kapat = () => { clearTimeout(zam); clearInterval(sayZam); el.remove(); NF = null; };
+  $('.kapatx', el).onclick = kapat;
+  const fazGit = (ad, sn, olcek, frek) => { faz.textContent = ad; top.style.transition = `transform ${sn}s cubic-bezier(.45,.05,.55,.95), box-shadow ${sn}s ease`; top.style.transform = `scale(${olcek})`;
+    top.classList.toggle('dolu', olcek > 0.8); if (frek) ses(frek); let k = sn; say.textContent = k; clearInterval(sayZam); sayZam = setInterval(() => { k--; if (k > 0) say.textContent = k; }, 1000); };
+  const sira = [[al, 'Nefes alın', 1, 392], [tut1, 'Tutun', 1, 0], [ver, 'Verin', 0.5, 294], [tut2, 'Bekleyin', 0.5, 0]].filter(x => x[0] > 0);
+  let i = 0;
+  const adim = () => { const gecen = (Date.now() - bas) / 1000;
+    if (gecen >= toplam){ return son(); }
+    const [sn, ad, ol, fr] = sira[i % sira.length]; i++; fazGit(ad, sn, ol, fr); zam = setTimeout(adim, sn * 1000); };
+  const tik = setInterval(() => { if (!el.isConnected) return clearInterval(tik); if (!bas) return; const g = Math.min(toplam, (Date.now() - bas) / 1000), k = Math.max(0, toplam - g);
+    kal.textContent = `${Math.floor(k / 60)}:${String(Math.floor(k % 60)).padStart(2, '0')}`; il.style.strokeDashoffset = 867 * (1 - g / toplam); }, 250);
+  const son = async () => { if (bitti) return; bitti = true; clearInterval(sayZam); faz.textContent = 'Bitti'; say.textContent = ''; top.style.transform = 'scale(.75)'; ses(523);
+    $('.nf-dug', el).innerHTML = '<button class="btn ana" id="nfKapat">Kapat</button>'; $('#nfKapat', el).onclick = kapat;
+    if (md.kod){ try{ await api('/api/pt/modul', json({kod: md.kod, islem: 'yap'})); yukle(); }catch(e){ /* yok */ } } toast('Elinize sağlık. Modül kaydedildi.'); };
+  $('#nfBas', el).onclick = () => { bas = Date.now(); $('.nf-dug', el).innerHTML = '<button class="metin sessiz" id="nfErken">Erken bitir</button>'; $('#nfErken', el).onclick = () => { bas = Date.now() - toplam * 1000; clearTimeout(zam); son(); }; ses(330); adim(); };
+  top.style.transform = 'scale(.5)';
+  NF = el;
+}
+
+/* Programınız ekranında modüller: kaynak, kanıt düzeyi, kişiye özel neden; "Çıkar" kişinin hakkı (bir daha önerilmez). */
+function modulListe(rc){
+  const M = rc.moduller || []; if (!M.length) return '';
+  return `<h2 class="bolum" style="margin-top:18px">Programınıza eklediklerim</h2><p class="gri2" style="margin:-4px 0 10px;font-size:14px">Bilimden, modern tıptan ve Uzak Doğu geleneklerinden; işaretlerinize bakıp ben seçtim. Gidişata göre ekler ya da çıkarırım.</p>
+    <div class="kart" style="padding:4px 16px">${M.map(m => `<div class="mdr2"><span class="mdik a-${esc(m.aile)}">${aileIkon(m.aile)}</span><div class="mdm"><div class="rcbas"><b>${esc(m.ad)}</b><span class="rcrol">${esc((AILE[m.aile] || AILE.bilim)[0])}</span></div>
+      <small>${esc(m.siklik)}${m.dk ? ' · ' + m.dk + ' dk' : ''} · ${esc(m.kaynak)}</small>${m.neden ? `<p class="mdneden">${esc(m.neden)}</p>` : ''}<p>${esc(m.ne)}</p>
+      <div class="satir ara" style="margin-top:6px">${kanitHtml(m.kanit)}<button class="metin sessiz" data-mcikar="${m.kod}" style="font-size:12.5px">Bana göre değil</button></div>
+      <p class="mdkn">${esc(m.kanit_not || '')}</p></div></div>`).join('')}</div>`;
+}
+
 function araKontrolKart(){
   const k = S.o.kontrol || {}; if (!k.zamani) return '';
   if (!k.acik) return `<div class="kart"><div class="satir"><span class="donen"></span><b>Ara kontrol hazırlanıyor</b></div><p class="gri2" style="margin:6px 0 0;font-size:14px">İki hafta doldu; son ${k.gun} günün kayıtlarına bakıp sorularımı hazırlıyorum.</p><button class="metin" data-kontrol-hazirla>Şimdi hazırla</button></div>`;

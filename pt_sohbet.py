@@ -1,4 +1,4 @@
-"""pt_sohbet.py - PT ile konuşma (2026-10-25). "Bugün dizim ağrıyor", "Bu hafta Hamburg'dayım" → PT önce seçenekli sorar (gerekirse), sonra planda
+"""pt_sohbet.py - Health ile konuşma (2026-10-25). "Bugün dizim ağrıyor", "Bu hafta Hamburg'dayım" → Health önce seçenekli sorar (gerekirse), sonra planda
 yapacağı değişikliği ÖNERİR; kullanıcı onaylayınca uygulanır (kurallar yine kodda). Geçmiş pt/sohbet.json (son 60 mesaj).
 
 Eylem türleri: bugun (bugünü uyarla: vakit, yer, ışık, ağrı), hafta (haftayı yeniden yaz, istekle), tasi (seansı başka güne), profil (ekipman/sakatlık/
@@ -12,7 +12,7 @@ import pt
 
 DOSYA = pt.VERI / "sohbet.json"
 
-ISTEM = """Sen PT'sin: kişisel antrenör + diyetisyen + fizyoterapist bilgisiyle çalışan, kısa ve net konuşan bir koç. Türkçe, "siz" dili, en çok 3 cümle.
+ISTEM = """Sen Health'sin: kişisel antrenör + diyetisyen + fizyoterapist bilgisiyle çalışan, kısa ve net konuşan bir koç. Türkçe, "siz" dili, en çok 3 cümle.
 Kullanıcı sana bir durum söyledi. Görevin: (a) durumu anlamak için gerekiyorsa TEK seçenekli soru sormak, (b) yeterince biliyorsan planda yapacağın
 değişikliği önermek. Teşhis koyma. Göğüs ağrısı, baş dönmesi, bayılma, yayılan uyuşma, şişlikle keskin eklem ağrısı gibi uyarı belirtilerinde
 antrenmanı durdur ve doktora/112'ye yönlendir (eylem: dinlenme).
@@ -81,7 +81,7 @@ def gonder(metin):
     import claude_yaz
     L = _degistir(lambda L: (L.append({"kim": "siz", "metin": str(metin)[:1000], "t": int(time.time())}), list(L))[1])
     son = [m for m in L if time.time() - m["t"] < 6 * 3600][-12:]
-    g = "\n".join(f"{'Kullanıcı' if m['kim'] == 'siz' else 'PT'}: {m['metin']}" for m in son)
+    g = "\n".join(f"{'Kullanıcı' if m['kim'] == 'siz' else 'Health'}: {m['metin']}" for m in son)
     c = claude_yaz.sor_json(ISTEM.format(gecmis=g, **baglam()), model_adi="sonnet", zaman_asimi=300)
     cevap = {"kim": "pt", "metin": str(c.get("yanit") or "")[:800], "t": int(time.time())}
     if c.get("soru") and (c["soru"].get("secenekler") or []):
@@ -122,7 +122,7 @@ def uygula(eylem_no):
             def degis(d):
                 s = d.get("sabah") or {}
                 if tur == "dinlenme":
-                    s["isik"], s["neden"] = "kirmizi", ["PT ile konuşma: dinlenme"]
+                    s["isik"], s["neden"] = "kirmizi", ["Health ile konuşma: dinlenme"]
                 else:
                     for a in ("vakit_dk", "nerede", "isik"):
                         if e.get(a):
@@ -133,7 +133,7 @@ def uygula(eylem_no):
                         if not e.get("isik"):
                             s["isik"] = pt.sabah_isigi(s)[0]
                     s.setdefault("isik", "yesil")
-                    s["neden"] = (s.get("neden") or []) + ["PT ile konuşma"]
+                    s["neden"] = (s.get("neden") or []) + ["Health ile konuşma"]
                 s["t"] = s.get("t") or int(time.time())
                 d["sabah"] = s
             pt.gun_degistir(t, degis)
@@ -157,7 +157,7 @@ def uygula(eylem_no):
             sonuc = "Profiliniz güncellendi; bir sonraki plan buna göre yazılır."
         elif tur == "not":
             p = pt.profil()
-            pt.profil_kaydet({"notlar": (p.get("notlar") or []) + [{"soru": "PT ile konuşma", "metin": e.get("not") or m.get("metin")}]})
+            pt.profil_kaydet({"notlar": (p.get("notlar") or []) + [{"soru": "Health ile konuşma", "metin": e.get("not") or m.get("metin")}]})
             sonuc = "Not alındı."
     except Exception:
         def geri(L):

@@ -1,4 +1,4 @@
-"""The standalone server opens PT and answers its API."""
+"""The standalone server opens Health and answers its API."""
 
 
 def test_ana_sayfa_pt(istemci):

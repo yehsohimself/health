@@ -22,9 +22,11 @@ DEGERLENDIRME = pt.VERI / "degerlendirme.json"
 KONTROLLER = pt.VERI / "kontroller"
 KONTROL_ARALIK = 14
 
-DEGERLENDIRME_ISTEM = """Sen PT'sin: bir uzman ekibisin (antrenör, dayanıklılık koçu, diyetisyen, fizyoterapist, uyku ve toparlanma koçu, uzun ömür uzmanı,
+DEGERLENDIRME_ISTEM = """Sen Health'sin: bir uzman ekibisin (antrenör, dayanıklılık koçu, diyetisyen, fizyoterapist, uyku ve toparlanma koçu, uzun ömür uzmanı,
 alışkanlık koçu; kişi jiu-jitsu yapıyorsa jiu-jitsu koçu). Kişinin asıl amacı uzun ve sağlıklı bir ömür olabilir; sorduğun şeyler ihtiyaç ve
-şartlardı, programın bileşimine (hangi disiplin, kaç gün) SEN karar verdin ve REÇETE'de yazıyor. İlk görüşme bitti;
+şartlardı, programın bileşimine (hangi disiplin, kaç gün) SEN karar verdin ve REÇETE'de yazıyor. Bilim ve modern tıp temeldir; Uzak Doğu ve
+geleneksel uygulamalar (nefes, meditasyon, tai chi, doğa) kanıtı olduğu ölçüde ve güvenliyse MODÜL olarak eklendi; kanıt düzeyini dürüst söyle,
+hiçbirini tıbbi tedavinin yerine koyma. "Zihin-beden uzmanı" modülleri anlatır. İlk görüşme bitti;
 şimdi kişiye değerlendirmeni söylüyorsun: onu nasıl gördüğün, hangi antrenman yaklaşımının ve hangi beslenme yaklaşımının ona uyduğu ve NEDEN.
 Sayılar aşağıda KODDAN geliyor (kalori, protein, pencere, test sonuçları, basamaklar); onları aynen kullan, yeni sayı uydurma. Teşhis koyma;
 sağlık notu varsa saygıyla an ve gerekirse doktora yönlendir. Dil: Türkçe, "siz", sıcak ama net, klişe ve slogan yok, abartı yok, 2-3 cümlelik
@@ -41,13 +43,13 @@ JSON:
  "beslenme": {{"yaklasim": "tek cümle ad (ör. 'Hafif açık, yüksek protein, 11-17 penceresi')", "aciklama": "2-4 cümle: kalori, protein, pencere/öğün düzeni, ne yiyeceği", "neden": "2 cümle"}},
  "dikkat": ["en çok 4 madde: ağrı, sağlık notu, risk, alışkanlık"],
  "ilk_adimlar": ["bu hafta yapılacak 3 somut şey"],
- "ekip": [{{"uzman": "Antrenör|Dayanıklılık koçu|Diyetisyen|Fizyoterapist|Uyku ve toparlanma koçu|Uzun ömür uzmanı|Alışkanlık koçu|Jiu-jitsu koçu", "not": "bu kişi için tek cümle, en çok 25 kelime, somut"}}],
+ "ekip": [{{"uzman": "Antrenör|Dayanıklılık koçu|Diyetisyen|Fizyoterapist|Uyku ve toparlanma koçu|Uzun ömür uzmanı|Zihin-beden uzmanı|Alışkanlık koçu|Jiu-jitsu koçu", "not": "bu kişi için tek cümle, en çok 25 kelime, somut"}}],
  "uzun_omur": {{"ozet": "2 cümle: yıllar sonra güçlü, dengeli ve bağımsız olmak için bu programın neye yatırım yaptığı (göstergelere dayan)", "olcum": "tek cümle: ilk ölçmemiz gerekenler ya da en zayıf gösterge"}},
  "kontrol": "tek cümle: 14 gün sonra neye bakacağız"}}
 "antrenman" REÇETE'yi anlatır (disiplinler, kaç gün, neden), başka bir bileşim önerme. "ekip" 5-8 uzman; her biri tekrar etmeyen tek şey söyler.
 Uzun ömür göstergelerinde "yok" olanlar henüz ölçülmedi; değer uydurma."""
 
-KONTROL_SORU_ISTEM = """Sen PT'sin. {gun} günlük ara kontrol görüşmesi yapıyorsunuz; amacı programın güncellenip güncellenmeyeceğine karar vermek.
+KONTROL_SORU_ISTEM = """Sen Health'sin. {gun} günlük ara kontrol görüşmesi yapıyorsunuz; amacı programın güncellenip güncellenmeyeceğine karar vermek.
 Aşağıdaki RAPOR kodun ölçtüğü gerçeklerdir. Rapora dayanarak 3-4 soru sor: her biri tek konu, 3-4 kısa ve birbirini dışlayan seçenek, gözleme
 dayalı ("Seansların yarısı kaçmış, neden?" gibi). Seçenekler en çok 7 kelime. Konular: kaçırılan seansların nedeni, seansların zorluğu, ağrı, açlık/beslenmeye uyum, enerji,
 önümüzdeki iki haftada özel durum. Rapor temizse (uyum yüksek, ağrı yok) sorular kısa ve ileriye dönük olsun. Türkçe, "siz" dili.
@@ -55,7 +57,7 @@ RAPOR: {rapor}
 HEDEFLER: {hedefler}
 JSON: {{"giris": "iki cümle: bu iki haftayı nasıl gördün (somut sayılarla)", "sorular": [{{"kod": "kisa_kod", "soru": "...", "secenekler": ["..."]}}]}}"""
 
-KONTROL_KARAR_ISTEM = """Sen PT'sin: antrenör + diyetisyen. {gun} günlük ara kontrol bitti. RAPOR kodun ölçtüğü gerçekler, CEVAPLAR kişinin söyledikleri,
+KONTROL_KARAR_ISTEM = """Sen Health'sin: antrenör + diyetisyen. {gun} günlük ara kontrol bitti. RAPOR kodun ölçtüğü gerçekler, CEVAPLAR kişinin söyledikleri,
 KURAL ÖNERİLERİ kodun kurallarından çıkan değişiklikler (bunlara uy; gerekçesi olmadan ters düşme). Karar ver: program "devam" mı, "guncelle" mi.
 Aynı anda en çok 2-3 şeyi değiştir. Değişmeyen şeyleri de söyle ("şu iyi gidiyor, dokunmuyorum"). Teşhis yok; ağrı sürüyorsa doktor/fizyoterapist öner.
 Türkçe, "siz" dili, somut, klişe yok.
@@ -74,7 +76,8 @@ JSON: {{"karar": "devam|guncelle", "ozet": "2-3 cümle: iki haftanın değerlend
 def _profil_ozet(p):
     return json.dumps({k: p.get(k) for k in ("ad", "cinsiyet", "yas", "boy_cm", "kilo_kg", "hedef_kilo_kg", "hedef_turleri", "beceri_hedefleri", "deneyim",
                                              "motivasyon", "yontemler", "bjj_ders", "ekipman", "gunler", "gunluk_dk", "antrenman_saati", "sakatliklar",
-                                             "sinirlar", "ek_bilgi", "notlar", "diyet", "beslenme", "beslenme_aliskanlik")}, ensure_ascii=False, default=str)
+                                             "sinirlar", "ek_bilgi", "notlar", "diyet", "beslenme", "beslenme_aliskanlik",
+                                             "sevdikleri", "stres", "uyku_kalite", "is_duzeni")}, ensure_ascii=False, default=str)
 
 
 def _hesap(p):
@@ -110,6 +113,7 @@ def _hesap(p):
         h["recete"] = {"ozet": rc.get("ozet"), "satirlar": [{k: x.get(k) for k in ("ad", "haftada", "dk", "rol")} for x in rc.get("satirlar") or []],
                        "eklemeler": rc.get("eklemeler"), "uyarilar": rc.get("uyarilar")}
         h["uzun_omur_dozu"] = pt_uzun.dozlar(p, rc)
+        h["moduller"] = [{k: m.get(k) for k in ("ad", "kaynak", "kanit", "neden", "siklik")} for m in rc.get("moduller") or []]
         h["uzun_omur_gostergeleri"] = [{k: g.get(k) for k in ("ad", "deger", "birim", "durum", "kaynak")} for g in pt_uzun.gostergeler(p)]
     except Exception:  # noqa: BLE001
         pass

@@ -118,7 +118,7 @@ def kaydet(veri):
                 if any(s.get("id") == sid for s in x["seanslar"]):
                     return
                 if any(s.get("tur") == a["tur"] and abs((s.get("sure_dk") or 0) - a["sure_dk"]) < 10 for s in x["seanslar"] if not str(s.get("id", "")).startswith("saglik:")):
-                    return                                     # PT'de zaten kaydedilmiş
+                    return                                     # Health'te zaten kaydedilmiş
                 x["seanslar"].append({"id": sid, "tur": a["tur"], "baslik": a["ad"], "sure_dk": a["sure_dk"], "zorluk": 5, "yuk": a["sure_dk"] * 5,
                                       "bitti": True, "kaynak": "Apple Sağlık", "mesafe_km": a.get("mesafe_km")})
             if a["sure_dk"] >= 10:

@@ -1,4 +1,4 @@
-"""pt_site.py - PT'nin site uçları (2026-10-25). sunucu/10_sayfalar.py'den `pt_site.kaydet(app)`; sayfa static/pt.html (port 8771).
+"""pt_site.py - Health'in site uçları (2026-10-25). sunucu/10_sayfalar.py'den `pt_site.kaydet(app)`; sayfa static/pt.html (port 8771).
 
 Uzun işler (haftalık plan, koç mesajı, video işleme) iş parçacığında; durum `calisan` içinde (yeniden başlatma bekler: mesgul()).
 Arka plan döngüsü (10 dk): pazar 18.00'den sonra haftanın koç mesajı + gelecek haftanın planı; yeni haftaya plansız girilmişse plan; her gün harcama
@@ -31,7 +31,7 @@ _kilit = threading.Lock()
 
 
 def mesgul():
-    return [f"PT: {a}" for a in list(calisan.values())]
+    return [f"Health: {a}" for a in list(calisan.values())]
 
 
 def _arka(anahtar, ad, fn, *arg):
@@ -140,6 +140,11 @@ def _ilk_durum():
     return pt_ilk.durum()
 
 
+def pt_uzun_recete():
+    import pt_uzun
+    return pt_uzun.recete_oku()
+
+
 def ozet():
     p = pt.profil()
     t = pt.bugun().isoformat()
@@ -168,6 +173,7 @@ def ozet():
         "degerlendirme": _g(lambda: {**__import__("pt_kontrol").ozet()["degerlendirme"], "hazirlaniyor": "degerlendirme" in calisan}, {}),
         "akis": _g(lambda: pt_koc.gun_akisi(t)["akis"], []),
         "recete_var": _g(lambda: bool((__import__("pt_uzun").recete_oku() or {}).get("satirlar")), False),
+        "moduller": _g(lambda: __import__("pt_modul").gunun(t), []), "modul_olay": _g(lambda: __import__("pt_modul").son_olay()),
         "doz": _g(lambda: __import__("pt_uzun").doz_ozeti(kod), {}),
         "haftalik_gorusme": pt.bugun().weekday() >= 5 and pt._hafta_no(kod) > 1 and not (pt._json(pt.MESAJLAR / f"{kod}.gorusme.json", {}).get("cevaplar")),
     }
@@ -241,6 +247,13 @@ def _dongu():
             if p.get("kuruldu") and not pt.tarama_durumu(p)["bekliyor"]:
                 simdi = dt.datetime.now()
                 kod = pt.hafta_kodu()
+                if sonuclar.get("modul_gun") != pt.bugun().isoformat():         # modüller gidişata göre, günde bir (Claude gerekmez)
+                    sonuclar["modul_gun"] = pt.bugun().isoformat()
+                    try:
+                        import pt_modul
+                        pt_modul.guncelle()
+                    except Exception:  # noqa: BLE001
+                        traceback.print_exc()
                 import claude_yaz
                 if claude_yaz.hazir():
                     if not pt.program(kod) and "plan" not in calisan and not _yakinda_basarisiz("plan"):
@@ -308,7 +321,7 @@ def _dongu():
 
 
 def _degerlendirme_baslat(yenile=False):
-    """Kurulumdan sonra: PT'nin değerlendirmesi + üç vade için hedef önerisi (arka planda, tek iş)."""
+    """Kurulumdan sonra: Health'in değerlendirmesi + üç vade için hedef önerisi (arka planda, tek iş)."""
     def kos():
         import pt_hedef
         import pt_kontrol
@@ -528,7 +541,7 @@ def kaydet(app):
                         + ([{"kod": "bjj", "ad": "Jiu-jitsu koçu", "ne": "Derslerinize göre haftayı dizer; zorlandığınız pozisyonları evde çalıştırır."}]
                            if "jiujitsu" in (p.get("sevdikleri") or []) or (p.get("bjj_ders") or {}).get("gunler") or (p.get("yontemler") or {}).get("bjj_solo") else []),
                         "kardiyo_turleri": pt_uzun.KARDIYO_TUR, "sevdikleri": pt_uzun.SEVDIKLERI,
-                        "profil": {k: p.get(k) for k in ("sevdikleri", "ekipman", "bjj_ders", "hedef_turleri")}})
+                        "profil": {k: p.get(k) for k in ("sevdikleri", "ekipman", "bjj_ders", "hedef_turleri", "stres", "uyku_kalite", "is_duzeni")}})
 
     @app.post("/api/pt/recete")
     def pt_recete_islem():
@@ -559,6 +572,43 @@ def kaydet(app):
             _arka("plan", "haftalık plan yeniden yazılıyor", yaz)
             _degerlendirme_baslat(yenile=True)
         return jsonify({"recete": kayit, "plan": "plan" in calisan})
+
+    @app.get("/api/pt/moduller")
+    def pt_moduller():
+        import pt_modul
+        return jsonify({"bugun": pt_modul.gunun(), "olay": pt_modul.son_olay(), "katalog": pt_modul.MODULLER,
+                        "cikan": pt_uzun_recete().get("modul_cikan") or []})
+
+    @app.post("/api/pt/modul")
+    def pt_modul_islem():
+        import pt_modul
+        g = _govde()
+        kod = str(g.get("kod") or "")
+        if kod not in pt_modul.MODULLER:
+            return jsonify({"hata": "Bilinmeyen modül."}), 400
+        islem = g.get("islem") or "yap"
+        if islem in ("yap", "geri"):
+            L = pt_modul.isaretle(kod, g.get("tarih"), geri=islem == "geri")
+            with _kilit:
+                pt_oyun._onbellek.clear()
+            return jsonify({"bugun": L})
+        if islem in ("cikar", "ekle"):
+            return jsonify({"moduller": pt_modul.cikar(kod, geri=islem == "ekle")})
+        return jsonify({"hata": "islem: yap | geri | cikar | ekle"}), 400
+
+    @app.post("/api/pt/modul/olay")
+    def pt_modul_olay():
+        import pt_modul
+        g = _govde()
+        pt_modul.olay_isaretle(int(g.get("t") or 0), geri=bool(g.get("geri")))
+        return jsonify({"ok": True})
+
+    @app.get("/api/pt/modul/video/<kod>")
+    def pt_modul_video(kod):
+        import pt_modul
+        if kod not in pt_modul.MODULLER:
+            return jsonify({"hata": "Bilinmeyen modül."}), 404
+        return jsonify({"video": pt_modul.video(kod)})
 
     @app.get("/api/pt/uzun")
     def pt_uzun_omur():
@@ -892,7 +942,7 @@ def kaydet(app):
                 return jsonify({"hata": f"Tahmin yapılamadı: {str(e)[:160]}"}), 502
         k = round(sum(x.get("kcal") or 0 for x in y["kalemler"]))
         p_ = round(sum(x.get("protein") or 0 for x in y["kalemler"]))
-        return jsonify({"ok": True, "mesaj": f"{y['ad']}: yaklaşık {k} kcal, {p_} g protein. PT'de kontrol edebilirsiniz.", "yemek": y})
+        return jsonify({"ok": True, "mesaj": f"{y['ad']}: yaklaşık {k} kcal, {p_} g protein. Health'te kontrol edebilirsiniz.", "yemek": y})
 
     @app.get("/pt-yemek-foto/<yid>.jpg")
     def pt_yemek_foto(yid):
@@ -983,7 +1033,7 @@ def kaydet(app):
         import pt_saglik
         return jsonify({**pt_saglik.durum(), "bugun": pt_saglik.hazirlik()})
 
-    # ---------------------------------------------------------------- PT ile konuşma
+    # ---------------------------------------------------------------- Health ile konuşma
     @app.get("/api/pt/sohbet")
     def pt_sohbet_gecmis():
         import pt_sohbet
@@ -998,7 +1048,7 @@ def kaydet(app):
         try:
             return jsonify(pt_sohbet.gonder(metin))
         except Exception as e:  # noqa: BLE001
-            return jsonify({"hata": f"PT cevap veremedi: {str(e)[:160]}"}), 502
+            return jsonify({"hata": f"Health cevap veremedi: {str(e)[:160]}"}), 502
 
     @app.post("/api/pt/sohbet/onay")
     def pt_sohbet_onay():
@@ -1170,7 +1220,7 @@ def kaydet(app):
             n = pt_push.abone_ol(v.get("sub") or {}, str(v.get("cihaz") or "")[:120])
         except ValueError as e:
             return jsonify({"hata": str(e)}), 400
-        pt_push.gonder("PT", "Bildirimler açık: sabah soruları, yeme penceresi ve antrenman saati buraya gelecek.", "/?u=pt", "pt-acildi")
+        pt_push.gonder("Health", "Bildirimler açık: sabah soruları, yeme penceresi ve antrenman saati buraya gelecek.", "/?u=pt", "pt-acildi")
         return jsonify({"ok": True, "cihaz": n})
 
     @app.post("/api/pt/push/sil")
@@ -1181,7 +1231,7 @@ def kaydet(app):
     @app.post("/api/pt/push/dene")
     def pt_push_dene():
         import pt_push
-        return jsonify({"ok": True, "cihaz": pt_push.gonder("PT", "Deneme bildirimi.", "/?u=pt", "pt-deneme")})
+        return jsonify({"ok": True, "cihaz": pt_push.gonder("Health", "Deneme bildirimi.", "/?u=pt", "pt-deneme")})
 
     # ---------------------------------------------------------------- su, kafein, sesli mesaj, takvim dosyası
     @app.post("/api/pt/su")
@@ -1213,7 +1263,7 @@ def kaydet(app):
     @app.get("/api/pt/takvim.ics")
     def pt_takvim_ics():
         kod = request.args.get("hafta") or pt.hafta_kodu()
-        return Response(pt.takvim_dosyasi(kod), mimetype="text/calendar", headers={"Content-Disposition": f'attachment; filename="PT {kod}.ics"'})
+        return Response(pt.takvim_dosyasi(kod), mimetype="text/calendar", headers={"Content-Disposition": f'attachment; filename="Health {kod}.ics"'})
 
     # ---------------------------------------------------------------- koç akışı: gün akışı, akşam ve pazar görüşmeleri, alışkanlık, ara soru
     @app.get("/api/pt/akis")
@@ -1436,7 +1486,7 @@ def kaydet(app):
     @app.get("/api/pt/disa-aktar")
     def pt_disa():
         return Response(json.dumps(pt.disa_aktar(), ensure_ascii=False, indent=1), mimetype="application/json",
-                        headers={"Content-Disposition": f"attachment; filename=PT {pt.bugun().isoformat()}.json"})
+                        headers={"Content-Disposition": f"attachment; filename=Health {pt.bugun().isoformat()}.json"})
 
     @app.get("/pt-sw.js")
     def pt_sw():

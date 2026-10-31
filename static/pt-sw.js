@@ -1,4 +1,4 @@
-/* PT çevrimdışı çalışanı (2026-10-25). Parkta bağlantı yoksa: sayfa ve son veriler önbellekten, hareket videoları telefonda.
+/* Health çevrimdışı çalışanı (2026-10-25). Parkta bağlantı yoksa: sayfa ve son veriler önbellekten, hareket videoları telefonda.
    Yalnızca güvenli adreste (eşleşmiş telefonun https tünel adresi ya da localhost) çalışır. Videolar Safari'nin istediği aralık isteklerine (Range) önbellekten dilimlenerek
    yanıtlanır. API: önce ağ, olmazsa son yanıt. Kayıtlar (POST) sayfadaki kuyrukta bekler, burada tutulmaz. */
 const SURUM = 'pt-v3', SAYFA = 'pt-sayfa-' + SURUM, VIDEO = 'pt-video', VERI = 'pt-veri';
@@ -45,9 +45,9 @@ self.addEventListener('fetch', e => {
 /* telefon bildirimleri (pt_push). Tünel adresinde aynı kökü paylaşan Couple bildirimleri de gösterilsin diye başlık/simge veriden. */
 self.addEventListener('push', e => {
   let v = {};
-  try { v = e.data ? e.data.json() : {}; } catch (er) { v = {baslik: 'PT', metin: e.data ? e.data.text() : ''}; }
+  try { v = e.data ? e.data.json() : {}; } catch (er) { v = {baslik: 'Health', metin: e.data ? e.data.text() : ''}; }
   const couple = String(v.etiket || '').startsWith('couple');
-  e.waitUntil(self.registration.showNotification(v.baslik || 'PT', {body: v.metin || '', icon: couple ? '/static/couple-ikon-192.png' : '/static/pt-ikon-192.png',
+  e.waitUntil(self.registration.showNotification(v.baslik || 'Health', {body: v.metin || '', icon: couple ? '/static/couple-ikon-192.png' : '/static/pt-ikon-192.png',
     tag: v.etiket || undefined, data: {url: v.url || '/?u=pt'}}));
 });
 self.addEventListener('notificationclick', e => {

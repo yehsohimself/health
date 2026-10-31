@@ -1,4 +1,4 @@
-"""pt_hareket.py - PT'nin hareket video kitaplığı (2026-10-25). Videoları kullanıcı kendisi çeker (lisans derdi yok; açık kaynak
+"""pt_hareket.py - Health'in hareket video kitaplığı (2026-10-25). Videoları kullanıcı kendisi çeker (lisans derdi yok; açık kaynak
 uygulamaların çoğu video lisansı yüzünden kapandı).
 
 Yükleme → ffmpeg: ses atılır, uzun kenar 720 px, 30 kare/sn, Apple donanım kodlayıcı (yoksa libx264), faststart, isteğe bağlı kırpma (bas/bit);

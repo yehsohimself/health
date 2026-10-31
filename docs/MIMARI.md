@@ -1,6 +1,6 @@
 # Mimari
 
-PT ve ortak motor; kardeş ürünler kurulu değilse kapalıdır. Bu belge kodun nasıl düzenlendiğini anlatır; kişiye özel notlar depoda değildir.
+Health ve ortak motor; kardeş ürünler kurulu değilse kapalıdır. Bu belge kodun nasıl düzenlendiğini anlatır; kişiye özel notlar depoda değildir.
 
 ## Sunucu
 
@@ -32,7 +32,6 @@ PT ve ortak motor; kardeş ürünler kurulu değilse kapalıdır. Bu belge kodun
 - `sizinti.py`: depoya kişisel bilgi sızmasını denetler (ayarlardaki adlar + genel desenler); duman testi ve commit kancası çağırır.
 
 ## Ürünler
-- **PT** (`pt*.py`, `static/pt.html`): kurallar kodda (`pt.KURALLAR_METNI`), plan Claude ile; telefon erişimi Meet'in eşleştirilmiş cihaz yolu.
 
 ## Veri (git dışı)
 

@@ -1,4 +1,4 @@
-"""PT test setup: the code is copied into a temporary folder and the server is loaded from pt_sunucu.py; your own pt/ data is never touched."""
+"""Health test setup: the code is copied into a temporary folder and the server is loaded from pt_sunucu.py; your own pt/ data is never touched."""
 import importlib.util
 import json
 import os

@@ -1,7 +1,7 @@
 """pt_hedef.py - Kısa, orta ve uzun vadeli hedefler (2026-10-30; kullanıcı: "kısa orta uzun vadeli hedefler belirleyelim birlikte").
 
 Gerçek bir antrenör ilk görüşmenin sonunda üç hedef koyar: 4 hafta (alışkanlık ve ilk ölçülebilir kazanım), 12 hafta (bir blok sonunda görünür
-fark), 1 yıl (asıl neden). PT de öyle: ADAYLARI KOD üretir (profil, testler, basamaklar ve kilo trendinden ölçülebilir hedefler; model uyduramaz),
+fark), 1 yıl (asıl neden). Health de öyle: ADAYLARI KOD üretir (profil, testler, basamaklar ve kilo trendinden ölçülebilir hedefler; model uyduramaz),
 Claude her vade için birini seçip kişinin diline çevirir (yoksa kurallar seçer), kişi onaylar ya da değiştirir. İlerleme her zaman KODLA ölçülür:
 kilo trendi, bel, test kayıtları, zincir basamağı, seans sayısı, seri. Hedefler haftalık plan istemine ve ara kontrole girer.
 
@@ -22,7 +22,7 @@ VADE_SURE = {k: s for k, _, _, s in VADELER}
 TEST_AD = {k: a for k, a, *_ in pt.TESTLER}
 TEST_OLCU = {k: o for k, _, o, *_ in pt.TESTLER}
 
-ONERI_ISTEM = """Sen PT'sin: kişisel antrenör + diyetisyen. Kişiyle ilk görüşmenin sonunda üç hedef belirliyorsunuz: kısa (4 hafta), orta (3 ay),
+ONERI_ISTEM = """Sen Health'sin: kişisel antrenör + diyetisyen. Kişiyle ilk görüşmenin sonunda üç hedef belirliyorsunuz: kısa (4 hafta), orta (3 ay),
 uzun (1 yıl). Aşağıda KODUN ÖLÇEBİLDİĞİ aday hedefler var; YALNIZCA bu adaylardan seç (numarayla). Her vade için bir ana hedef ve bir seçenek.
 Seçerken: kısa vade alışkanlık ve ilk somut kazanım (kaçırılmayacak kadar gerçekçi), orta vade bir blok sonunda görünür fark, uzun vade kişinin
 asıl nedeni. Kişi "uzun ve sağlıklı yaşamak" diyorsa yıl hedefi büyük ölçüde düzendir (haftalık sağlık dozu: en az iki güç antrenmanı +

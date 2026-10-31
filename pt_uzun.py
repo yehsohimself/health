@@ -10,7 +10,7 @@ Ben ihtiyacı ve şartlarımı tanımlayacağım, o bana 'o zaman sana şöyle b
    150), haftada bir yoğun çalışma (nefes nefese; jiu-jitsu dersi sayılır), denge (haftada 3 gün kısa), hareketlilik, uyku. Planın ve yapılanın
    bu dozu ne kadar karşıladığı ölçülür.
 3. REÇETE (`recete`): kişinin ihtiyacından ve şartlarından (hedefler, sevdikleri, günleri, dakikası, ekipmanı, dersleri, ağrıları) haftalık disiplin
-   karışımı. Kişi disiplin seçmez; PT "size şöyle bir program yazıyorum" der, her satırın nedenini söyler, kişi sayıları değiştirebilir. Onaylanan
+   karışımı. Kişi disiplin seçmez; Health "size şöyle bir program yazıyorum" der, her satırın nedenini söyler, kişi sayıları değiştirebilir. Onaylanan
    reçete profilin `yontemler`'ine ve plan istemine gider. Kayıt pt/recete.json.
 """
 import datetime as dt
@@ -37,6 +37,7 @@ UZMANLAR = [
     ("fizyoterapist", "Fizyoterapist", "Ağrılar, eklemler, hareketlilik ve denge."),
     ("uyku", "Uyku ve toparlanma koçu", "Uyku, yorgunluk ve hafif haftalar."),
     ("uzun_omur", "Uzun ömür uzmanı", "Yıllar sonra da güçlü, dengeli ve bağımsız olmanız için ölçüler."),
+    ("zihin", "Zihin-beden uzmanı", "Nefes, meditasyon, tai chi: stres, uyku ve denge için; kanıtı olduğu kadarıyla."),
     ("davranis", "Alışkanlık koçu", "Düzeni sürdürmek: küçük, her gün yapılabilir adımlar."),
 ]
 
@@ -435,7 +436,15 @@ def recete(p=None, sayilar=None, kardiyo_tur=None):
     return {"satirlar": satirlar, "eklemeler": eklemeler, "uyarilar": uyari, "yontemler": yontemler, "gun": n, "toplam": toplam,
             "kardiyo_tur": ktur, "dozlar": {"guc": max(2, s.get("kalistenik", 0)), "kolay_dk": kolay_hedef, "yogun": 0 if alisma else 1, "denge": 3,
                                             "hareketlilik": max(1, s.get("flow", 0) + s.get("mobilite", 0))},
-            "ozet": _ozet_cumlesi(satirlar, n)}
+            "ozet": _ozet_cumlesi(satirlar, n), "moduller": _moduller(p)}
+
+
+def _moduller(p):
+    try:
+        import pt_modul
+        return pt_modul.sec(p, recete_oku().get("modul_cikan"))
+    except Exception:  # noqa: BLE001
+        return []
 
 
 def _ozet_cumlesi(satirlar, n):
@@ -452,7 +461,7 @@ def recete_kaydet(sayilar=None, kardiyo_tur=None):
     """Kişi onayladı: reçete kaydedilir, profilin yöntemleri buna göre güncellenir."""
     p = pt.profil()
     r = recete(p, sayilar, kardiyo_tur)
-    kayit = {**r, "zaman": int(time.time()), "onay": True}
+    kayit = {**r, "zaman": int(time.time()), "onay": True, "modul_cikan": recete_oku().get("modul_cikan") or []}
     pt._yaz(RECETE, kayit)
     y = {**(p.get("yontemler") or {}), **r["yontemler"]}
     ek = {"yontemler": y, "kardiyo_tur": r["kardiyo_tur"]}
@@ -470,7 +479,8 @@ def recete_metni():
     kardiyo = KARDIYO_TUR.get(r.get("kardiyo_tur") or "yuruyus", "Tempolu yürüyüş")
     return (f"{satir}. Kardiyo günü bisiklet değilse tur 'kardiyo' ({kardiyo}). UZUN ÖMÜR DOZU: güç en az {d.get('guc', 2)} seans; kolay kardiyo "
             f"toplam en az {d.get('kolay_dk', 150)} dk (konuşabilecek tempo); " + ("haftada 1 yoğun çalışma (aralıklı kardiyo ya da BJJ dersi); " if d.get("yogun") else "")
-            + "güç seanslarının Kapanış bölümüne tek_ayak_denge (2×30 sn her ayak); haftada bir seansa yere_otur_kalk (2×5).")
+            + "güç seanslarının Kapanış bölümüne tek_ayak_denge (2×30 sn her ayak); haftada bir seansa yere_otur_kalk (2×5). MODÜLLER: "
+            + __import__("pt_modul").metin(r.get("moduller") or []))
 
 
 def uzman_notlari(p=None, g=None):
@@ -488,6 +498,8 @@ def uzman_notlari(p=None, g=None):
         {"uzman": "Uyku ve toparlanma koçu", "not": f"Uyku ortalamanız {by['uyku']['deger']} saat; hedef 7-9." if by["uyku"]["deger"] else "Sabah kontrolünde uykunuzu yazın; programı ona göre ayarlarım."},
         {"uzman": "Uzun ömür uzmanı", "not": ("Önce şu ölçüleri alalım: " + ", ".join(eksik[:3]) + ". ") if eksik else
          ("Geliştireceğimiz: " + ", ".join(zayif[:3]) + ". " if zayif else "Göstergeleriniz iyi; korumak hedef. ") + "Yılda bir kez tansiyon, kan şekeri ve kolesterolü doktorunuza ölçtürün."},
+        *([{"uzman": "Zihin-beden uzmanı", "not": "Programınıza ekledim: " + ", ".join(m["ad"].lower() for m in _moduller(p)[:3]) + "; nedenleri programda yazılı."}]
+           if _moduller(p) else []),
         {"uzman": "Alışkanlık koçu", "not": "Kısa da olsa her gün bir şey: seri, eksik günleri değil devam etmeyi sayar."},
     ]
 

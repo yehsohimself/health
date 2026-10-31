@@ -1,4 +1,4 @@
-"""pt_sunucu.py - PT'yi tek başına çalıştırır (2026-10-29; ayrı depo `yehsohimself/pt` için). Video Hub'ın ortak sunucusu yoksa bunu kullanın:
+"""pt_sunucu.py - Health'i tek başına çalıştırır (2026-10-29; ayrı depo `yehsohimself/health` için). Video Hub'ın ortak sunucusu yoksa bunu kullanın:
 
     .venv/bin/python pt_sunucu.py            http://127.0.0.1:8771
 
@@ -73,5 +73,5 @@ pt_site.kaydet(app)
 
 if __name__ == "__main__":
     port = int(sys.argv[sys.argv.index("--port") + 1]) if "--port" in sys.argv else int(os.environ.get("PT_PORT", "8771"))
-    print(f"PT: http://127.0.0.1:{port}", flush=True)
+    print(f"Health: http://127.0.0.1:{port}", flush=True)
     app.run(host="127.0.0.1", port=port, threaded=True)

@@ -1,4 +1,4 @@
-"""pt.py - PT (Trainer): kişisel antrenör + diyetisyen çekirdeği (2026-10-25). Site uçları pt_site.py, sayfa static/pt.html (port 8771).
+"""pt.py - Health (Trainer): kişisel antrenör + diyetisyen çekirdeği (2026-10-25). Site uçları pt_site.py, sayfa static/pt.html (port 8771).
 
 Araştırma: reports/PT özellik araştırması.md. İlke: uzmanların döngüsü (tarama → başlangıç testleri → plan → sabah kontrolü → seans → ağrı →
 haftalık koç mesajı). Kurallar KODDA ve görünür (ilerleme, sabah uyarlaması, ağrı izleme); Claude planı bu kuralların verdiği hedeflerle yazar ve
@@ -39,7 +39,7 @@ def _json(p, varsayilan=None):
             if p.exists() and p.stat().st_size and not list(p.parent.glob(p.name + ".bozuk-*")):
                 import shutil
                 shutil.copy2(p, p.with_name(f"{p.name}.bozuk-{int(time.time())}"))
-                print(f"PT: bozuk kayıt yedeklendi: {p.name} ({type(e).__name__})", flush=True)
+                print(f"Health: bozuk kayıt yedeklendi: {p.name} ({type(e).__name__})", flush=True)
         except OSError:
             pass
     return {} if varsayilan is None else varsayilan
@@ -247,7 +247,7 @@ PROFIL_VARSAYILAN = {
     "ad": "", "cinsiyet": "erkek", "dogum_tarihi": "", "yas": None, "boy_cm": None, "kilo_kg": None, "hedef_kilo_kg": None, "hedef_tarih": "",
     "hedefler": [], "beceri_hedefleri": [], "neden": "", "hedef_turleri": [], "deneyim": "", "motivasyon": "", "diyet": "",
     "ek_bilgi": [], "notlar": [], "gun_duzeni": {}, "beslenme_aliskanlik": {}, "saglik_degerleri": [], "aliskanlik": {}, "ara_cevaplar": {}, "program_aktif": None, "program_biten": [],
-    "gorusmeler": {}, "kontrol_istegi": "", "son_kontrol": "", "sevdikleri": [], "kardiyo_tur": "yuruyus",
+    "gorusmeler": {}, "kontrol_istegi": "", "son_kontrol": "", "sevdikleri": [], "kardiyo_tur": "yuruyus", "stres": None, "uyku_kalite": None, "is_duzeni": None,
     "yontemler": {"kalistenik": 2, "bjj_solo": 1, "flow": 1, "bisiklet": 1, "mobilite": 1},
     "bjj_ders": {"gunler": [], "saat": "", "sure_dk": 90},
     "ekipman": ["bisiklet", "bar", "mat"], "gunler": [0, 1, 2, 3, 4, 5, 6], "gunluk_dk": 45, "antrenman_saati": "sabah",
@@ -331,7 +331,7 @@ def tarama_durumu(p=None):
             "eski": eski}
 
 
-TANISMA_ISTEM = """Sen PT'sin: kişisel antrenör + diyetisyen. Kullanıcı kendini serbestçe anlattı. Anlattığından profil alanlarını çıkar.
+TANISMA_ISTEM = """Sen Health'sin: kişisel antrenör + diyetisyen. Kullanıcı kendini serbestçe anlattı. Anlattığından profil alanlarını çıkar.
 Yalnızca SÖYLENENİ yaz; söylenmeyen alanı boş bırak (tahmin etme). Türkçe yaz.
 
 KULLANICININ ANLATTIĞI:
@@ -370,7 +370,7 @@ def tanisma_coz(metin):
         ek["ekipman"] = [x for x in ek["ekipman"] if x in EKIPMANLAR]
     return {"profil": ek, "eksik": c.get("eksik") or [], "ozet": c.get("ozet") or ""}
 
-EK_SORU_ISTEM = """Sen PT'sin: kişisel antrenör + diyetisyen + fizyoterapist bilgisiyle çalışıyorsun. Kullanıcı tanışma sorularını seçeneklerle cevapladı,
+EK_SORU_ISTEM = """Sen Health'sin: kişisel antrenör + diyetisyen + fizyoterapist bilgisiyle çalışıyorsun. Kullanıcı tanışma sorularını seçeneklerle cevapladı,
 bazı yerlere kendi notunu yazdı. Türkçe, "siz" dili.
 
 CEVAPLAR (profil):
@@ -1036,7 +1036,7 @@ def kirmizi_seans(s=None):
 
 # ----------------------------------------------------------------------------- haftalık plan (Claude yazar, kurallar kodda)
 
-PLAN_ISTEM = """Sen PT'sin: deneyimli bir kişisel antrenör, kuvvet-kondisyon koçu, BJJ hocası ve fizyoterapistin bilgisiyle çalışıyorsun.
+PLAN_ISTEM = """Sen Health'sin: deneyimli bir kişisel antrenör, kuvvet-kondisyon koçu, BJJ hocası ve fizyoterapistin bilgisiyle çalışıyorsun.
 {hafta_ad} için haftalık antrenman planı yaz. Türkçe, "siz" dili.
 
 KİŞİ:
@@ -1473,7 +1473,7 @@ BJJ_DRILL = {"Guard": ["bacak_pummel", "kalca_degistirme", "karides"], "Yan kont
 
 # ----------------------------------------------------------------------------- haftalık koç mesajı
 
-KOC_ISTEM = """Sen PT'sin: kişisel antrenör + diyetisyen + alışkanlık koçu. {hafta} haftası için haftalık kontrol mesajını yaz.
+KOC_ISTEM = """Sen Health'sin: kişisel antrenör + diyetisyen + alışkanlık koçu. {hafta} haftası için haftalık kontrol mesajını yaz.
 Ton: sıcak ama net, "siz" dili, Türkçe, klişe ve slogan yok, abartı yok. Kayıtlara SOMUT atıf yap (sayı, gün). Uydurma yok: veride olmayanı yazma.
 Tartı tek ölçü değil: tekrar sayıları, bel, uyku gibi tartı dışı kazanımları öne çıkar. Kişinin motivasyonunu ve notlarını (veri.kisi) hatırla. "İki kez kaçırma" ilkesi: bir kaçırma sorun değil.
 Aynı anda en çok bir-iki şeyi değiştir. Teşhis koyma; ağrı ya da belirti kuralı bozulduysa açıkça söyle, gerekiyorsa doktora yönlendir.
@@ -1615,7 +1615,7 @@ def takvim_dosyasi(kod):
     """Haftanın planı .ics (iPhone takvimine eklemek için). Saat yoksa sabah/öğle/akşam varsayılanı."""
     pl = program(kod)
     p = profil()
-    L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Video Hub//PT//TR", "CALSCALE:GREGORIAN", "X-WR-CALNAME:PT"]
+    L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Video Hub//PT//TR", "CALSCALE:GREGORIAN", "X-WR-CALNAME:Health"]
     simdi = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     for g in pl.get("gunler") or []:
         if g.get("tur") == "dinlenme":
@@ -1627,8 +1627,8 @@ def takvim_dosyasi(kod):
         bit = bas + dt.timedelta(minutes=int(g.get("sure_dk") or 45))
         aciklama = "\\n".join(f"{b.get('ad')}: " + ", ".join(h.get("ad") or h.get("kod") for h in b.get("hareketler") or []) for b in g.get("bolumler") or [])
         L += ["BEGIN:VEVENT", f"UID:pt-{g.get('id')}@videohub", f"DTSTAMP:{simdi}", f"DTSTART:{bas.strftime('%Y%m%dT%H%M%S')}",
-              f"DTEND:{bit.strftime('%Y%m%dT%H%M%S')}", f"SUMMARY:PT · {(g.get('baslik') or g.get('tur') or '').replace(',', '\\,')}",
-              f"DESCRIPTION:{aciklama[:900].replace(',', '\\,')}", "BEGIN:VALARM", "TRIGGER:-PT10M", "ACTION:DISPLAY", "DESCRIPTION:PT", "END:VALARM", "END:VEVENT"]
+              f"DTEND:{bit.strftime('%Y%m%dT%H%M%S')}", f"SUMMARY:Health · {(g.get('baslik') or g.get('tur') or '').replace(',', '\\,')}",
+              f"DESCRIPTION:{aciklama[:900].replace(',', '\\,')}", "BEGIN:VALARM", "TRIGGER:-PT10M", "ACTION:DISPLAY", "DESCRIPTION:Health", "END:VALARM", "END:VEVENT"]
     L.append("END:VCALENDAR")
     return "\r\n".join(L) + "\r\n"
 
@@ -1637,7 +1637,7 @@ def takvim_dosyasi(kod):
 
 
 def disa_aktar():
-    """Bütün PT verisi tek JSON (videolar hariç)."""
+    """Bütün Health verisi tek JSON (videolar hariç)."""
     d = {"surum": "pt@1", "zaman": int(time.time()), "profil": profil(), "testler": testler(), "ilerleme": ilerleme(),
          "program": {p.stem: _json(p, {}) for p in sorted(PROGRAM.glob("*.json"))},
          "gunluk": {p.stem: _json(p, {}) for p in sorted(GUNLUK.glob("*.json"))},

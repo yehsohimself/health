@@ -1,6 +1,6 @@
-"""pt_push.py - PT'nin telefon bildirimleri (2026-10-25; couple_push.py'nin eşi, ayrı anahtar "pt_vapid" ve abone listesi pt/push_aboneler.json).
+"""pt_push.py - Health'in telefon bildirimleri (2026-10-25; couple_push.py'nin eşi, ayrı anahtar "pt_vapid" ve abone listesi pt/push_aboneler.json).
 
-Ana ekrana eklenmiş PT (iOS 16.4+ web uygulaması, https: eşleşmiş tünel adresi) Web Push ile bildirim alır; izin kullanıcının dokunuşuyla istenir.
+Ana ekrana eklenmiş Health (iOS 16.4+ web uygulaması, https: eşleşmiş tünel adresi) Web Push ile bildirim alır; izin kullanıcının dokunuşuyla istenir.
 Bildirimler pt_site arka plan döngüsünden: sabah kontrolü (antrenman saatinden önce), yeme penceresinin kapanmasına 30 dk, antrenman saati,
 pazar akşamı haftalık mesaj. Günde aynı türden en çok bir (pt/push_gonderilen.json).
 """
@@ -84,7 +84,7 @@ def gonder(baslik, metin, url="/?u=pt", etiket=""):
         try:
             v, _ = _vapid()
         except Exception as e:  # noqa: BLE001
-            print(f"PT bildirimi: anahtar yok ({e})", flush=True)
+            print(f"Health bildirimi: anahtar yok ({e})", flush=True)
             return
         veri = json.dumps({"baslik": baslik[:120], "metin": metin[:300], "url": url or "/", "etiket": etiket or ""}, ensure_ascii=False)
         olu = []
@@ -96,9 +96,9 @@ def gonder(baslik, metin, url="/?u=pt", etiket=""):
                 if kod in (404, 410):
                     olu.append(x["sub"]["endpoint"])
                 else:
-                    print(f"PT bildirimi gönderilemedi ({kod}): {str(e)[:160]}", flush=True)
+                    print(f"Health bildirimi gönderilemedi ({kod}): {str(e)[:160]}", flush=True)
             except Exception as e:  # noqa: BLE001
-                print(f"PT bildirimi gönderilemedi: {str(e)[:160]}", flush=True)
+                print(f"Health bildirimi gönderilemedi: {str(e)[:160]}", flush=True)
         for ep in olu:
             abonelik_sil(ep)
     threading.Thread(target=kos, daemon=True).start()
