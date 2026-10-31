@@ -1,0 +1,65 @@
+/* pt_ana.css — Bugün ekranı: amaç cümlesi, üç iş halkası, Şimdi kartı, seçili işin ayrıntısı (2026-10-31) */
+.an-ust{margin-bottom:14px}
+.an-amac{font-size:16px;line-height:1.5;color:var(--ink2);margin:8px 0 16px;max-width:560px}
+.an-amac b{color:var(--ink)}
+.an-amac .metin{font-size:15px;padding:0;margin-left:2px}
+.an-uc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.an-ayak{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:16px 10px 14px;border-radius:var(--r);
+  border:1px solid var(--cizgi);background:var(--yuzey);color:var(--ink);cursor:pointer;transition:border-color .15s,transform .1s,background .15s;font:inherit}
+.an-ayak:hover{border-color:var(--cizgi2)}
+.an-ayak:active{transform:scale(.98)}
+.an-ayak.on{border-color:var(--ink3);background:var(--yuzey2)}
+.an-ayak b{font-size:15px;letter-spacing:-.01em}
+.an-ayak small{font-size:12.5px;color:var(--ink2);line-height:1.35;min-height:2.7em}
+.an-halka{position:relative;width:72px;height:72px;display:block}
+.an-halka svg{width:72px;height:72px;transform:rotate(-90deg)}
+.an-halka circle{fill:none;stroke-width:6}
+.an-iz{stroke:var(--yuzey3)}
+.an-dol{stroke-linecap:round;animation:anDol 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes anDol{from{stroke-dashoffset:var(--c)}to{stroke-dashoffset:var(--d)}}
+.an-ik{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.an-ik svg,.an-dik svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.an-ayak.tamam .an-ik svg{stroke-width:2.6}
+
+.an-simdi{position:relative;overflow:hidden;padding:20px;border-color:color-mix(in srgb,var(--ar) 45%,var(--cizgi))}
+.an-simdi::before{content:'';position:absolute;inset:0;background:radial-gradient(120% 80% at 0% 0%,color-mix(in srgb,var(--ar) 14%,transparent),transparent 60%);pointer-events:none}
+.an-simdi > *{position:relative}
+.an-simdi h2{font-size:24px;letter-spacing:-.02em;margin:8px 0 6px;line-height:1.2}
+.an-simdi p{color:var(--ink2);font-size:15px;line-height:1.5;margin:0 0 16px}
+.an-simdi.tamam p{margin-bottom:0}
+.an-sb{display:flex;align-items:center;gap:8px}
+.an-nok{width:8px;height:8px;border-radius:50%;background:var(--ar);box-shadow:0 0 0 0 var(--ar);animation:anNabiz 2s infinite}
+.an-simdi.tamam .an-nok{animation:none}
+@keyframes anNabiz{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ar) 60%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+.an-detay{margin-top:26px;scroll-margin-top:calc(var(--navh,60px) + 12px)}
+.an-dbas{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.an-dik{flex:none;width:40px;height:40px;border-radius:12px;background:var(--yuzey2);display:flex;align-items:center;justify-content:center}
+.an-dbas h2{font-size:20px;margin:0;letter-spacing:-.02em}
+.an-dbas p{margin:2px 0 0;color:var(--ink2);font-size:14px;line-height:1.45}
+.an-bolum{font-size:20px;letter-spacing:-.02em;margin:30px 0 12px}
+.an-bolum span{display:block;font-size:14px;font-weight:400;color:var(--ink2);letter-spacing:0;margin-top:2px}
+
+.an-dongu{width:100%;height:auto;margin:10px 0 6px}
+.an-yol,.an-don{fill:none;stroke:var(--cizgi2);stroke-width:1.5;stroke-dasharray:3 5}
+.an-dg circle{fill:var(--yuzey2);stroke:var(--vurgu);stroke-width:1.5}
+.an-dg text{fill:var(--ink);font-size:13px;font-weight:700}
+.an-dg{animation:anBelir .5s both;animation-delay:calc(var(--i) * .25s)}
+@keyframes anBelir{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.an-isik{fill:var(--vurgu)}
+.an-adim{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--cizgi)}
+.an-adim > span{flex:none;width:26px;height:26px;border-radius:50%;background:var(--vurgu);color:var(--vurgu-ink);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.an-adim b{font-size:15px}
+.an-adim p{margin:2px 0 0;color:var(--ink2);font-size:14px;line-height:1.45}
+
+@media (max-width:520px){
+  .an-uc{gap:8px}
+  .an-ayak{padding:12px 6px}
+  .an-halka,.an-halka svg{width:60px;height:60px}
+  .an-ayak .an-ik svg{width:22px;height:22px}
+  .an-ayak small{font-size:11.5px}
+  .an-simdi h2{font-size:21px}
+}
+@media (prefers-reduced-motion:reduce){.an-dol,.an-dg{animation:none}.an-nok{animation:none}.an-isik{display:none}}
+.an-daha{margin-bottom:12px}.an-daha summary{cursor:pointer;color:var(--ink2);font-size:14px;padding:6px 0 12px;list-style:none}
+.an-daha summary::-webkit-details-marker{display:none}.an-daha summary::before{content:'＋ ';color:var(--vurgu)}.an-daha[open] summary::before{content:'－ '}

@@ -210,11 +210,15 @@ def _is_adi():
     return "Diğer"
 
 
-def _kullanim_yaz(is_adi, model_adi, sn, d=None, hata=""):
+def _kullanim_yaz(is_adi, model_adi, sn, d=None, hata="", tur=None):
     u = (d or {}).get("usage") or {}
     satir = {"t": round(time.time()), "is": is_adi, "model": model_adi, "sn": round(sn, 1), "ok": not hata,
              "giris": int(u.get("input_tokens") or 0) + int(u.get("cache_read_input_tokens") or 0) + int(u.get("cache_creation_input_tokens") or 0),
              "cikis": int(u.get("output_tokens") or 0), **({"hata": hata[:160]} if hata else {})}
+    if (d or {}).get("total_cost_usd") is not None:          # Claude'un verdiği maliyet (API eşdeğeri): aboneliğe göreli yükün en iyi ölçüsü
+        satir["maliyet"] = round(float(d["total_cost_usd"]), 5)
+    if tur:
+        satir["tur"] = tur
     if misafir():                              # davetlinin kendi hesabıyla yaptığı çağrı: sahibin bütçesine ve özetine sayılmaz
         satir["misafir"] = misafir().get("id")
     try:
@@ -261,7 +265,10 @@ def arka_plan_uygun():
         return hazir()
     if sinir_durumu():
         return False
-    try:
+    import claude_butce                        # 2026-10-31: aboneliğin gerçek doluluğuna göre (claude_butce.py)
+    if claude_butce.gosterge():
+        return claude_butce.arka_plan_uygun()
+    try:                                       # gösterge yoksa eski sayım
         esik = int(json.loads((KLASOR / "ayarlar.json").read_text(encoding="utf-8")).get("claude_arka_plan_esik") or ARKA_PLAN_ESIK)
     except Exception:  # noqa: BLE001
         esik = ARKA_PLAN_ESIK
@@ -352,7 +359,22 @@ def toplanti_suruyor():
         return False
 
 
+KULLANICI_ISI = contextvars.ContextVar("vh_kullanici_isi", default=False)
+
+
+@contextlib.contextmanager
+def kullanici_isi():
+    """Kullanıcının verdiği işi yürüten iş parçacığı (2026-10-31): dengeleyici bunu 'siz' sayar, hiç bekletmez."""
+    t = KULLANICI_ISI.set(True)
+    try:
+        yield
+    finally:
+        KULLANICI_ISI.reset(t)
+
+
 def _istekten_mi():
+    if KULLANICI_ISI.get() or os.environ.get("VH_CLAUDE_TUR") == "siz":     # sohbette kullanıcı açıkça istediyse: VH_CLAUDE_TUR=siz
+        return True
     try:
         from flask import has_request_context
         return has_request_context()
@@ -360,30 +382,58 @@ def _istekten_mi():
         return False
 
 
-def _oncelik(is_adi):
-    """Toplantı işi işaret bırakır; kendiliğinden çalışan arka plan işi gerekirse bekler (en çok 2 saat)."""
+def _izin(is_adi, model_adi, akis=False):
+    """Çağrıdan önce: toplantı işi işaret bırakır; dengeleyiciye (claude_butce) sorulur. Kullanıcının istekleri ve toplantılar hiç beklemez;
+    kendiliğinden çalışan arka plan işi doluluk düşene dek bekler (en çok 2 saat), günlük payı dolduysa hiç çalışmaz. (model, tür) döner."""
     if misafir():
-        return
-    if toplanti_mi():
+        return model_adi, "misafir"
+    tm = toplanti_mi()
+    if tm:
         try:
             TOPLANTI_ISARETI.parent.mkdir(parents=True, exist_ok=True); TOPLANTI_ISARETI.touch()
         except OSError:
             pass
-        return
-    if not str(is_adi).startswith(BEKLER_ONEK) or _istekten_mi():
-        return
+    import claude_butce
+    tur = claude_butce.tur_bul(is_adi, _istekten_mi(), tm, akis)
+    if tur != "arka":
+        k = claude_butce.karar(is_adi, tur, model_adi)
+        if k["model"] != model_adi:
+            claude_butce.olay("hafif_model", is_adi, eski=model_adi, yeni=k["model"], seviye=k.get("seviye"))
+        return k["model"], tur
     son, yazdi = time.time() + 7200, False
-    while time.time() < son:
-        neden = "toplantı sürüyor" if toplanti_suruyor() else ("Claude bütçesi toplantılara ayrıldı" if not arka_plan_uygun() and not sinir_durumu() else "")
-        if not neden:
-            return
-        if not yazdi:
-            print(f"Claude: {is_adi} bekliyor ({neden})", flush=True); yazdi = True
-        time.sleep(20)
-    raise ClaudeHata("Arka plan işi Claude'u bekledi; toplantı işleri önce geldi")
+    while True:
+        try:
+            if toplanti_suruyor():
+                raise claude_butce.Bekle("toplantı sürüyor")
+            k = claude_butce.karar(is_adi, tur, model_adi)
+            if k["model"] != model_adi:
+                claude_butce.olay("hafif_model", is_adi, eski=model_adi, yeni=k["model"], seviye=k.get("seviye"))
+            return k["model"], tur
+        except claude_butce.Bekle as b:
+            if b.kalici or time.time() > son:
+                claude_butce.olay("atlandi", is_adi, neden=b.neden)
+                raise ClaudeHata(f"Claude dengeleyicisi: {b.neden}")
+            if not yazdi:
+                print(f"Claude: {is_adi} bekliyor ({b.neden})", flush=True); yazdi = True
+                claude_butce.olay("bekletildi", is_adi, neden=b.neden)
+            time.sleep(60)
 
 
-def sor(istem, sistem="", zaman_asimi=600, model_adi=None, araclar=""):
+def _doluluk_oku(satirlar):
+    """stream-json satırlarından rate_limit_event'i dengeleyiciye verir."""
+    import claude_butce
+    for satir in satirlar:
+        if '"rate_limit_event"' not in satir:
+            continue
+        try:
+            d = json.loads(satir)
+        except Exception:  # noqa: BLE001
+            continue
+        if d.get("type") == "rate_limit_event" and isinstance(d.get("rate_limit_info"), dict):
+            claude_butce.gosterge_yaz(d["rate_limit_info"])
+
+
+def sor(istem, sistem="", zaman_asimi=600, model_adi=None, araclar="", _is=None):
     """İstemi Claude'a verir, yanıt metnini döndürür. Varsayılan araç yok; yalnızca metin. `araclar` yalnız web için verilir
     ("WebSearch,WebFetch"; 2026-10-29 Content'in akım araması: anahtarsız arama motorları otomatik sorguyu engelliyor)."""
     istem = istem + dil_eki()
@@ -392,26 +442,36 @@ def sor(istem, sistem="", zaman_asimi=600, model_adi=None, araclar=""):
         raise ClaudeHata("Claude programı bulunamadı")
     if araclar and set(araclar.split(",")) - {"WebSearch", "WebFetch"}:
         raise ClaudeHata("yalnız web araçlarına izin var")
-    _oncelik(_is_adi())
+    is_adi = _is or _is_adi()
+    m_adi, tur = _izin(is_adi, model_adi or model())
     komut = [p, "-p", "--tools", araclar, "--strict-mcp-config", "--setting-sources", "", "--no-session-persistence",
-             "--output-format", "json", "--model", model_adi or model()]
+             "--output-format", "stream-json", "--verbose", "--model", m_adi]
     if araclar:
         komut += ["--allowedTools", araclar]
     if sistem:
         komut += ["--system-prompt", sistem]
-    is_adi, t0, m_adi = _is_adi(), time.time(), model_adi or model()
+    t0 = time.time()
     with tempfile.TemporaryDirectory() as bos:                       # boş çalışma klasörü: proje dosyalarına bakmasın
         try:
             r = subprocess.run(komut, input=istem, capture_output=True, text=True, timeout=zaman_asimi, env=_ortam(), cwd=bos)
         except subprocess.TimeoutExpired:
-            _kullanim_yaz(is_adi, m_adi, time.time() - t0, hata="zaman aşımı"); raise ClaudeHata("zaman aşımı")
-    try:
-        d = json.loads(r.stdout)
-    except Exception:  # noqa: BLE001
-        _kullanim_yaz(is_adi, m_adi, time.time() - t0, hata=(r.stderr or r.stdout or "yanıt yok")[:160])
+            _kullanim_yaz(is_adi, m_adi, time.time() - t0, hata="zaman aşımı", tur=tur); raise ClaudeHata("zaman aşımı")
+    satirlar = (r.stdout or "").splitlines()
+    _doluluk_oku(satirlar)                                           # 2026-10-31: akış biçimi, aboneliğin doluluğunu da verir
+    d = None
+    for satir in reversed(satirlar):
+        if '"result"' in satir:
+            try:
+                x = json.loads(satir)
+            except Exception:  # noqa: BLE001
+                continue
+            if x.get("type") == "result":
+                d = x; break
+    if d is None:
+        _kullanim_yaz(is_adi, m_adi, time.time() - t0, hata=(r.stderr or r.stdout or "yanıt yok")[:160], tur=tur)
         _sinir_kontrol(r.stderr or r.stdout or "")
         raise ClaudeHata((r.stderr or r.stdout or "yanıt yok").strip()[:300])
-    _kullanim_yaz(is_adi, m_adi, time.time() - t0, d, "" if not d.get("is_error") else str(d.get("result") or "hata"))
+    _kullanim_yaz(is_adi, m_adi, time.time() - t0, d, "" if not d.get("is_error") else str(d.get("result") or "hata"), tur=tur)
     if d.get("is_error"):
         mesaj = str(d.get("result") or d.get("terminal_reason") or "hata")
         _sinir_kontrol(mesaj)
@@ -432,10 +492,12 @@ def sor_akis(istem, sistem="", zaman_asimi=300, model_adi=None):
     if not p:
         raise ClaudeHata("Claude programı bulunamadı")
     komut = [p, "-p", "--tools", "", "--strict-mcp-config", "--setting-sources", "", "--no-session-persistence",
-             "--output-format", "stream-json", "--verbose", "--include-partial-messages", "--model", model_adi or model()]
+             "--output-format", "stream-json", "--verbose", "--include-partial-messages"]
     if sistem:
         komut += ["--system-prompt", sistem]
-    is_adi, t0, m_adi = _is_adi(), time.time(), model_adi or model()
+    is_adi, t0 = _is_adi(), time.time()
+    m_adi, tur = _izin(is_adi, model_adi or model(), akis=True)
+    komut += ["--model", m_adi]
     with tempfile.TemporaryDirectory() as bos:
         pr = subprocess.Popen(komut, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=_ortam(), cwd=bos, bufsize=1)
         pr.stdin.write(istem); pr.stdin.close()
@@ -448,7 +510,9 @@ def sor_akis(istem, sistem="", zaman_asimi=300, model_adi=None):
                     d = json.loads(satir)
                 except Exception:  # noqa: BLE001
                     continue
-                if d.get("type") == "stream_event":
+                if d.get("type") == "rate_limit_event":
+                    _doluluk_oku([satir])
+                elif d.get("type") == "stream_event":
                     ev = d.get("event") or {}
                     if ev.get("type") == "content_block_delta" and (ev.get("delta") or {}).get("type") == "text_delta":
                         parca = ev["delta"].get("text") or ""
@@ -461,7 +525,7 @@ def sor_akis(istem, sistem="", zaman_asimi=300, model_adi=None):
             if pr.poll() is None:
                 pr.kill()
             pr.wait()
-    _kullanim_yaz(is_adi, m_adi, time.time() - t0, sonuc, "" if sonuc and not sonuc.get("is_error") else str((sonuc or {}).get("result") or "yanıt yok"))
+    _kullanim_yaz(is_adi, m_adi, time.time() - t0, sonuc, "" if sonuc and not sonuc.get("is_error") else str((sonuc or {}).get("result") or "yanıt yok"), tur=tur)
     if not sonuc or sonuc.get("is_error"):
         mesaj = str((sonuc or {}).get("result") or "yanıt yok")
         _sinir_kontrol(mesaj)
@@ -477,20 +541,22 @@ def sor_gorsel(istem, resimler, sistem="", zaman_asimi=900, model_adi=None):
     p = program()
     if not p:
         raise ClaudeHata("Claude programı bulunamadı")
-    _oncelik(_is_adi())
+    is_adi = _is_adi()
+    m_adi, tur = _izin(is_adi, model_adi or model())
     icerik = [{"type": "text", "text": istem}]
     for r in resimler:
         tur = "image/png" if str(r).lower().endswith(".png") else "image/jpeg"
         icerik.append({"type": "image", "source": {"type": "base64", "media_type": tur, "data": base64.b64encode(Path(r).read_bytes()).decode()}})
     mesaj = json.dumps({"type": "user", "message": {"role": "user", "content": icerik}}) + "\n"
     komut = [p, "-p", "--input-format", "stream-json", "--output-format", "stream-json", "--verbose", "--tools", "", "--strict-mcp-config",
-             "--setting-sources", "", "--no-session-persistence", "--model", model_adi or model()]
+             "--setting-sources", "", "--no-session-persistence", "--model", m_adi]
     if sistem:
         komut += ["--system-prompt", sistem]
-    is_adi, t0, m_adi = _is_adi(), time.time(), model_adi or model()
+    t0 = time.time()
     with tempfile.TemporaryDirectory() as bos:
         r = subprocess.run(komut, input=mesaj, capture_output=True, text=True, timeout=zaman_asimi, env=_ortam(), cwd=bos)
     sonuc = None
+    _doluluk_oku((r.stdout or "").splitlines())
     for satir in (r.stdout or "").splitlines():
         try:
             d = json.loads(satir)
@@ -498,7 +564,7 @@ def sor_gorsel(istem, resimler, sistem="", zaman_asimi=900, model_adi=None):
             continue
         if d.get("type") == "result":
             sonuc = d
-    _kullanim_yaz(is_adi, m_adi, time.time() - t0, sonuc, "" if sonuc and not sonuc.get("is_error") else str((sonuc or {}).get("result") or r.stderr or "yanıt yok"))
+    _kullanim_yaz(is_adi, m_adi, time.time() - t0, sonuc, "" if sonuc and not sonuc.get("is_error") else str((sonuc or {}).get("result") or r.stderr or "yanıt yok"), tur=tur)
     if not sonuc:
         raise ClaudeHata((r.stderr or "yanıt yok").strip()[:300])
     if sonuc.get("is_error"):
