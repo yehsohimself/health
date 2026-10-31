@@ -1059,6 +1059,24 @@ def kaydet(app):
         import pt_saglik
         return jsonify({**pt_saglik.durum(), "bugun": pt_saglik.hazirlik()})
 
+    @app.post("/api/pt/saglik/ice-aktar")
+    def pt_saglik_ice_aktar():
+        """iPhone Sağlık 'Tüm sağlık verilerini dışa aktar' dosyası (zip ya da export.xml): diske alınır, arka planda okunur, sonra silinir."""
+        import pt_saglik
+        f = request.files.get("dosya")
+        if not f or not f.filename:
+            return jsonify({"hata": "Dosya gelmedi."}), 400
+        if not f.filename.lower().endswith((".zip", ".xml")):
+            return jsonify({"hata": "dışa_aktar.zip ya da export.xml bekleniyor."}), 400
+        if "saglik_ice" in calisan:
+            return jsonify({"hata": "Bir dosya zaten okunuyor."}), 409
+        gecici = pt.VERI / ".gecici"
+        gecici.mkdir(parents=True, exist_ok=True)
+        yol = gecici / f"saglik_{uuid.uuid4().hex[:8]}{'.zip' if f.filename.lower().endswith('.zip') else '.xml'}"
+        f.save(yol)
+        _arka("saglik_ice", "Apple Sağlık verisi okunuyor", pt_saglik.ice_aktar, yol)
+        return jsonify({"ok": True})
+
     # ---------------------------------------------------------------- Health ile konuşma
     @app.get("/api/pt/sohbet")
     def pt_sohbet_gecmis():
@@ -1072,9 +1090,22 @@ def kaydet(app):
         if not metin:
             return jsonify({"hata": "Boş mesaj."}), 400
         try:
-            return jsonify(pt_sohbet.gonder(metin))
+            c = pt_sohbet.gonder(metin)
         except Exception as e:  # noqa: BLE001
             return jsonify({"hata": f"Health cevap veremedi: {str(e)[:160]}"}), 502
+        if c.get("kayitlar"):
+            with _kilit:
+                pt_oyun._onbellek.clear()
+        return jsonify(c)
+
+    @app.post("/api/pt/sohbet/geri")
+    def pt_sohbet_geri():
+        import pt_sohbet
+        g = _govde()
+        ok = pt_sohbet.kayit_geri_al(str(g.get("no") or ""), int(g.get("i") or 0))
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        return jsonify({"ok": ok})
 
     @app.post("/api/pt/sohbet/onay")
     def pt_sohbet_onay():

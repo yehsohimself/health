@@ -16,7 +16,7 @@ sys.path.insert(0, str(KLASOR))
 import pt_site  # noqa: E402
 
 app = Flask(__name__, static_folder=str(KLASOR / "static"), static_url_path="/static")
-app.config["MAX_CONTENT_LENGTH"] = 60 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 3 * 1024 ** 3      # Apple Sağlık dışa aktarımı büyük olabilir
 
 
 @app.get("/")

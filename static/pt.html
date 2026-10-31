@@ -655,6 +655,27 @@ label.btn,label.metin{cursor:pointer}
 .dg-bugun{fill:var(--vurgu);filter:drop-shadow(0 0 6px rgba(var(--vurgu-rgb),.9))}.dg-t{fill:var(--vurgu);font-size:12px;font-weight:600}
 .dg-dalga{fill:none;stroke:var(--vurgu);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:ygdalga 2.2s ease-out infinite}
 @media (prefers-reduced-motion: reduce){.dg-dalga{animation:none}}
+
+/* Sohbet kutusu her sekmede; kayıtlar (2026-10-31) */
+#sohbetFab{position:fixed;right:18px;bottom:calc(84px + var(--alt));z-index:40;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 18px 0 14px;border-radius:99px;
+  background:var(--vurgu);color:var(--vurgu-ink);border:0;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;box-shadow:0 10px 30px -8px rgba(var(--vurgu-rgb),.65),0 0 0 1px rgba(0,0,0,.2)}
+#sohbetFab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+@media (min-width:821px){#sohbetFab{bottom:28px;right:28px}}
+@media (max-width:420px){#sohbetFab span{display:none}#sohbetFab{width:52px;height:52px;padding:0;justify-content:center}}
+body:has(.perde) #sohbetFab, body:has(.nfo) #sohbetFab, body:has(#oyn) #sohbetFab, body:has(.oyn) #sohbetFab{display:none}
+.kayitlar{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.kayit{display:flex;align-items:center;gap:8px;font-size:13.5px;background:rgba(var(--vurgu-rgb),.08);border:1px solid rgba(var(--vurgu-rgb),.3);border-radius:10px;padding:7px 10px}
+.kayit i{font-style:normal;color:var(--vurgu);font-weight:700}.kayit span{flex:1}.kayit .metin{font-size:12.5px;padding:0}
+.kayit.geri{opacity:.55;background:none;border-color:var(--cizgi)}.kayit.hata{border-color:rgba(255,93,93,.4);background:rgba(255,93,93,.06)}.kayit.hata i{color:var(--kirmizi)}
+
+/* Apple Sağlık dosyası (2026-10-31) */
+.si-son{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px;margin-bottom:8px}
+.si-adim{margin:4px 0 12px;padding-left:20px;font-size:14px;line-height:1.55;color:var(--ink2)}.si-adim b{color:var(--ink)}
+.si-birak{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;border:1.5px dashed rgba(var(--vurgu-rgb),.5);border-radius:14px;padding:20px 14px;cursor:pointer;font-size:14.5px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(var(--vurgu-rgb),.08),transparent 70%);transition:background .2s,border-color .2s}
+.si-birak u{color:var(--vurgu);text-decoration:none}.si-birak small{color:var(--ink3);font-size:12.5px}.si-birak.ust{border-color:var(--vurgu);background:rgba(var(--vurgu-rgb),.14)}
+.si-ilerle{height:6px;border-radius:3px;background:var(--yuzey3);overflow:hidden;margin-top:12px}.si-ilerle i{display:block;height:100%;background:var(--vurgu);transition:width .3s}
+.si-ilerle.akis i{width:40%!important;animation:siakis 1.4s ease-in-out infinite}@keyframes siakis{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
 </style>
 <link rel="stylesheet" href="/static/pt_gorsel.css?v=5">
 </head>
@@ -757,8 +778,9 @@ const IKON = {
   kardiyo: '<svg viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M8 21l3-6 3 2v5M11 15l1-6 4 3 3-1M12 9l-4 1-2 3"/></svg>',
   uzun: '<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg>',
 };
+IKON.spor = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 4.5h-5L8 10z"/><path d="M12 3v4M16 10l4.5-1.5M14.5 14.5l2.5 4M9.5 14.5L7 18.5M8 10L3.5 8.5"/></svg>';
 IKON.mobilite_ = IKON.mobilite; IKON.toparlanma = IKON.mobilite;
-const TUR_AD = {kalistenik: 'Kalistenik', bjj_solo: 'Solo BJJ', bjj_ders: 'BJJ dersi', flow: 'Animal flow', bisiklet: 'Bisiklet', kardiyo: 'Kardiyo', mobilite: 'Mobilite', test: 'Başlangıç testleri', dinlenme: 'Dinlenme', asgari: 'Kısa antrenman'};
+const TUR_AD = {kalistenik: 'Kalistenik', bjj_solo: 'Solo BJJ', bjj_ders: 'BJJ dersi', flow: 'Animal flow', bisiklet: 'Bisiklet', kardiyo: 'Kardiyo', spor: 'Spor', mobilite: 'Mobilite', test: 'Başlangıç testleri', dinlenme: 'Dinlenme', asgari: 'Kısa antrenman'};
 const GUN = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'], GUN_KISA = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
 const YONTEM_SIRA = ['kalistenik', 'bjj_solo', 'flow', 'bisiklet', 'kardiyo', 'mobilite'];
 const gunAd = t => { const d = new Date(t + 'T12:00'); return GUN[(d.getDay() + 6) % 7]; };
@@ -799,7 +821,7 @@ async function yukle(sessiz){
 }
 function mesgul(){ const a = document.activeElement; return $('.perde') || $('.oyn') || (a && /INPUT|TEXTAREA|SELECT/.test(a.tagName)); }
 function ciz(){
-  if (!S.o.kurulu || S.kurulum) return kurulumCiz();
+  if (!S.o.kurulu || S.kurulum){ const f = $('#sohbetFab'); if (f) f.remove(); return kurulumCiz(); }
   /* 2026-10-29 sadeleştirme: dört sekme. Koç (görüşmeler, Health'in hafızası) Siz sayfasının içinde; sohbet Bugün'de. */
   const T = [['bugun', 'Bugün'], ['plan', 'Antrenman'], ['beslenme', 'Beslenme'], ['ilerleme', 'İlerleme']];
   const sb = $('#sizBtn'); sb.classList.remove('hidden'); sb.classList.toggle('on', S.sek === 'siz' || S.sek === 'koc'); sb.textContent = ((S.o.profil.ad || 'S').trim()[0] || 'S').toLocaleUpperCase('tr');
@@ -811,6 +833,9 @@ function ciz(){
   $('#navSol').innerHTML = c.length ? `<span class="donen"></span><span>${esc(c[0])}</span>` : (S.o.seri ? `<button class="tema" style="width:auto;padding:0 10px;display:inline-flex;gap:4px;align-items:center;color:var(--alev)" id="navSeri" aria-label="Seri">${ALEV('alev', 'style="width:16px;height:16px"')}<b style="font-variant-numeric:tabular-nums">${S.o.seri}</b></button>` : '');
   const ns = $('#navSeri'); if (ns) ns.onclick = seriSayfa;
   ({bugun: bugunCiz, plan: antrenmanCiz, beslenme: beslenmeCiz, koc: kocCiz, ilerleme: ilerlemeCiz, siz: sizCiz}[S.sek] || bugunCiz)();
+  let fab = $('#sohbetFab');                                          // her sekmeden Health'e yazmak (2026-10-31)
+  if (!fab){ fab = document.createElement('button'); fab.id = 'sohbetFab'; fab.setAttribute('aria-label', "Health'e yaz"); fab.title = "Health'e yaz";
+    fab.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg><span>Health\'e yaz</span>'; fab.onclick = () => sohbetSayfa(); document.body.appendChild(fab); }
   if (!$('.perde') && !$('#oyn')) setTimeout(() => kutlamaKontrol(), 350);
 }
 
@@ -1547,9 +1572,10 @@ async function ihtiyacKart(){
 }
 
 /* ------------------------------------------------------------------ Health ile konuşma: hazır seçenekler, Health gerekirse seçenekli sorar, değişikliği önerir, siz onaylarsınız */
-const SOHBET_HAZIR = ['Vaktim az', 'Bir yerim ağrıyor', 'Çok yorgunum'];
+/* 2026-10-31: sohbet her sekmeden açılır (sağ alttaki düğme); yaptığınızı yazın, Health kaydeder: "dün 25 dk maç yaptım", "öğlen mercimek çorbası yedim". */
+const SOHBET_HAZIR = ['Dün maç yaptım', 'Bugün yürüdüm', 'Kilomu yazayım', 'Vaktim az', 'Bir yerim ağrıyor', 'Çok yorgunum'];
 function sohbetKart(){
-  return `<div class="kart"><div class="sohbetsatir"><input id="sohbetGir" placeholder="Health'e yazın: planı değiştir, ne yesem…" enterkeyhint="send"><button id="sohbetGon" aria-label="Gönder">↑</button></div>
+  return `<div class="kart"><div class="sohbetsatir"><input id="sohbetGir" placeholder="Health'e yazın: dün 25 dk maç yaptım, vaktim az…" enterkeyhint="send"><button id="sohbetGon" aria-label="Gönder">↑</button></div>
     <div class="cipler kaydir" style="margin-top:10px">${SOHBET_HAZIR.map(x => `<button data-sohbet="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`;
 }
 function sohbetBagla(m){
@@ -1559,18 +1585,23 @@ function sohbetBagla(m){
   $('#sohbetGon', m).onclick = git; g.onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); git(); } };
 }
 async function sohbetSayfa(ilk){
-  const p = sayfa(`<h3>Health</h3><div id="sb" class="sohbetakis"></div><div class="sohbetsatir" style="margin-top:10px"><input id="sbGir" placeholder="Yazın…" enterkeyhint="send"><button id="sbGon" aria-label="Gönder">↑</button></div>`, {kapaninca: () => yukle(true)});
+  const p = sayfa(`<h3>Health</h3><p class="gri2" style="margin:-4px 0 8px;font-size:13.5px">Yaptığınızı ya da durumunuzu yazın; kaydederim ya da planı ona göre değiştiririm.</p><div id="sb" class="sohbetakis"></div>
+    <div class="cipler kaydir" id="sbHazir" style="margin-top:8px">${SOHBET_HAZIR.map(x => `<button data-sbh="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+    <div class="sohbetsatir" style="margin-top:10px"><input id="sbGir" placeholder="Örn. dün 25 dk büyük sahada maç yaptım" enterkeyhint="send"><button id="sbGon" aria-label="Gönder">↑</button></div>`, {kapaninca: () => yukle(true)});
   const sb = $('#sb', p);
   let L = [];
   try{ L = (await api('/api/pt/sohbet')).mesajlar || []; }catch(e){ /* yok */ }
   const ciz = (bekle) => {
     sb.innerHTML = L.slice(-14).map(x => x.kim === 'siz' ? `<div class="balon">${esc(x.metin)}</div>` : `<div class="ptbalon">${esc(x.metin)}
       ${x.soru && x === L[L.length - 1] ? `<div class="cipler" style="margin-top:8px">${x.soru.secenekler.map(s => `<button data-cevap="${esc(s)}">${esc(s)}</button>`).join('')}</div>` : ''}
+      ${(x.kayitlar || []).length ? `<div class="kayitlar">${x.kayitlar.map((k, i) => `<div class="kayit ${k.geri_alindi ? 'geri' : ''} ${k.hata ? 'hata' : ''}"><i>${k.hata ? '!' : k.geri_alindi ? '↺' : '✓'}</i><span>${esc(k.ozet)}${k.geri_alindi ? ' · geri alındı' : ''}</span>${k.hata || k.geri_alindi ? '' : `<button class="metin" data-kgeri="${x.kayit_no}|${i}">Geri al</button>`}</div>`).join('')}</div>` : ''}
       ${x.eylem ? `<div class="eylemkart"><b>${esc(x.eylem.aciklama || 'Planı değiştireyim mi?')}</b>${x.uygulandi ? `<span class="gri">✓ ${esc(x.sonuc || 'Uygulandı')}</span>` : x.vazgecildi ? '<span class="gri">Uygulanmadı</span>'
         : `<div class="satir" style="margin-top:8px"><button class="btn ana kucuk" data-onay="${x.eylem_no}">Uygula</button><button class="btn kucuk" data-red="${x.eylem_no}">Vazgeç</button></div>`}</div>` : ''}</div>`).join('')
       + (bekle ? '<div class="ptbalon"><span class="donen"></span></div>' : '');
     sb.scrollTop = sb.scrollHeight; p.querySelector('.sayfa').scrollTop = 1e6;
     $$('[data-cevap]', sb).forEach(b => b.onclick = () => yolla(b.dataset.cevap));
+    $$('[data-kgeri]', sb).forEach(b => b.onclick = async () => { const [no, i] = b.dataset.kgeri.split('|'); try{ await api('/api/pt/sohbet/geri', json({no, i: +i}));
+      const m = L.find(x => x.kayit_no === no); if (m) m.kayitlar[+i].geri_alindi = 1; ciz(); toast('Geri alındı.'); }catch(e){ toast(e.message); } });
     $$('[data-onay]', sb).forEach(b => b.onclick = async () => { b.disabled = true; try{ const r = await api('/api/pt/sohbet/onay', json({no: b.dataset.onay, onay: true}));
       const m = L.find(x => x.eylem_no === b.dataset.onay); if (m){ m.uygulandi = 1; m.sonuc = r.sonuc; } ciz(); toast(r.sonuc || 'Uygulandı.'); }catch(e){ toast(e.message); b.disabled = false; } });
     $$('[data-red]', sb).forEach(b => b.onclick = async () => { await api('/api/pt/sohbet/onay', json({no: b.dataset.red, onay: false})); const m = L.find(x => x.eylem_no === b.dataset.red); if (m) m.vazgecildi = true; ciz(); });
@@ -1579,6 +1610,8 @@ async function sohbetSayfa(ilk){
     try{ L.push(await api('/api/pt/sohbet', json({metin: t}))); }catch(e){ L.push({kim: 'pt', metin: e.message}); } ciz(); };
   const gir = $('#sbGir', p); const gon = () => { const t = gir.value.trim(); if (t){ gir.value = ''; yolla(t); } };
   $('#sbGon', p).onclick = gon; gir.onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); gon(); } };
+  $$('[data-sbh]', p).forEach(b => b.onclick = () => { const t = b.dataset.sbh; if (/yazayım|^Dün maç|^Bugün yürüdüm/.test(t)){ gir.value = {'Kilomu yazayım': 'Bugün kilom ', 'Dün maç yaptım': 'Dün … dakika maç yaptım', 'Bugün yürüdüm': 'Bugün … dakika yürüdüm'}[t] || t; gir.focus(); const n = gir.value.indexOf('…'); if (n >= 0) gir.setSelectionRange(n, n + 1); } else yolla(t); });
+  setTimeout(() => gir.focus(), 200);
   ciz(); if (ilk) yolla(ilk);
 }
 
@@ -2461,6 +2494,7 @@ async function sizCiz(){
     <button class="lsatir dugmesatir" data-koc><div class="lgovde"><b>Koçunuz</b><small>Görüşmeler ve Health'in sizin hakkınızda bildikleri</small></div><span class="gri">›</span></button>
     <button class="lsatir dugmesatir" id="videoEkle"><div class="lgovde"><b>Kendi hareket videolarınız</b><small>${kendi.length ? kendi.length + ' video' : 'Bir hareketi kendiniz çekip ekleyin'}</small></div><span class="gri">›</span></button>
     ${kendi.length ? `<div class="hareketsir" style="flex-wrap:wrap;margin-top:8px">${kendi.map(x => `<div class="hk" data-hareket="${x.kod}" style="cursor:pointer"><img class="kucukresim" src="${x.kapak}" alt="">${esc(x.ad)}</div>`).join('')}</div>` : ''}</div>`;
+  h += `<h2 class="bolum">Apple Sağlık</h2><div class="kart" id="saglikIce"><div class="satir gri"><span class="donen"></span></div></div>`;
   h += '<div id="telBolum"></div>';
   h += `<h2 class="bolum">Verileriniz</h2><div class="kart"><p class="gri2" style="margin:0 0 10px;font-size:14px">Kayıtlarınız bu bilgisayarda durur ve her gece yedeklenir. Plan ve yemek tahmini için yalnızca gereken bilgiler yapay zekâya gider.</p>
     <a class="btn kucuk" href="/api/pt/disa-aktar">Verilerimi indir</a></div>`;
@@ -2472,7 +2506,7 @@ async function sizCiz(){
   $('#tarama').onclick = () => { const K = {adim: 'soru', i: 0, p: JSON.parse(JSON.stringify(p)), notlar: (p.notlar || []).map((n, i) => ({...n, id: 'eski', t: 'e' + i})), ek: [], donus: 'ozet'}; K.i = gorunur(K).findIndex(q => q.id === 'parq_kalp'); S.kurulum = K; ciz(); };
   $('#belirti').onclick = durSayfa;
   $('#videoEkle').onclick = () => videoSayfa();
-  kanitKart();
+  kanitKart(); saglikIceCiz();
   $$('[data-hareket]', m).forEach(x => x.onclick = () => hareketSayfa(x.dataset.hareket));
   $$('[data-koc]', m).forEach(x => x.onclick = () => { S.sek = 'koc'; store.set('pt_sek', 'koc'); window.scrollTo(0, 0); ciz(); });
   api('/api/pt/erisim').then(r => { const tb = $('#telBolum'); if (!tb) return;
@@ -2481,7 +2515,7 @@ async function sizCiz(){
     tb.innerHTML = `<h2 class="bolum">Telefon</h2><div class="kart" id="erisim"></div><h2 class="bolum">Bildirimler</h2><div class="kart" id="bildirimKart"><div class="satir gri"><span class="donen"></span></div></div>
       <h2 class="bolum">Yemek fotoğrafı gönderme</h2><div class="kart"><p class="gri2" style="margin:0 0 10px;font-size:14px">Telefonda yemeğin fotoğrafını <b>Paylaş → Health'e yemek</b> ile gönderin; Health öğünü kaydeder.</p>
       <div class="satir"><a class="btn ana" href="/api/pt/yemek/kisayol" download>Kısayolu indir</a><a class="btn" href="/api/pt/yemek/kisayol?yer=ev" download>Yalnız ev ağı için</a></div></div>
-      <h2 class="bolum">Apple Sağlık</h2><div class="kart" id="saglikKart"></div>`;
+      <h2 class="bolum">Apple Sağlık · her gün kendiliğinden</h2><div class="kart" id="saglikKart"></div>`;
     bildirimKart(); erisimCiz(r); }).catch(() => {});
 }
 function saglikCiz(s){
@@ -3066,6 +3100,36 @@ function bastanSayfa(){
 function durgunBagla(m){
   $$('[data-bastan]', m).forEach(b => b.onclick = bastanSayfa);
   $$('[data-bastanyok]', m).forEach(b => b.onclick = async () => { try{ await api('/api/pt/yeniden-ertele', json({gun: 7})); }catch(e){ /* yok */ } const k = $('#durgunKart'); if (k) k.remove(); toast('Tamam, kaldığınız yerden. Bir hafta sormam.'); });
+}
+
+/* ------------------------------------------------------------------ APPLE SAĞLIK DOSYASI (2026-10-31; kullanıcı: "apple health'imden data alabilse harika olur").
+   Mac'te Sağlık uygulaması yok: iPhone'da "Tüm sağlık verilerini dışa aktar" → AirDrop → buraya bırakılır. Son 120 gün okunur, dosya silinir. */
+async function saglikIceCiz(){
+  const k = $('#saglikIce'); if (!k) return;
+  let d = {}; try{ d = await api('/api/pt/saglik/durum'); }catch(e){ /* yok */ }
+  const i = d.ice;
+  k.innerHTML = `${i ? `<div class="si-son"><span class="rozet yesil"><i></i>Bağlı</span><span>Son aktarım ${esc(new Date(i.t * 1000).toLocaleDateString('tr-TR', {day: 'numeric', month: 'long'}))}: ${i.gun} gün, ${i.antrenman} antrenman${i.ilk ? ` (${esc(tarihKisa(i.ilk))} – ${esc(tarihKisa(i.son))})` : ''}</span></div>` :
+      '<p class="gri2" style="margin:0 0 10px;font-size:14px">Uykunuz, dinlenme nabzınız, adımlarınız, kilonuz ve saatinizle kaydettiğiniz antrenmanlar (maç, yürüyüş, koşu…) Health\'e gelir; sabah ayarı, sağlık dozu ve uzun ömür ölçüleri bunları kullanır.</p>'}
+    <ol class="si-adim"><li>iPhone'da <b>Sağlık</b> uygulamasını açın, sağ üstte profil resminize dokunun.</li><li><b>Tüm sağlık verilerini dışa aktar</b> → <b>Dışa aktar</b>. Birkaç dakika sürebilir.</li><li>Gelen zip dosyasını <b>AirDrop</b> ile bu Mac'e gönderin; İndirilenler'e düşer (adı <b>export.zip</b> ya da <b>dışa_aktar.zip</b>).</li></ol>
+    <label class="si-birak" id="siBirak"><input type="file" accept=".zip,.xml" hidden id="siDosya"><span>Zip dosyasını buraya bırakın ya da <u>seçin</u></span><small>Son 120 gün okunur. Dosya okunduktan sonra silinir; veriler bu bilgisayarda kalır.</small></label>
+    <div id="siDurum"></div>${i ? '<p class="gri" style="margin:8px 0 0;font-size:12.5px">Ayda bir yeniden aktarmanız yeter; aynı günler üst üste yazılmaz.</p>' : ''}`;
+  const z = $('#siBirak', k), inp = $('#siDosya', k), du = $('#siDurum', k);
+  const yukleDosya = f => { if (!f) return; if (!/\.(zip|xml)$/i.test(f.name)) return toast('Sağlık\'tan gelen zip dosyasını seçin.');
+    const fd = new FormData(); fd.append('dosya', f); const x = new XMLHttpRequest();
+    du.innerHTML = `<div class="si-ilerle"><i style="width:0%"></i></div><p class="gri2" id="siYazi" style="margin:6px 0 0;font-size:13.5px">Yükleniyor · ${(f.size / 1048576).toFixed(0)} MB</p>`;
+    x.upload.onprogress = e => { if (e.lengthComputable){ $('.si-ilerle i', du).style.width = Math.round(e.loaded / e.total * 100) + '%'; } };
+    x.onload = () => { let r = {}; try{ r = JSON.parse(x.responseText); }catch(e){ /* yok */ }
+      if (x.status >= 400){ du.innerHTML = `<div class="not uyari">${esc(r.hata || 'Yüklenemedi.')}</div>`; return; }
+      $('#siYazi', du).innerHTML = '<span class="donen"></span> Okunuyor: uyku, nabız, adım, kilo ve antrenmanlar…'; $('.si-ilerle', du).classList.add('akis');
+      const bak = setInterval(async () => { let j = {}; try{ j = await api('/api/pt/is/saglik_ice'); }catch(e){ return; }
+        if (j.calisiyor) return; clearInterval(bak);
+        if (j.ok === false){ du.innerHTML = `<div class="not uyari">${esc(j.hata || 'Okunamadı.')}</div>`; return; }
+        const s = j.sonuc || {}; toast(`Apple Sağlık: ${s.gun || 0} gün, ${s.antrenman || 0} antrenman alındı.`); await yukle(true); saglikIceCiz(); }, 2000); };
+    x.onerror = () => { du.innerHTML = '<div class="not uyari">Bağlantı koptu; yeniden deneyin.</div>'; };
+    x.open('POST', '/api/pt/saglik/ice-aktar'); x.send(fd); };
+  inp.onchange = () => yukleDosya(inp.files[0]);
+  z.ondragover = e => { e.preventDefault(); z.classList.add('ust'); }; z.ondragleave = () => z.classList.remove('ust');
+  z.ondrop = e => { e.preventDefault(); z.classList.remove('ust'); yukleDosya(e.dataTransfer.files[0]); };
 }
 
 function araKontrolKart(){
