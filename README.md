@@ -59,6 +59,20 @@ measure where you are, decide the mix, watch how you respond, and change it for 
 
 ## A day with Health
 
+**Health speaks first.** Open the app and Health says one short, personal thing about where you are: *"Yesterday's match at
+the stadium was a hard one, your legs are probably heavy. Today's 10-minute test can wait until the evening if you like."*
+Below it, the replies you would most likely give, one of which starts the session. Answer with a tap, or say something else.
+
+**Talk back, out loud or in writing.** A bar at the bottom of every screen: type or tap the microphone (speech is turned into
+text on your own Mac with Whisper; nothing leaves the computer). Ask *why* a test is in the plan, push back, log a football
+match or a lunch in one sentence. Health answers like a person, asks a follow-up with tappable choices when it needs one, and can
+drop a card into the conversation: start today's session, your weekly dose, a breathing exercise, your weight curve. Every
+question in setup, in the morning check and in the coach interviews has *"Say something else"* and *"I have a question"*.
+
+**Your week as a story.** On Sunday and Monday, a full-screen recap you tap through: the days you moved, minutes by activity,
+the moment of the week, your longevity-dose rings, steps, sleep and weight from Apple Health, and one sentence for next week.
+Every number is counted from your logs; a card without data is simply left out.
+
 **Morning.** Three taps for the morning check, and the session for today appears, already adjusted: the right progression step for each movement, the right number of sets, a 10-minute version if you are short on time. Your streak counts any finished session, even 10 minutes.
 
 <p align="center"><img src="docs/today.jpg" width="760" alt="Today screen"></p>
@@ -117,8 +131,8 @@ applied (session length, number of days, weight-loss pace); the rest goes into n
 - Setup by tap, not by form: one question per screen, a free-text note only if you want to add something.
 - Pre-exercise health screening (PAR-Q+) and a hard stop with clear instructions if you report warning signs.
 - Two-question pain check after sessions; joint pain is followed up the next morning, muscle burn is not.
-- Talk to Health in plain language (*"my knee hurts"*, *"I only have 15 minutes"*, *"I'm travelling this week"*);
-  it asks one follow-up question and proposes a change you can apply with one tap.
+- Talk to Health in plain language, by typing or by voice (*"my knee hurts"*, *"I only have 15 minutes"*, *"why this test?"*);
+  it answers, asks a follow-up with choices when needed, logs what you did, and proposes plan changes you apply with one tap.
 
 **Nutrition**
 - Targets from Mifflin–St Jeor and the training you actually did, protein 1.6–2.2 g/kg, fibre and saturated fat limits.

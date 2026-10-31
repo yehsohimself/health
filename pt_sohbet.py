@@ -16,7 +16,10 @@ import pt
 
 DOSYA = pt.VERI / "sohbet.json"
 
-ISTEM = """Sen Health'sin: kişisel antrenör + diyetisyen + fizyoterapist bilgisiyle çalışan, kısa ve net konuşan bir koç. Türkçe, "siz" dili, en çok 3 cümle.
+ISTEM = """Sen Health'sin: kişinin yanındaki sıcak, meraklı ve dürüst bir koçsun (antrenör, diyetisyen, fizyoterapist, uyku ve uzun ömür bilgisiyle).
+İnsan gibi konuş: kişinin söylediğine önce gerçekten cevap ver, gerekirse merak et, kısa espri ya da takdir olabilir; kalıp cümle, rapor dili, madde
+yığını yok. Türkçe, "siz" dili, çoğunlukla 1-3 cümle (kişi açıklama ya da neden sorarsa 4-6 cümle olabilir; **kalın** ve kısa liste serbest).
+Kişi soruya soruyla karşılık verebilir, itiraz edebilir, konu açabilir: hepsine açıksın. Bir şeyi neden yaptığını sorarsa nedenini sade anlat.
 Kullanıcı sana bir durum söyledi ya da yaptığı bir şeyi anlattı. YAPTIĞI ya da ÖLÇTÜĞÜ bir şeyi söylüyorsa (maç, yürüyüş, koşu, ders,
 yediği yemek, kilo, uyku, içtiği su) onu "kayitlar" listesine yaz: bunlar onay beklemeden kaydedilir; yanıtta kaydettiğini kısa söyle ve
 gerekiyorsa tek cümle yorum ekle (ör. maç yoğun çalışma sayılır, yarın hafif tutalım). Tarihleri {bugun} gününe göre çöz ("dün", "cumartesi").
@@ -29,13 +32,18 @@ BUGÜN ({bugun}): {bugun_plan}
 SABAH KONTROLÜ: {sabah}
 BU HAFTA: {hafta}
 SON KAYITLAR: {son}
+APPLE SAĞLIK (son günler): {saglik}
+BU HAFTANIN SAĞLIK DOZU: {doz}
+MODÜLLER: {moduller}
 KURALLAR (kodda, değiştirme): {kurallar}
 
 KONUŞMA:
 {gecmis}
 
 JSON döndür:
-{{"yanit": "kısa cevap",
+{{"yanit": "cevabın",
+  "oneriler": ["kişinin bundan sonra sana söyleyebileceği 2-3 kısa şey (en çok 5 kelime, onun ağzından): 'Neden test var?', 'Yarına alalım'"],
+  "kartlar": ["gerekirse göster: seans (bugünün seansı, başlat düğmesiyle) | doz (haftalık sağlık dozu) | nefes (nefes çalışması başlat) | program (haftalık yapı) | kilo (kilo eğrisi) | hareket:<kod> (hareketin kartı)"],
   "kayitlar": [{{"tur": "aktivite|yemek|kilo|uyku|su", "tarih": "YYYY-MM-DD",
      "spor": "futbol|basketbol|tenis|voleybol|padel|yuzme|kosu|yuruyus|bisiklet|jiujitsu|yoga|fitness|dans|diger", "ad": "kısa ad: 'Futbol (büyük saha)'",
      "sure_dk": sayı, "zorluk": 1-10, "not": "...", "metin": "yemek için: yenen her şey miktarıyla", "ogun": "kahvalti|ogle|aksam|ara",
@@ -196,7 +204,28 @@ def baglam():
                                for s in gs["seanslar"]], ensure_ascii=False),
         sabah=json.dumps(gs.get("sabah") or {}, ensure_ascii=False)[:600],
         hafta=json.dumps([{"id": g.get("id"), "tarih": g["tarih"], "tur": g["tur"], "baslik": g.get("baslik")} for g in pl.get("gunler") or []], ensure_ascii=False),
-        son=json.dumps(son[:20], ensure_ascii=False), kurallar=" ".join(pt.KURALLAR_METNI), bolgeler="|".join(pt.BOLGELER))
+        son=json.dumps(son[:20], ensure_ascii=False), kurallar=" ".join(pt.KURALLAR_METNI), bolgeler="|".join(pt.BOLGELER),
+        saglik=_g(_saglik_ozet, "yok"), doz=_g(lambda: json.dumps(__import__("pt_uzun").doz_ozeti().get("satirlar"), ensure_ascii=False), "yok"),
+        moduller=_g(lambda: ", ".join(f"{m['ad']}{' (bugün yapıldı)' if m.get('bitti') else ''}" for m in __import__("pt_modul").gunun()) or "yok", "yok"))
+
+
+def _g(fn, v=""):
+    try:
+        return fn()
+    except Exception:  # noqa: BLE001
+        return v
+
+
+def _saglik_ozet():
+    import pt_saglik
+    L = []
+    for i in range(0, 4):
+        t = (pt.bugun() - dt.timedelta(days=i)).isoformat()
+        g = pt_saglik.gun(t) or {}
+        x = {k: g[k] for k in ("adim", "uyku_saat", "nabiz", "hrv", "kilo") if g.get(k)}
+        if x:
+            L.append(f"{t}: " + ", ".join(f"{k} {v}" for k, v in x.items()))
+    return "; ".join(L) or "yok"
 
 
 def gonder(metin):
@@ -205,7 +234,7 @@ def gonder(metin):
     son = [m for m in L if time.time() - m["t"] < 6 * 3600][-12:]
     g = "\n".join(f"{'Kullanıcı' if m['kim'] == 'siz' else 'Health'}: {m['metin']}" for m in son)
     c = claude_yaz.sor_json(ISTEM.format(gecmis=g, **baglam()), model_adi="sonnet", zaman_asimi=300)
-    cevap = {"kim": "pt", "metin": str(c.get("yanit") or "")[:800], "t": int(time.time())}
+    cevap = {"kim": "pt", "metin": str(c.get("yanit") or "")[:1600], "t": int(time.time())}
     K = []
     for k in (c.get("kayitlar") or [])[:6]:
         if isinstance(k, dict):
@@ -218,6 +247,9 @@ def gonder(metin):
     if K:
         cevap["kayitlar"] = K
         cevap["kayit_no"] = f"k{int(time.time() * 1000)}"
+    cevap["oneriler"] = [str(x)[:40] for x in (c.get("oneriler") or []) if str(x).strip()][:3]
+    KART = ("seans", "doz", "nefes", "program", "kilo")
+    cevap["kartlar"] = [str(k)[:40] for k in (c.get("kartlar") or []) if str(k).split(":")[0] in KART or str(k).startswith("hareket:")][:2]
     if c.get("soru") and (c["soru"].get("secenekler") or []):
         cevap["soru"] = {"soru": str(c["soru"].get("soru") or "")[:200], "secenekler": [str(x)[:60] for x in c["soru"]["secenekler"]][:5]}
     e = c.get("eylem")
@@ -317,3 +349,80 @@ def vazgec(eylem_no):
             if x.get("eylem_no") == eylem_no and not x.get("uygulandi"):
                 x["vazgecildi"] = True
     _degistir(f)
+
+
+# ----------------------------------------------------------------------------- Health önce konuşur (2026-10-31; kullanıcı: "deneyim humanize edilmeli,
+# çok kısıtlı hissediyorum"). Bugün ekranının başında, günün durumuna göre kısa, kişisel bir söz; altında kişinin verebileceği cevaplar. Söz sohbet
+# geçmişine de yazılır, cevap aynı konuşmanın devamıdır. Günün durumu değişince (sabah kontrolü, seans, kayıt) yeniden yazılır.
+SELAM = pt.VERI / "selam.json"
+SELAM_ISTEM = """Sen Health'sin: kişinin yanındaki sıcak, meraklı, dürüst koç. Bugün ekranını açtı; ilk sen konuşuyorsun. Şu anki duruma göre
+1-2 cümlelik, insan gibi, KİŞİSEL bir söz yaz: dünü ya da son kayıtları (maç, yürüyüş, uyku, adım) fark ettiğini göster, bugün için tek bir şey
+öner ya da sor. Selamlama ve ad ekranda zaten yazıyor: "Günaydın/Merhaba/İyi akşamlar" ile ve adla BAŞLAMA, doğrudan konuya gir.
+Kayıttaki sayıları ve puanları okur gibi tekrarlama ("7 zorluk girmişsiniz" değil, "dünkü maç zorlu geçmiş"); bir arkadaş gibi söyle.
+Rapor dili, "Bugün harika bir gün" gibi kalıp, emoji yok; "siz" dili, Türkçe. Saat {saat}, {dilim}. Veri yoksa uydurma.
+KİŞİ: {profil}
+BUGÜN ({bugun}): {bugun_plan}
+SABAH KONTROLÜ: {sabah}
+SON KAYITLAR: {son}
+APPLE SAĞLIK: {saglik}
+BU HAFTANIN SAĞLIK DOZU: {doz}
+MODÜLLER: {moduller}
+PROGRAM DURUMU: {durum}
+JSON: {{"soz": "1-2 cümle", "cevaplar": ["kişinin buna verebileceği 3 kısa cevap, onun ağzından, en çok 5 kelime"], "kart": "seans|doz|nefes|null"}}"""
+
+
+def _dilim():
+    h = dt.datetime.now().hour
+    return "sabah" if h < 12 else "öğleden sonra" if h < 18 else "akşam"
+
+
+def _selam_imza():
+    t = pt.bugun().isoformat()
+    d = pt.gun(t)
+    return f"{t}|{_dilim()}|{bool(d.get('sabah'))}|{sum(1 for x in d.get('seanslar') or [] if x.get('bitti'))}|{len(d.get('yemekler') or [])}"
+
+
+def _kural_selam():
+    gs = pt.gun_seansi(pt.bugun().isoformat())
+    s = next((x for x in gs["seanslar"] if not x.get("bitti") and x.get("tur") != "dinlenme"), None)
+    if not gs.get("sabah"):
+        return {"soz": "Bugün nasıl hissediyorsunuz? Uykunuza ve enerjinize göre günü ayarlayayım.",
+                "cevaplar": ["İyiyim, enerjim yerinde", "Biraz yorgunum", "Vaktim az"], "kart": None}
+    if s:
+        return {"soz": f"Bugün {s.get('baslik') or 'seansınız'} var, {s.get('sure_dk') or 20} dakika. Hazır olduğunuzda başlayalım.",
+                "cevaplar": ["Şimdi başlıyorum", "Akşama bırakayım", "Daha kısa olsun"], "kart": "seans"}
+    return {"soz": "Bugünkü işiniz tamam gibi. Yarın için bir isteğiniz var mı?", "cevaplar": ["Yarın daha kolay", "Her şey yolunda", "Bir sorum var"], "kart": None}
+
+
+def selam(uret=True):
+    """Önbellekteki söz (aynı durum için bir kez yazılır). uret=False: yalnız var olanı ya da kural sözünü döndürür."""
+    im = _selam_imza()
+    d = pt._json(SELAM, {})
+    if d.get("imza") == im and d.get("soz"):
+        return d
+    if not uret:
+        return {**_kural_selam(), "imza": im, "eski": True}
+    import claude_yaz
+    c = {}
+    if claude_yaz.hazir():
+        try:
+            import pt_yeniden
+            b = baglam()
+            dg = pt_yeniden.durgun()
+            c = claude_yaz.sor_json(SELAM_ISTEM.format(saat=dt.datetime.now().strftime("%H:%M"), dilim=_dilim(),
+                                                       durum=json.dumps(dg, ensure_ascii=False) if dg else "yolunda", **b), model_adi="sonnet", zaman_asimi=120)
+        except Exception:  # noqa: BLE001
+            c = {}
+    if not c.get("soz"):
+        c = _kural_selam()
+    out = {"imza": im, "soz": str(c["soz"])[:400], "cevaplar": [str(x)[:40] for x in c.get("cevaplar") or []][:3],
+           "kart": c.get("kart") if c.get("kart") in ("seans", "doz", "nefes") else None, "t": int(time.time())}
+    pt._yaz(SELAM, out)
+    def ekle(L):                                                 # konuşmanın başı olsun: cevap bu sözün devamıdır
+        eski = next((m for m in L if m.get("selam") == im), None)
+        if eski:                                                 # aynı durumun söz yeniden yazıldı (ör. Claude yokken kural sözü vardı)
+            eski.update({"metin": out["soz"], "oneriler": out["cevaplar"]})
+        else:
+            L.append({"kim": "pt", "metin": out["soz"], "t": out["t"], "selam": im, "oneriler": out["cevaplar"]})
+    _degistir(ekle)
+    return out

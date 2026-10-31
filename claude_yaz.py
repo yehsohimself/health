@@ -186,7 +186,7 @@ KULLANIM = KLASOR / "kayitlar" / ".claude_kullanim.jsonl"
 SINIR = KLASOR / "kayitlar" / ".claude_sinir.json"
 _kayit_kilidi = threading.Lock()
 IS_ADLARI = {
-    "terimler.claude_temizle": "Transkript temizliği", "ozet.ozet_uret": "Özet", "ceviri": "Çeviri", "sor": "Soru-cevap",
+    "terimler.claude_temizle": "Transkript temizliği", "ozet.ozet_uret": "Özet", "ceviri": "Çeviri", "sor": "Soru-cevap", "meet_asistan": "Meet asistanı",
     "marka": "Marka içerik paketi", "paylasim": "X taslakları", "notlar": "Toplantı notları", "adlar": "Ad önerisi",
     "klipler": "Öne çıkan anlar", "broll": "B-roll", "canli": "Canlı özet", "goruntu": "Görüntü betimleme",
     "altyazi": "Altyazı kırılımı", "onbrifing": "Toplantı öncesi hatırlatma", "haftalik.brief": "Brief",

@@ -6,9 +6,11 @@ tahmini güncellenir.
 """
 import datetime as dt
 import json
+import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -31,7 +33,7 @@ _kilit = threading.Lock()
 
 
 def mesgul():
-    return [f"Health: {a}" for a in list(calisan.values())]
+    return [f"Health: {a}" for k, a in list(calisan.items()) if k != "selam"]       # ilk söz kısa ve yeniden yazılabilir; beklenmez
 
 
 def _arka(anahtar, ad, fn, *arg):
@@ -176,8 +178,21 @@ def ozet():
         "durgun": _g(lambda: __import__("pt_yeniden").durgun()), "program_baslangic": p.get("program_baslangic"),
         "moduller": _g(lambda: __import__("pt_modul").gunun(t), []), "modul_olay": _g(lambda: __import__("pt_modul").son_olay()),
         "doz": _g(lambda: __import__("pt_uzun").doz_ozeti(kod), {}),
+        "selam": _g(_selam),
+        "hikaye": _g(lambda: __import__("pt_hikaye").bugun_karti()),
         "haftalik_gorusme": pt.bugun().weekday() >= 5 and pt._hafta_no(kod) > 1 and not (pt._json(pt.MESAJLAR / f"{kod}.gorusme.json", {}).get("cevaplar")),
     }
+
+
+def _selam():
+    """Health'in Bugün'deki ilk sözü. Önbellekte yoksa kural sözü döner ve Claude ile yazımı arka planda başlar."""
+    import pt_sohbet
+    s = pt_sohbet.selam(uret=False)
+    if s.get("eski"):
+        if not _yakinda_basarisiz("selam", 1):
+            _arka("selam", "Health'in sözü yazılıyor", pt_sohbet.selam)
+        s["yaziliyor"] = "selam" in calisan
+    return s
 
 
 GONDERILEN = pt.VERI / "push_gonderilen.json"
@@ -1110,6 +1125,42 @@ def kaydet(app):
             with _kilit:
                 pt_oyun._onbellek.clear()
         return jsonify(c)
+
+    @app.get("/api/pt/hikaye")
+    def pt_hikaye_al():
+        import pt_hikaye
+        kod = request.args.get("hafta")
+        if kod and not pt.hafta_gecerli(kod):
+            return jsonify({"hata": "Hafta geçersiz."}), 400
+        return jsonify(pt_hikaye.hikaye(kod or None))
+
+    @app.get("/api/pt/selam")
+    def pt_selam_al():
+        return jsonify(_selam())
+
+    @app.post("/api/pt/ses-yazi")
+    def pt_ses_yazi():
+        """Mikrofondan gelen kısa ses → yazı (bilgisayardaki ses modeliyle; ses dışarı gitmez)."""
+        f = request.files.get("dosya")
+        if not f:
+            return jsonify({"hata": "Ses gelmedi."}), 400
+        import subprocess
+        import tempfile
+        d = tempfile.mkdtemp(prefix="pt_ses_")
+        yol = os.path.join(d, "ses" + (os.path.splitext(f.filename or "")[1] or ".webm"))
+        f.save(yol)
+        try:
+            r = subprocess.run([sys.executable, str(pt.KLASOR / "sesnot.py"), yol, "tr"], capture_output=True, text=True, timeout=180)
+            if r.returncode != 0 and "mlx" in (r.stderr or ""):        # bu kurulumda ses modeli yok: tarayıcının ses tanımasına geçilir
+                return jsonify({"hata": "Ses modeli kurulu değil."}), 501
+            j = json.loads((r.stdout or "").strip().splitlines()[-1]) if r.stdout.strip() else {}
+        except Exception as e:  # noqa: BLE001
+            j = {"hata": str(e)[:160]}
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+        if not (j.get("metin") or "").strip():
+            return jsonify({"hata": j.get("hata") or "Sesi anlayamadım; yeniden deneyin."}), 422
+        return jsonify({"metin": j["metin"].strip()})
 
     @app.post("/api/pt/sohbet/geri")
     def pt_sohbet_geri():
