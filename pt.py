@@ -247,7 +247,7 @@ PROFIL_VARSAYILAN = {
     "ad": "", "cinsiyet": "erkek", "dogum_tarihi": "", "yas": None, "boy_cm": None, "kilo_kg": None, "hedef_kilo_kg": None, "hedef_tarih": "",
     "hedefler": [], "beceri_hedefleri": [], "neden": "", "hedef_turleri": [], "deneyim": "", "motivasyon": "", "diyet": "",
     "ek_bilgi": [], "notlar": [], "gun_duzeni": {}, "beslenme_aliskanlik": {}, "saglik_degerleri": [], "aliskanlik": {}, "ara_cevaplar": {}, "program_aktif": None, "program_biten": [],
-    "gorusmeler": {}, "kontrol_istegi": "", "son_kontrol": "", "sevdikleri": [], "kardiyo_tur": "yuruyus", "stres": None, "uyku_kalite": None, "is_duzeni": None,
+    "gorusmeler": {}, "kontrol_istegi": "", "son_kontrol": "", "sevdikleri": [], "kardiyo_tur": "yuruyus", "stres": None, "uyku_kalite": None, "is_duzeni": None, "program_baslangic": None,
     "yontemler": {"kalistenik": 2, "bjj_solo": 1, "flow": 1, "bisiklet": 1, "mobilite": 1},
     "bjj_ders": {"gunler": [], "saat": "", "sure_dk": 90},
     "ekipman": ["bisiklet", "bar", "mat"], "gunler": [0, 1, 2, 3, 4, 5, 6], "gunluk_dk": 45, "antrenman_saati": "sabah",

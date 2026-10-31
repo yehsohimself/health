@@ -258,6 +258,12 @@ def zamani():
     except Exception:  # noqa: BLE001
         ilk = False
     bas = dt.date.fromisoformat(son["tarih"]) if son else _baslangic_tarihi()
+    yb = pt.profil().get("program_baslangic")                     # program bugünden baştan başladıysa sayaç oradan
+    if yb:
+        try:
+            bas = max(bas, dt.date.fromisoformat(yb))
+        except ValueError:
+            pass
     sonraki = bas + dt.timedelta(days=KONTROL_ARALIK)
     gun = (pt.bugun() - bas).days
     return {"zamani": bool(acik) or (gun >= KONTROL_ARALIK and not ilk and pt.profil().get("kuruldu")), "acik": acik, "son": son,

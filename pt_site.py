@@ -173,6 +173,7 @@ def ozet():
         "degerlendirme": _g(lambda: {**__import__("pt_kontrol").ozet()["degerlendirme"], "hazirlaniyor": "degerlendirme" in calisan}, {}),
         "akis": _g(lambda: pt_koc.gun_akisi(t)["akis"], []),
         "recete_var": _g(lambda: bool((__import__("pt_uzun").recete_oku() or {}).get("satirlar")), False),
+        "durgun": _g(lambda: __import__("pt_yeniden").durgun()), "program_baslangic": p.get("program_baslangic"),
         "moduller": _g(lambda: __import__("pt_modul").gunun(t), []), "modul_olay": _g(lambda: __import__("pt_modul").son_olay()),
         "doz": _g(lambda: __import__("pt_uzun").doz_ozeti(kod), {}),
         "haftalik_gorusme": pt.bugun().weekday() >= 5 and pt._hafta_no(kod) > 1 and not (pt._json(pt.MESAJLAR / f"{kod}.gorusme.json", {}).get("cevaplar")),
@@ -562,6 +563,8 @@ def kaydet(app):
         if not pt.tarama_durumu()["bekliyor"]:
             kod = pt.hafta_kodu()
             istek = "Haftalık reçete değişti; bu haftanın kalan günlerini yeni reçeteye göre yaz, bitmiş günlere dokunma."
+            if pt.profil().get("program_baslangic") == pt.bugun().isoformat():
+                istek += " PROGRAM BUGÜN BAŞTAN BAŞLADI: geçen günlere seans koyma (dinlenme yaz), bugünden pazara kadar kısa ve kolay başla."
 
             def yaz():
                 pl = pt.program_uret(kod, istek)
@@ -572,6 +575,29 @@ def kaydet(app):
             _arka("plan", "haftalık plan yeniden yazılıyor", yaz)
             _degerlendirme_baslat(yenile=True)
         return jsonify({"recete": kayit, "plan": "plan" in calisan})
+
+    # ---------------------------------------------------------------- bugünden baştan başla (2026-10-31)
+    @app.post("/api/pt/yeniden-basla")
+    def pt_yeniden_basla():
+        import pt_yeniden
+        g = _govde()
+        if "plan" in calisan:
+            return jsonify({"hata": "Plan şu an yazılıyor; bir dakika sonra yeniden deneyin."}), 409
+        r = pt_yeniden.yeniden_basla(g.get("neden") or "")
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        if not pt.tarama_durumu()["bekliyor"] and g.get("plan_yaz", True):   # reçete ekranı ardından gelecekse planı o yazar
+            gun = pt.GUN_AD[pt.bugun().weekday()] if hasattr(pt, "GUN_AD") else ""
+            istek = (f"PROGRAM BUGÜN ({pt.bugun().isoformat()} {gun}) BAŞTAN BAŞLIYOR: önceki günler geçti, onlara seans koyma (dinlenme yaz). "
+                     "Bugünden pazara kadar, kişinin kaldırabileceği kadar kısa ve kolay yaz; ilk gün özellikle kolay olsun. " + str(g.get("istek") or "")[:300])
+            _arka("plan", "haftalık plan bugünden yazılıyor", pt.program_uret, r["hafta"], istek)
+        return jsonify({**r, "plan": "plan" in calisan})
+
+    @app.post("/api/pt/yeniden-ertele")
+    def pt_yeniden_ertele():
+        import pt_yeniden
+        pt_yeniden.ertele(int(_govde().get("gun") or 7))
+        return jsonify({"ok": True})
 
     @app.get("/api/pt/moduller")
     def pt_moduller():

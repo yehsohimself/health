@@ -648,6 +648,13 @@ label.btn,label.metin{cursor:pointer}
 .sb-cizgi{position:absolute;left:0;bottom:0;height:2px;background:var(--vurgu);box-shadow:0 0 8px rgba(var(--vurgu-rgb),.9);width:0}
 .sb-nok i{background:rgba(255,255,255,.3)}.sb-nok i.on{background:var(--vurgu)}.sb-ad{color:rgba(255,255,255,.55)}
 @media (prefers-reduced-motion: reduce){.es-ak,.yg-dalga,.hhbtn.ana::after,.hh.tam .hh-svg{animation:none}.yg-otur,.yg-aktif{animation:none;stroke-dashoffset:0}.sb img{transition:opacity .3s}.sb img.on{transform:none}}
+
+/* Bugünden baştan (2026-10-31) */
+.dg-sema{width:100%;max-width:340px;height:auto;display:block;margin:8px 0 2px;overflow:visible}
+.dg-cz{stroke:var(--cizgi2);stroke-width:1.5;stroke-dasharray:3 5}.dg-n{fill:var(--ink3);opacity:.45}
+.dg-bugun{fill:var(--vurgu);filter:drop-shadow(0 0 6px rgba(var(--vurgu-rgb),.9))}.dg-t{fill:var(--vurgu);font-size:12px;font-weight:600}
+.dg-dalga{fill:none;stroke:var(--vurgu);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:ygdalga 2.2s ease-out infinite}
+@media (prefers-reduced-motion: reduce){.dg-dalga{animation:none}}
 </style>
 <link rel="stylesheet" href="/static/pt_gorsel.css?v=5">
 </head>
@@ -1192,6 +1199,7 @@ function bugunCiz(){
   // Seri ilk tamamlanan günden sonra görünür; 0 gösteren bir sayaç ilk gün motivasyon değil yük.
   const y = o.oyun, seriVar = y && (y.seri || y.en_uzun || (y.bugun || {}).durum === 'tamam' || ((y.puan || {}).toplam || 0) > 0);
   if (seriVar) h += puanSerit();
+  h += durgunKart();
   h += haftaHalka(!!(o.ilk || {}).aktif);                                     // ilk haftada düğmesiz: tek adımı ilk hafta kartı verir
   if (o.tarama.bekliyor) h += `<div class="kart"><div class="not uyari" style="margin:0">Sağlık sorularından birine "evet" dediniz. Doktorunuzla konuştuktan sonra planı başlatın.</div><button class="btn genis" style="margin-top:10px" data-doktor>Doktorumla konuştum, onay aldım</button></div>`;
   if ((o.calisan || {}).plan) h += `<div class="kart"><div class="satir"><span class="donen"></span><b>Haftanızı yazıyorum</b></div><p class="gri2" style="margin:6px 0 0;font-size:14px">Bir iki dakika sürer; bu sırada sabah sorularını cevaplayabilirsiniz.</p></div>`;
@@ -1206,7 +1214,7 @@ function bugunCiz(){
     h += hedefKart(true) + gunPlaniKart() + kontrolKart() + pencereKart() + modulOlayKart() + modulKart() + (o.oyun ? gorevKart() : '') + '<div id="telKart"></div>' + suKart() + sohbetKart();
     m.innerHTML = h;
     $$('.btn.ana', m).slice(1).forEach(x => x.classList.remove('ana'));
-    haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); seriBagla(m); yeniBagla(m);
+    durgunBagla(m); haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); seriBagla(m); yeniBagla(m);
     $$('[data-sekme]', m).forEach(x => x.onclick = () => { S.sek = 'plan'; S.alt = 'program'; store.set('pt_sek', 'plan'); store.set('pt_alt', 'program'); window.scrollTo(0, 0); ciz(); });
     const ss = (o.ilk.simdi || {}).seans; if (ss) sesHazirla(ss);
     return;
@@ -1232,7 +1240,7 @@ function bugunCiz(){
   h += sohbetKart();
   m.innerHTML = h;
   $$('.btn.ana', m).slice(1).forEach(x => x.classList.remove('ana'));          // tek birincil düğme
-  haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); oneriBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); kocBagla(m); seriBagla(m); yeniBagla(m);
+  durgunBagla(m); haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); oneriBagla(m); hizliFotoBagla(m); kontrolBagla(m); sohbetBagla(m); suBagla(m); kocBagla(m); seriBagla(m); yeniBagla(m);
   (b.seanslar || []).forEach(s => (s.bolumler || []).length && !s.bitti && sesHazirla(s));
 }
 function bugunBagla(m){
@@ -2449,6 +2457,7 @@ async function sizCiz(){
     <div style="margin-top:10px"><button class="btn kucuk" id="duzenle">Düzenle</button></div></div>`;
   /* 2026-10-29 sadeleştirme: Koç bu sayfanın içinde; telefona özgü bölümler (eşleştirme, bildirim, kısayol, Apple Sağlık) yalnız telefon kullanılıyorsa. */
   h += `<div class="kart"><button class="lsatir dugmesatir" data-recete><div class="lgovde"><b>Programınız</b><small>${esc(S.o.recete_var ? 'Haftanızın yapısı ve nedenleri; sayıları değiştirebilirsiniz' : 'Health\'in size önerdiği haftalık yapı')}</small></div><span class="gri">›</span></button>
+    <button class="lsatir dugmesatir" data-bastan><div class="lgovde"><b>Programı bugünden başlat</b><small>İlk adım, hedeflerin süresi ve ara kontrol bugünden sayılır; kayıtlar silinmez</small></div><span class="gri">›</span></button>
     <button class="lsatir dugmesatir" data-koc><div class="lgovde"><b>Koçunuz</b><small>Görüşmeler ve Health'in sizin hakkınızda bildikleri</small></div><span class="gri">›</span></button>
     <button class="lsatir dugmesatir" id="videoEkle"><div class="lgovde"><b>Kendi hareket videolarınız</b><small>${kendi.length ? kendi.length + ' video' : 'Bir hareketi kendiniz çekip ekleyin'}</small></div><span class="gri">›</span></button>
     ${kendi.length ? `<div class="hareketsir" style="flex-wrap:wrap;margin-top:8px">${kendi.map(x => `<div class="hk" data-hareket="${x.kod}" style="cursor:pointer"><img class="kucukresim" src="${x.kapak}" alt="">${esc(x.ad)}</div>`).join('')}</div>` : ''}</div>`;
@@ -2458,7 +2467,7 @@ async function sizCiz(){
   h += `<h2 class="bolum">Sağlık</h2><div class="kart"><p class="gri2" style="margin:0 0 8px;font-size:14px">Yeni bir tanı, ilaç değişikliği ya da ameliyattan sonra sağlık sorularını yeniden cevaplayın.</p><button class="btn kucuk" id="tarama">Sağlık sorularını yeniden cevapla</button> <button class="metin red" id="belirti">Uyarı belirtileri</button></div>`;
   h += `<h2 class="bolum">Health nasıl karar veriyor?</h2><div class="kart" id="kanitKart"><div class="satir gri"><span class="donen"></span></div></div>`;
   m.innerHTML = h;
-  bugunBagla(m);
+  bugunBagla(m); durgunBagla(m);
   $('#duzenle').onclick = () => { S.kurulum = {adim: 'ozet', i: 0, p: JSON.parse(JSON.stringify(p)), notlar: (p.notlar || []).map((n, i) => ({...n, id: 'eski', t: 'e' + i})), ek: []}; ciz(); };
   $('#tarama').onclick = () => { const K = {adim: 'soru', i: 0, p: JSON.parse(JSON.stringify(p)), notlar: (p.notlar || []).map((n, i) => ({...n, id: 'eski', t: 'e' + i})), ek: [], donus: 'ozet'}; K.i = gorunur(K).findIndex(q => q.id === 'parq_kalp'); S.kurulum = K; ciz(); };
   $('#belirti').onclick = durSayfa;
@@ -3014,6 +3023,49 @@ function modulListe(rc){
       <small>${esc(m.siklik)}${m.dk ? ' · ' + m.dk + ' dk' : ''} · ${esc(m.kaynak)}</small>${m.neden ? `<p class="mdneden">${esc(m.neden)}</p>` : ''}<p>${esc(m.ne)}</p>
       <div class="satir ara" style="margin-top:6px">${kanitHtml(m.kanit)}<button class="metin sessiz" data-mcikar="${m.kod}" style="font-size:12.5px">Bana göre değil</button></div>
       <p class="mdkn">${esc(m.kanit_not || '')}</p></div></div>`).join('')}</div>`;
+}
+
+/* ------------------------------------------------------------------ BUGÜNDEN BAŞTAN (2026-10-31; kullanıcı: "programa baştan başlamak da isteyebilirim;
+   şu an bir program öyle başlamış gidiyor, ben onu yapmıyorum, öyle devam ediyor"). Kayıt silinmez; ilk adım, hedeflerin süresi, ara kontrol ve
+   haftanın planı bugünden sayılır. Program ilerlemiyorsa Bugün'de kendisi önerir. */
+function durgunKart(){
+  const d = S.o.durgun; if (!d || (S.o.program_baslangic === bugunT())) return '';
+  const G = Array.from({length: 7}, (_, i) => 6 - i);
+  const sema = `<svg viewBox="0 0 300 44" class="dg-sema" aria-hidden="true"><line x1="14" x2="262" y1="22" y2="22" class="dg-cz"/>
+    ${G.map((g, i) => `<circle cx="${14 + i * 38}" cy="22" r="${g ? 4 : 0}" class="dg-n"/>`).join('')}
+    <circle cx="${14 + 6 * 38}" cy="22" r="7" class="dg-bugun"/><circle cx="${14 + 6 * 38}" cy="22" r="7" class="dg-dalga"/>
+    <text x="${14 + 6 * 38 + 14}" y="26" class="dg-t">bugün</text></svg>`;
+  return `<div class="kart vurgulu" id="durgunKart"><span class="mono">Programınız bekliyor</span>
+    <h3 style="margin:2px 0 4px">${d.hic ? `Programınız ${d.gun} gündür başlamadı.` : `Son antrenmanınızın üzerinden ${d.gun} gün geçti.`}</h3>
+    ${sema}
+    <p class="gri2" style="margin:6px 0 12px;font-size:14px">İsterseniz bugünden baştan başlayalım: ilk adım, hedeflerinizin süresi ve ara kontrol bugünden sayılır, haftanız bugünden yazılır. Kayıtlarınız silinmez.</p>
+    <button class="btn ana genis" data-bastan>Bugünden başla</button>
+    <p style="margin:8px 0 0;text-align:center"><button class="metin sessiz" data-bastanyok>Kaldığım yerden devam</button></p></div>`;
+}
+function bastanSayfa(){
+  const C = [['Vaktim az', 'Seanslar kısa olsun (10-15 dk)'], ['Sabahları', 'Seanslar sabah'], ['Akşamları', 'Seanslar akşam'], ['Evde', 'Ekipmansız, evde'], ['Çok kolay başla', 'İlk hafta çok kolay']];
+  const p = sayfa(`<span class="mono">Bugünden baştan</span><h3>Programı bugünden başlatalım.</h3>
+    <ul class="rcmad"><li>İlk adım bugün; ilk hafta yolu birinci adımdan başlar.</li><li>Hedeflerinizin süresi (4 hafta, 3 ay, 1 yıl) bugünden sayılır.</li>
+      <li>Ara kontrol 14 gün sonra.</li><li>Bu haftanın planı bugünden itibaren yeniden yazılır.</li><li>Antrenman, yemek ve test kayıtlarınız silinmez.</li></ul>
+    <span class="etk">Bu sefer neyi farklı yapalım? (isteğe bağlı)</span>
+    <div class="cipler" data-coklu id="bsSec">${C.map(([a, v]) => `<button data-v="${esc(v)}">${esc(a)}</button>`).join('')}</div>
+    <label class="rconay"><input type="checkbox" id="bsSoru"><span>Soruları da baştan cevaplamak istiyorum</span></label>
+    <div class="salt"><button class="btn" data-kapat>Vazgeç</button><button class="btn ana" id="bsTamam">Bugünden başla</button></div>`, {sabit: true});
+  segBagla(p);
+  $('#bsTamam', p).onclick = async () => { const b = $('#bsTamam', p); b.disabled = true; b.innerHTML = '<span class="donen"></span> Başlatıyorum';
+    const istek = cokluDeger($('#bsSec', p)).join('; '), soru = $('#bsSoru', p).checked;
+    const rcOnce = !S.o.recete_var && !soru;                       // yeni program yapısına geçmemişse önce onu görsün; planı reçete yazar
+    try{ await api('/api/pt/yeniden-basla', json({istek, neden: istek, plan_yaz: !rcOnce}));
+      p.kapat();
+      if (rcOnce){ toast('Program bugünden başlıyor. Önce haftanızın yapısına bakalım.'); await yukle(); receteSayfa(); return; }
+      toast('Program bugün baştan başladı. Haftanızı bugünden yazıyorum.');
+      if (soru){ await yukle(); const pr = S.o.profil; S.kurulum = {adim: 'ozet', i: 0, p: JSON.parse(JSON.stringify(pr)), notlar: (pr.notlar || []).map((n, i) => ({...n, id: 'eski', t: 'e' + i})), ek: []}; ciz(); }
+      else { S.sek = 'bugun'; window.scrollTo(0, 0); yukle(); }
+    }catch(e){ toast(e.message); b.disabled = false; b.textContent = 'Bugünden başla'; } };
+}
+function durgunBagla(m){
+  $$('[data-bastan]', m).forEach(b => b.onclick = bastanSayfa);
+  $$('[data-bastanyok]', m).forEach(b => b.onclick = async () => { try{ await api('/api/pt/yeniden-ertele', json({gun: 7})); }catch(e){ /* yok */ } const k = $('#durgunKart'); if (k) k.remove(); toast('Tamam, kaldığınız yerden. Bir hafta sormam.'); });
 }
 
 function araKontrolKart(){
