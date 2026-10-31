@@ -825,7 +825,7 @@ async function api(yol, s = {}){
 function toast(m, eylem, fn){ $$('.toast').forEach(x => x.remove()); const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); t.innerHTML = `<span>${esc(m)}</span>${eylem ? `<button>${esc(eylem)}</button>` : ''}`; document.body.appendChild(t); if (eylem) $('button', t).onclick = () => { t.remove(); fn(); }; setTimeout(() => t.remove(), eylem ? 6000 : 3200); }
 function temaUygula(){ if (store.get('tema_v20', 'dark') === 'light') document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme; }
 temaUygula(); $('#tema').onclick = () => { store.set('tema_v20', store.get('tema_v20', 'dark') === 'light' ? 'dark' : 'light'); temaUygula(); };
-(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'Health', 8771], ['ledger', 'Ledger', 8773]];
+(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'Health', 8771], ['ledger', 'Ledger', 8773], ['office', 'Office', 8772], ['capital', 'Capital', 8774]];
   const m = $('#urunMenu'); const yerel = /^(127\.|localhost|192\.168\.|10\.|.*\.local$)/.test(location.hostname);
   const kurulu = (document.documentElement.dataset.urunler || '').split(',').filter(Boolean);
   if (kurulu.length === 1) { $('#urunBtn').style.display = 'none'; return; }   // tek başına Health: başka ürün yok
@@ -1267,13 +1267,34 @@ function pencereKart(sade){
 /* Oruç tek dokunuşları (2026-10-28): yemek kaydı olmasa da açılış ve kapanış işaretlenir; pencere ve oruç süresi buna göre. */
 function oructaSatir(pen){
   const yemek = (S.o.bugun.yemekler || S.o.gunluk && S.o.gunluk.yemekler || []).length;
-  if (pen.kapattim) return `<div class="satir" style="gap:10px;margin-top:4px"><span class="gri" style="font-size:13px">Son yemek ${pen.kapanis}</span><button class="metin sessiz" data-oruc="kapat" data-geri style="font-size:13px">Geri al</button></div>`;
-  if (yemek || pen.acildi) return `<div class="satir" style="gap:10px;margin-top:4px"><button class="metin" data-oruc="kapat">Son yemeğimi yedim</button>${pen.acildi && !yemek ? '<button class="metin sessiz" data-oruc="ac" data-geri style="font-size:13px">Açmadım</button>' : ''}</div>`;
+  const saatT = t => { const d = new Date(t * 1000), bg = new Date(); const s = d.toLocaleTimeString('tr-TR', {hour: '2-digit', minute: '2-digit'});
+    return d.toDateString() === bg.toDateString() ? s : `${d.toLocaleDateString('tr-TR', {day: 'numeric', month: 'short'})} ${s}`; };
+  const bas = pen.acildi_t ? `<span class="gri" style="font-size:13px">Başladınız ${saatT(pen.acildi_t)}</span><button class="metin sessiz" data-oruc="ac" data-t="${pen.acildi_t}" style="font-size:13px">Değiştir</button>` : '';
+  if (pen.kapattim) return `<div class="satir" style="gap:10px;margin-top:4px">${bas}<span class="gri" style="font-size:13px">Son yemek ${saatT(pen.kapandi_t)}</span><button class="metin sessiz" data-oruc="kapat" data-t="${pen.kapandi_t}" style="font-size:13px">Değiştir</button></div>`;
+  if (yemek || pen.acildi) return `<div class="satir" style="gap:10px;margin-top:4px"><button class="metin" data-oruc="kapat">Son yemeğimi yedim</button>${bas}</div>`;
   return `<div class="satir" style="margin-top:4px"><button class="metin" data-oruc="ac">Yemeye başladım</button></div>`;
 }
+/* Başlangıç ve bitiş saati seçilebilir (2026-10-31, kullanıcı: "yemeğe başladım, bitirdim derken seçenek çıkmıyor; tarih ve saat seçebilmeliyim").
+   Tek dokunuşla "Şimdi" ya da "N dk önce"; değilse tarih ve saat. Kayıt varsa "Kaldır". */
+function orucSayfa(ne, mevcut){
+  const yerel = d => { const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000); return z.toISOString().slice(0, 16); };
+  const simdi = new Date(), deger = mevcut ? new Date(mevcut * 1000) : simdi;
+  const p = sayfa(`<h3>${ne === 'ac' ? 'Yemeye ne zaman başladınız?' : 'Son yemeğinizi ne zaman yediniz?'}</h3>
+    <div class="cipler" style="margin:12px 0 4px">${[[0, 'Şimdi'], [15, '15 dk önce'], [30, '30 dk önce'], [60, '1 saat önce'], [120, '2 saat önce']].map(([dk, a]) => `<button data-dk="${dk}">${a}</button>`).join('')}</div>
+    <label class="etk" for="or_t">Ya da tarih ve saat seçin</label>
+    <input class="alan" type="datetime-local" id="or_t" value="${yerel(deger)}" min="${yerel(new Date(simdi - 3 * 86400000))}" max="${yerel(simdi)}">
+    <div class="salt">${mevcut ? '<button class="btn" data-sil>Kaldır</button>' : '<button class="btn" data-kapat>Vazgeç</button>'}<button class="btn ana" data-kaydet>Kaydet</button></div>`);
+  const gonder = async (govde, mesaj) => {
+    try{ await api('/api/pt/oruc', json({ne, ...govde})); p.kapat(); toast(mesaj); yukle(); }catch(e){ toast(e.message); } };
+  const tamam = t => { const s = new Date(t * 1000).toLocaleString('tr-TR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+    return ne === 'ac' ? `Yemeye başlama: ${s}` : `Son yemek: ${s}`; };
+  $$('[data-dk]', p).forEach(b => b.onclick = () => { const t = Math.floor(Date.now() / 1000) - b.dataset.dk * 60; gonder({t}, tamam(t)); });
+  $('[data-kaydet]', p).onclick = () => { const v = $('#or_t', p).value; if (!v) return toast('Tarih ve saat seçin.');
+    const t = Math.floor(new Date(v).getTime() / 1000); gonder({t}, tamam(t)); };
+  const sil = $('[data-sil]', p); if (sil) sil.onclick = () => gonder({geri: true}, 'Kaldırıldı.');
+}
 function orucBagla(m){
-  $$('[data-oruc]', m).forEach(x => x.onclick = async () => { const geri = x.hasAttribute('data-geri'), ne = x.dataset.oruc;
-    try{ await api('/api/pt/oruc', json({ne, geri})); toast(geri ? 'Geri alındı.' : ne === 'ac' ? 'Yeme saatleriniz başladı.' : 'Bugünlük yemek bitti.'); yukle(); }catch(e){ toast(e.message); } });
+  $$('[data-oruc]', m).forEach(x => x.onclick = () => orucSayfa(x.dataset.oruc, x.dataset.t ? +x.dataset.t : null));
   $$('[data-dunku]', m).forEach(x => x.onclick = dunkuSayfa);
 }
 async function dunkuSayfa(){

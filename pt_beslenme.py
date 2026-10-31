@@ -198,6 +198,7 @@ def pencere_durumu(p=None, tarih=None):
     return {"acilis": acilis.strftime("%H:%M"), "kapanis": kapanis.strftime("%H:%M"), "acilis_t": int(acilis.timestamp()),
             "kapanis_t": int(kapanis.timestamp()), "durum": durum, "saat": saat, "kaydirildi": bool(d.get("pencere_bas")),
             "acildi": bool(d.get("oruc_acildi")), "kapattim": kapattim,
+            "acildi_t": d.get("oruc_acildi"), "kapandi_t": d.get("oruc_kapandi"),
             "oruc_bas_t": int(oruc_bas) if oruc_bas else None, "hedef_oruc": 24 - saat}
 
 
@@ -212,18 +213,32 @@ def _oruc_basi(tarih):
     return dun.get("oruc_kapandi") or max([y.get("t") or 0 for y in dun.get("yemekler") or []] or [0]) or None
 
 
-def oruc_isaretle(tarih, ne, geri=False):
-    """Tek dokunuş: ne = 'ac' (orucu şimdi açtım) | 'kapat' (son yemeğimi yedim). geri=True işareti kaldırır."""
+def oruc_isaretle(tarih, ne, geri=False, t=None):
+    """ne = 'ac' (yemeye başladım) | 'kapat' (son yemeğimi yedim). geri=True işareti kaldırır.
+    t (epoch sn) verilirse o an işaretlenir (2026-10-31, kullanıcı: "başlangıç ve bitiş için tarih ve saat seçebilmeliyim");
+    kayıt o anın gününe yazılır. En çok 3 gün geriye, ileri tarih yok. Değişen günü döner."""
     alan = {"ac": "oruc_acildi", "kapat": "oruc_kapandi"}[ne]
+    simdi = int(time.time())
+    if t is not None and not geri:
+        t = int(t)
+        if t > simdi + 120:
+            raise ValueError("İleri bir saat seçilemez.")
+        if t < simdi - 3 * 86400:
+            raise ValueError("En çok üç gün geriye gidebilirsiniz.")
+        tarih = dt.datetime.fromtimestamp(t).date().isoformat()
+    an = min(t, simdi) if t is not None else simdi
 
     def f(d):
         if geri:
             d.pop(alan, None)
-        else:
-            d[alan] = int(time.time())
-            if ne == "ac":
-                d.pop("oruc_kapandi", None)
+            return
+        if ne == "kapat" and d.get("oruc_acildi") and an < d["oruc_acildi"]:
+            raise ValueError(f"Son yemek, yemeye başlama saatinden ({dt.datetime.fromtimestamp(d['oruc_acildi']):%H:%M}) önce olamaz.")
+        d[alan] = an
+        if ne == "ac" and (d.get("oruc_kapandi") or 0) <= an:     # yeniden açıldı; geçmişe dönük düzeltmede sonraki kapanış kalır
+            d.pop("oruc_kapandi", None)
     pt.gun_degistir(tarih, f)
+    return tarih
 
 
 def dunku_yemekler(tarih):

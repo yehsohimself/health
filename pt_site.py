@@ -1030,8 +1030,16 @@ def kaydet(app):
         ne = g.get("ne")
         if ne not in ("ac", "kapat"):
             return jsonify({"hata": "ne: ac ya da kapat"}), 400
-        pt_beslenme.oruc_isaretle(_tarih(), ne, bool(g.get("geri")))
-        return jsonify(pt_beslenme.pencere_durumu(tarih=_tarih()))
+        t = g.get("t")
+        if t is not None:
+            t = pt.sayi(t, 0, 4e9)
+            if t is None:
+                return jsonify({"hata": "Saat okunamadı."}), 400
+        try:
+            gun = pt_beslenme.oruc_isaretle(_tarih(), ne, bool(g.get("geri")), t)
+        except ValueError as e:
+            return jsonify({"hata": str(e)}), 400
+        return jsonify({**pt_beslenme.pencere_durumu(tarih=_tarih()), "gun": gun})
 
     @app.post("/api/pt/bjj-dersleri")
     def pt_bjj_dersleri():
