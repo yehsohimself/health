@@ -58,7 +58,8 @@ def _hae(veri):
     """Health Auto Export JSON'u → {tarih: {alan: değer}}."""
     out = {}
     adlar = {"sleep_analysis": "uyku_saat", "resting_heart_rate": "nabiz", "heart_rate_variability": "hrv", "weight_body_mass": "kilo",
-             "step_count": "adim", "body_mass": "kilo"}
+             "step_count": "adim", "body_mass": "kilo", "vo2_max": "vo2max", "vo2max": "vo2max",
+             "cardio_fitness": "vo2max"}
     for m in (veri.get("data") or {}).get("metrics") or []:
         alan = adlar.get(m.get("name"))
         if not alan:
@@ -97,7 +98,7 @@ def kaydet(veri):
         gunler = _hae(veri)
     else:
         t = pt.tarih_gecerli((veri or {}).get("tarih") or pt.bugun().isoformat())
-        g = {a: _sayi(veri.get(a)) for a in ("uyku_saat", "hrv", "nabiz", "kilo", "adim") if veri.get(a) not in (None, "")}
+        g = {a: _sayi(veri.get(a)) for a in ("uyku_saat", "hrv", "nabiz", "kilo", "adim", "vo2max") if veri.get(a) not in (None, "")}
         if g.get("uyku_saat") and g["uyku_saat"] > 24:      # dakika geldiyse
             g["uyku_saat"] = round(g["uyku_saat"] / 60, 2)
         if veri.get("antrenmanlar"):

@@ -6,7 +6,7 @@
 
 **A personal trainer and nutrition coach that lives on your Mac.**
 
-It gets to know you, tests where you are, writes your week, adjusts every morning to how you slept,
+It gets to know you, decides what your week should be made of, tests where you are, writes your week, adjusts every morning to how you slept,
 counts your sets out loud, and tells you *why* it changed something.
 
 ![macOS](https://img.shields.io/badge/macOS-Apple%20silicon-111?logo=apple)
@@ -57,6 +57,18 @@ watch how you respond, and change the plan for a reason they can explain. PT tri
 
 On Sunday you get a short coach message (what went well, what changes next week, one habit to keep) and next
 week's plan is written with it.
+
+**You describe your life, PT composes the program.** Setup never asks *"how many calisthenics sessions do you want?"*.
+It asks what you enjoy (jiu-jitsu, walking, cycling, bodyweight at home…), which days you have, how long, what hurts. Then a
+team of specialists (trainer, endurance coach, dietitian, physio, sleep coach, longevity specialist, habit coach, and a
+jiu-jitsu coach if you train) answers with *"here is the program I'm writing for you"*: two strength sessions, easy cardio,
+one hard session, balance and mobility, with your classes as fixed days, one reason per line, and counts you can change.
+
+**Built for a long, healthy life.** Every week has a minimum *longevity dose*: at least two strength sessions, easy cardio
+minutes, one breathless session, balance on three days, seven hours of sleep. PT measures it from what you actually logged and
+shows it next to the plan. It also tracks the markers that best predict healthy ageing: estimated VO2max (from Apple Health or
+resting heart rate), the sit-to-stand floor test, one-leg balance, grip (dead hang), push-up and squat strength, waist-to-height
+ratio and resting heart rate. The weakest one shapes the next block.
 
 **After the intake, PT tells you what it concluded.** Like a real trainer at the end of a first session: how it sees you, which training
 approach and which nutrition approach fit you and *why*, what to watch, the first three steps. The numbers in it (calories, protein, test
@@ -180,6 +192,8 @@ flowchart LR
 | `pt_sunucu.py` | Standalone server on 127.0.0.1:8771 |
 | `pt_beslenme.py`, `pt_bls.py`, `pt_yemek.py` | Targets, meal estimates, BLS lookup, weekly menu |
 | `pt_oyun.py` | Streak, freezes, badges, daily tasks |
+| `pt_uzun.py` | Weekly program mix from needs, longevity dose, ageing markers |
+| `pt_hedef.py`, `pt_kontrol.py` | Three-horizon goals, intake assessment, 14-day check-ins |
 | `static/pt.html` | The whole interface, vanilla JS |
 
 Identifiers and comments are in Turkish (the project started as a personal tool). Tests:
@@ -226,7 +240,9 @@ MIT. See [LICENSE](LICENSE).
 <details>
 <summary><b>Türkçe</b></summary>
 
-PT, Mac'inizde çalışan kişisel antrenör ve beslenme koçu. Seçenekli sorularla sizi tanır, başlangıç testiyle
+PT, Mac'inizde çalışan kişisel antrenör ve beslenme koçu. Seçenekli sorularla ihtiyacınızı ve şartlarınızı öğrenir, programın
+yapısını kendisi kurar ("Size şöyle bir program yazıyorum"), uzun ve sağlıklı yaşam için haftalık dozu (güç, kolay kardiyo, denge)
+ve yaşlanma göstergelerini ölçer, başlangıç testiyle
 seviyenizi ölçer, haftanızı yazar, her sabah uyku ve enerjinize göre günü ayarlar, setleri sesli sayar ve bir
 şeyi neden değiştirdiğini söyler. İlerleme kuralları kodda ve uygulamada görünür; kalori değerleri BLS 4.0
 tablosundan gelir. Verileriniz Mac'inizde kalır. Kurulum: yukarıdaki dört komut, sonra tarayıcıda

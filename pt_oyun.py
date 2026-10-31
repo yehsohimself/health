@@ -101,6 +101,8 @@ EK_GOREVLER = [
     ("soguk", "Duşun sonunda 30 saniye soğuk su", 10, "Uyanıklık; kalp sorunu varsa atlayın.", "kalp_yok"),
     ("hazirlik", "Yarının öğünlerini hazırlayın", 15, "Bir öğün bile yeter.", None),
     ("kayit", "Bütün öğünleri kaydedin", 15, "Fotoğrafla ya da yazarak.", None),
+    ("denge", "1 dakika tek ayak denge", 10, "Her ayak 30 saniye; diş fırçalarken de olur.", None),
+    ("oturkalk", "5 kez yere oturup kalkma", 10, "Elleri olabildiğince az kullanarak, yavaşça.", None),
 ]
 EK = {k: (ad, puan, ac, kosul) for k, ad, puan, ac, kosul in EK_GOREVLER}
 

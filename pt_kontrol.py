@@ -13,6 +13,7 @@ ne tarz bir spor ve beslenme programına ihtiyacım olduğunu belirlesin; ara ko
 import datetime as dt
 import hashlib
 import json
+import re
 import time
 
 import pt
@@ -21,7 +22,9 @@ DEGERLENDIRME = pt.VERI / "degerlendirme.json"
 KONTROLLER = pt.VERI / "kontroller"
 KONTROL_ARALIK = 14
 
-DEGERLENDIRME_ISTEM = """Sen PT'sin: kişisel antrenör, kuvvet-kondisyon koçu, diyetisyen ve fizyoterapist bilgisiyle çalışıyorsun. İlk görüşme bitti;
+DEGERLENDIRME_ISTEM = """Sen PT'sin: bir uzman ekibisin (antrenör, dayanıklılık koçu, diyetisyen, fizyoterapist, uyku ve toparlanma koçu, uzun ömür uzmanı,
+alışkanlık koçu; kişi jiu-jitsu yapıyorsa jiu-jitsu koçu). Kişinin asıl amacı uzun ve sağlıklı bir ömür olabilir; sorduğun şeyler ihtiyaç ve
+şartlardı, programın bileşimine (hangi disiplin, kaç gün) SEN karar verdin ve REÇETE'de yazıyor. İlk görüşme bitti;
 şimdi kişiye değerlendirmeni söylüyorsun: onu nasıl gördüğün, hangi antrenman yaklaşımının ve hangi beslenme yaklaşımının ona uyduğu ve NEDEN.
 Sayılar aşağıda KODDAN geliyor (kalori, protein, pencere, test sonuçları, basamaklar); onları aynen kullan, yeni sayı uydurma. Teşhis koyma;
 sağlık notu varsa saygıyla an ve gerekirse doktora yönlendir. Dil: Türkçe, "siz", sıcak ama net, klişe ve slogan yok, abartı yok, 2-3 cümlelik
@@ -38,7 +41,11 @@ JSON:
  "beslenme": {{"yaklasim": "tek cümle ad (ör. 'Hafif açık, yüksek protein, 11-17 penceresi')", "aciklama": "2-4 cümle: kalori, protein, pencere/öğün düzeni, ne yiyeceği", "neden": "2 cümle"}},
  "dikkat": ["en çok 4 madde: ağrı, sağlık notu, risk, alışkanlık"],
  "ilk_adimlar": ["bu hafta yapılacak 3 somut şey"],
- "kontrol": "tek cümle: 14 gün sonra neye bakacağız"}}"""
+ "ekip": [{{"uzman": "Antrenör|Dayanıklılık koçu|Diyetisyen|Fizyoterapist|Uyku ve toparlanma koçu|Uzun ömür uzmanı|Alışkanlık koçu|Jiu-jitsu koçu", "not": "bu kişi için tek cümle, en çok 25 kelime, somut"}}],
+ "uzun_omur": {{"ozet": "2 cümle: yıllar sonra güçlü, dengeli ve bağımsız olmak için bu programın neye yatırım yaptığı (göstergelere dayan)", "olcum": "tek cümle: ilk ölçmemiz gerekenler ya da en zayıf gösterge"}},
+ "kontrol": "tek cümle: 14 gün sonra neye bakacağız"}}
+"antrenman" REÇETE'yi anlatır (disiplinler, kaç gün, neden), başka bir bileşim önerme. "ekip" 5-8 uzman; her biri tekrar etmeyen tek şey söyler.
+Uzun ömür göstergelerinde "yok" olanlar henüz ölçülmedi; değer uydurma."""
 
 KONTROL_SORU_ISTEM = """Sen PT'sin. {gun} günlük ara kontrol görüşmesi yapıyorsunuz; amacı programın güncellenip güncellenmeyeceğine karar vermek.
 Aşağıdaki RAPOR kodun ölçtüğü gerçeklerdir. Rapora dayanarak 3-4 soru sor: her biri tek konu, 3-4 kısa ve birbirini dışlayan seçenek, gözleme
@@ -97,6 +104,16 @@ def _hesap(p):
     except Exception:  # noqa: BLE001
         pass
     try:
+        import pt_uzun
+        rc = pt_uzun.recete_oku()
+        rc = rc if rc.get("satirlar") else pt_uzun.recete(p)
+        h["recete"] = {"ozet": rc.get("ozet"), "satirlar": [{k: x.get(k) for k in ("ad", "haftada", "dk", "rol")} for x in rc.get("satirlar") or []],
+                       "eklemeler": rc.get("eklemeler"), "uyarilar": rc.get("uyarilar")}
+        h["uzun_omur_dozu"] = pt_uzun.dozlar(p, rc)
+        h["uzun_omur_gostergeleri"] = [{k: g.get(k) for k in ("ad", "deger", "birim", "durum", "kaynak")} for g in pt_uzun.gostergeler(p)]
+    except Exception:  # noqa: BLE001
+        pass
+    try:
         h["su_hedefi_ml"] = pt.su_hedefi(p)
     except Exception:  # noqa: BLE001
         pass
@@ -104,8 +121,11 @@ def _hesap(p):
 
 
 def _imza(p):
-    return hashlib.sha1(json.dumps({k: p.get(k) for k in ("hedef_turleri", "beceri_hedefleri", "hedef_kilo_kg", "kilo_kg", "yontemler", "gunler", "gunluk_dk",
-                                                            "ekipman", "sakatliklar", "sinirlar", "beslenme", "diyet")}, sort_keys=True, default=str).encode()).hexdigest()[:10]
+    d = {k: p.get(k) for k in ("hedef_turleri", "beceri_hedefleri", "hedef_kilo_kg", "kilo_kg", "yontemler", "gunler", "gunluk_dk",
+                               "ekipman", "sakatliklar", "sinirlar", "beslenme", "diyet")}
+    ek = {"sevdikleri": p.get("sevdikleri"), "recete": (pt._json(pt.VERI / "recete.json", {}) or {}).get("zaman")}
+    d.update({k: v for k, v in ek.items() if v})          # yeni alanlar yalnız doluysa: eski değerlendirmeler boşuna yeniden yazılmasın
+    return hashlib.sha1(json.dumps(d, sort_keys=True, default=str).encode()).hexdigest()[:10]
 
 
 def _kural_degerlendirme(p, hesap):
@@ -115,6 +135,10 @@ def _kural_degerlendirme(p, hesap):
     b = hesap.get("beslenme") or {}
     bas = (hesap.get("baslangic") or {}).get("tur")
     yak = ", ".join(f"{v} {pt.YONTEMLER.get(k, k)}" for k, v in y.items()) or "kalistenik"
+    rc = hesap.get("recete") or {}
+    if rc.get("ozet"):                                       # reçete varsa bileşimi o anlatır (ders günleri dahil)
+        gun = int(re.search(r"Haftada (\d+)", rc["ozet"]).group(1)) if re.search(r"Haftada (\d+)", rc["ozet"]) else gun
+        yak = rc["ozet"].split(": ", 1)[-1].rstrip(".")
     return {"mesaj": f"Haftada {gun} gün, günde {p.get('gunluk_dk') or 30} dakika ayırabiliyorsunuz; bu düzenli ilerleme için yeterli. "
                      + ("İlk haftalarda kısa seanslarla alışmak, sonra yüklenmek en sağlıklısı." if bas == "alisma" else "Kaldığınız yerden, ölçerek devam edeceğiz."),
             "antrenman": {"yaklasim": f"Haftalık {yak}", "aciklama": f"Her seans ısınma, ana bölüm ve kapanıştan oluşur; hareketler basamak basamak ilerler ve "
@@ -124,7 +148,24 @@ def _kural_degerlendirme(p, hesap):
                                                                                                            f"{b.get('neden') or ''}", "neden": "Hedefler tartı ve kayıtlara göre kendini düzeltir."},
             "dikkat": [x for x in (p.get("sinirlar") or []) + (p.get("sakatliklar") or [])][:4],
             "ilk_adimlar": ["Sabah kontrolünü her gün yapın", "İlk antrenmanı bitirin; kısa da olsa sayılır", "Bir öğünü fotoğrafla kaydedin"],
+            "ekip": _ekip_notlari(p), "uzun_omur": _kural_uzun_omur(p, hesap),
             "kontrol": "14 gün sonra uyum, zorluk ve ağrıya bakıp programı güncelleyip güncellemeyeceğimize karar veririz."}
+
+
+def _ekip_notlari(p):
+    try:
+        return __import__("pt_uzun").uzman_notlari(p)
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def _kural_uzun_omur(p, hesap):
+    d = hesap.get("uzun_omur_dozu") or {}
+    G = hesap.get("uzun_omur_gostergeleri") or []
+    eksik = [g["ad"].lower() for g in G if g.get("durum") == "yok"]
+    return {"ozet": f"Uzun ve sağlıklı yaşamın üç ayağı kas gücü, kalp-damar kondisyonu ve denge. Haftada {d.get('guc', 2)} güç antrenmanı ve "
+                    f"{d.get('kolay_dk', 150)} dakika kolay kardiyo bu üçünü birlikte besler.",
+            "olcum": ("İlk ölçeceklerimiz: " + ", ".join(eksik[:3]) + ".") if eksik else "Göstergeleri 5 haftada bir yeniden ölçeriz."}
 
 
 def degerlendirme(yenile=False):
@@ -151,7 +192,12 @@ def degerlendirme(yenile=False):
          "antrenman": {k: str((c.get("antrenman") or {}).get(k) or "")[:900] for k in ("yaklasim", "aciklama", "neden")},
          "beslenme": {k: str((c.get("beslenme") or {}).get(k) or "")[:900] for k in ("yaklasim", "aciklama", "neden")},
          "dikkat": [str(x)[:400] for x in c.get("dikkat") or []][:4], "ilk_adimlar": [str(x)[:400] for x in c.get("ilk_adimlar") or []][:4],
-         "kontrol": str(c.get("kontrol") or "")[:300], "hesap": hesap, "okundu": False}
+         "kontrol": str(c.get("kontrol") or "")[:300], "hesap": hesap, "okundu": False,
+         "ekip": [{"uzman": str(x.get("uzman") or "")[:40], "not": str(x.get("not") or "")[:300]} for x in (c.get("ekip") or []) if isinstance(x, dict)
+                  and x.get("not")][:8] or _ekip_notlari(p),
+         "uzun_omur": {k: str(((c.get("uzun_omur") or {}) if isinstance(c.get("uzun_omur"), dict) else {}).get(k) or "")[:500] for k in ("ozet", "olcum")}}
+    if not d["uzun_omur"]["ozet"]:
+        d["uzun_omur"] = _kural_uzun_omur(p, hesap)
     pt._yaz(DEGERLENDIRME, d)
     return d
 
@@ -256,7 +302,18 @@ def rapor(gun=KONTROL_ARALIK):
         seri = {"seri": oy["seri"], "en_uzun": oy["en_uzun"]}
     except Exception:  # noqa: BLE001
         seri = {}
-    return {"gun": gun, "planlanan_seans": planli, "yapilan_seans": len(seanslar), "uyum": round(len(seanslar) / planli, 2) if planli else None,
+    doz = {}
+    try:
+        import pt_uzun
+        hd = pt_uzun.dozlar(p)
+        kodlar = sorted({pt.hafta_kodu(g) for g in gunler_})
+        olc = [pt_uzun.hafta_olcumu(k) for k in kodlar]
+        doz = {"hedef_guc": hd["guc"], "hedef_kolay_dk": hd["kolay_dk"], "hafta": len(kodlar),
+               "guc_ort": round(sum(o["guc"] for o in olc) / len(olc), 1), "kolay_dk_ort": round(sum(o["kolay_dk"] for o in olc) / len(olc)),
+               "tamam_hafta": sum(1 for o in olc if o["guc"] >= hd["guc"] and o["kolay_dk"] >= hd["kolay_dk"])}
+    except Exception:  # noqa: BLE001
+        pass
+    return {"gun": gun, "doz": doz, "planlanan_seans": planli, "yapilan_seans": len(seanslar), "uyum": round(len(seanslar) / planli, 2) if planli else None,
             "toplam_dk": sum(int(s.get("sure_dk") or 0) for s in seanslar), "zorluk_ort": round(sum(zorluk) / len(zorluk), 1) if zorluk else None,
             "zorluk_dagilim": {"kolay(<=4)": sum(1 for z in zorluk if z <= 4), "iyi(5-7)": sum(1 for z in zorluk if 5 <= z <= 7), "zor(>=8)": sum(1 for z in zorluk if z >= 8)},
             "agri": [{"bolge": a.get("bolge"), "puan": a.get("puan")} for a in agri][:8], "korunan": list(pt.koru_bolgeler()),
@@ -280,7 +337,7 @@ def _kural_onerileri(r, cevaplar=None):
     if uyum is not None and r["planlanan_seans"] >= 4:
         if uyum < 0.5:
             L.append({"alan": "antrenman", "ne": f"Haftalık antrenman günü {gun} → {max(2, gun - 1)}, seans süresi {dk} → {max(10, dk - 10)} dk.",
-                      "neden": f"{r['gun']} günde planlanan {r['planlanan_seans']} seansın {r['yapilan_seans']}'i yapıldı; daha küçük bir plan tutar."})
+                      "neden": f"{r['gun']} günde planlanan {r['planlanan_seans']} seanstan {r['yapilan_seans']} tanesi yapıldı; daha küçük bir plan tutar."})
             ayar.update(gun_sayisi=max(2, gun - 1), gunluk_dk=max(10, dk - 10))
         elif uyum >= 0.85 and (r.get("zorluk_ort") or 10) <= 5 and not r.get("agri"):
             L.append({"alan": "antrenman", "ne": f"Seans süresi {dk} → {min(60, dk + 10)} dk; basamaklar kurallara göre ilerlemeye devam.",
@@ -310,6 +367,13 @@ def _kural_onerileri(r, cevaplar=None):
         n = r["beslenme"]["protein_hedefli_gun"]
         L.append({"alan": "beslenme", "ne": "Her öğüne bir avuç içi protein; menü buna göre yeniden yazılır.",
                   "neden": f"Kayıtlı {r['beslenme']['kayitli_gun']} günün " + ("hiçbirinde" if not n else f"yalnız {n} tanesinde") + " protein hedefe yaklaştı."})
+    dz = r.get("doz") or {}
+    if dz.get("hedef_kolay_dk") and dz.get("kolay_dk_ort", 0) < dz["hedef_kolay_dk"] / 2 and r.get("yapilan_seans"):
+        L.append({"alan": "uzun_omur", "ne": "Antrenman olmayan günlere 20 dakikalık tempolu yürüyüş; kolay kardiyo dakikaları buradan dolar.",
+                  "neden": f"Haftada ortalama {dz['kolay_dk_ort']} dk kolay kardiyo yapıldı, hedef {dz['hedef_kolay_dk']} dk."})
+    if dz.get("hedef_guc") and dz.get("guc_ort", 0) < dz["hedef_guc"] - 0.5 and r.get("yapilan_seans"):
+        L.append({"alan": "uzun_omur", "ne": "Güç antrenmanları haftanın başına; kaçarsa 20 dakikalık kısa versiyon.",
+                  "neden": f"Haftada ortalama {dz['guc_ort']} güç antrenmanı; uzun ömür için en az {dz['hedef_guc']}."})
     if r.get("uyku_ort") and r["uyku_ort"] < 6.5:
         L.append({"alan": "toparlanma", "ne": "Yatış saati 30 dakika öne; zor seanslar iyi uyunan günlere.", "neden": f"Ortalama uyku {r['uyku_ort']} saat."})
     sec = str(cevaplar.get("ozel") or cevaplar.get("onumuzdeki") or "").lower()

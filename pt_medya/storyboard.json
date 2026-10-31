@@ -1,9 +1,8 @@
 {
- "calisiyor": false,
- "bas": 1792933629,
- "kalan": 0,
+ "calisiyor": true,
+ "bas": 1793439029,
+ "kalan": 1,
  "hata": null,
  "durdu": null,
- "son": "ip_atlama",
- "bitis": 1792950882
+ "son": "tek_ayak_denge"
 }

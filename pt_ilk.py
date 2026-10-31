@@ -10,7 +10,7 @@ import hashlib
 import pt
 
 TEST_1 = ["squat_max", "sinav_max", "plank_sn"]
-TEST_2 = ["hollow_sn", "derin_squat", "omuz_duvar"]
+TEST_2 = ["hollow_sn", "derin_squat", "omuz_duvar", "tek_ayak_sn", "oturkalk"]
 
 
 def _adimlar(p):
@@ -22,8 +22,8 @@ def _adimlar(p):
          "aciklama": "Üç kısa test: squat, şınav, plank. Nereden başlayacağımızı bunlar söyler."},
         {"ad": "İlk antrenman", "tur": "hizli", "odak": "tum", "dk": 10,
          "aciklama": "Tüm vücut, en kolay basamaklar. Nefesiniz hafif hızlansın, yorulmayın."},
-        {"ad": "İkinci tanışma testi", "tur": "test", "testler": TEST_2, "dk": 5,
-         "aciklama": "Gövde ve hareketlilik testleri. Beş dakika sürer."},
+        {"ad": "İkinci tanışma testi", "tur": "test", "testler": TEST_2, "dk": 7,
+         "aciklama": "Gövde, denge ve hareketlilik testleri. Tek ayak dengesi ve yere oturup kalkma, yaşlanmayı en iyi gösteren iki ölçü."},
         {"ad": "Bacak ve kalça", "tur": "hizli", "odak": "alt", "dk": 10,
          "aciklama": "Squat, köprü ve baldır. Dizler ayak uçlarıyla aynı yönde."},
         {"ad": "Üst vücut", "tur": "hizli", "odak": "ust", "dk": 10,

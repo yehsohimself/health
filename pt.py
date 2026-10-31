@@ -170,6 +170,9 @@ KATALOG_HAM = [
     ("boyun_hazirlik", "Boyun hazırlığı", "mobilite", "tekrar", "yok", "boyun", "mobilite", 1, "Yavaş daireler ve izometrik baskı."),
     ("jumping_jack", "Jumping jack", "isinma", "sure", "yok", "ayak_bilegi", "isinma", 1, "Hafif tempoda."),
     ("ip_atlama", "İp atlama", "isinma", "sure", "ip", "ayak_bilegi", "isinma", 1, "Ayak uçlarında, alçak sıçrama."),
+    # denge (2026-10-31, uzun ömür katmanı): güç seanslarının kapanışına, haftada üç gün
+    ("tek_ayak_denge", "Tek ayak denge", "mobilite", "sure", "yok", "ayak_bilegi,kalca", "denge", 1, "Bir ayak üstünde, kalça düz; kolaylaşınca gözler kapalı."),
+    ("yere_otur_kalk", "Yere oturup kalkma", "mobilite", "tekrar", "yok", "kalca,diz", "denge", 2, "Bağdaş kurup oturun, kalkın; olabildiğince elsiz."),
 ]
 KATALOG = {k: {"kod": k, "ad": a, "tur": t, "olcu": o, "ekipman": e, "bolge": b.split(","), "zincir": z, "basamak": s, "aciklama": ac}
            for k, a, t, o, e, b, z, s, ac in KATALOG_HAM}
@@ -178,7 +181,7 @@ EKIPMANLAR = {"bisiklet": "Bisiklet", "bar": "Barfiks demiri", "paralel": "Paral
               "kettlebell": "Kettlebell", "bant": "Direnç bandı", "mat": "Mat", "ip": "Atlama ipi", "bjj_manken": "BJJ mankeni",
               "trainer": "Bisiklet trainer'ı (evde)"}
 YONTEMLER = {"kalistenik": "Kalistenik", "bjj_solo": "Solo BJJ drill", "bjj_ders": "BJJ dersi", "flow": "Animal flow", "bisiklet": "Bisiklet",
-             "mobilite": "Mobilite"}
+             "mobilite": "Mobilite", "kardiyo": "Yürüyüş ve koşu"}
 BOLGELER = {"boyun": "Boyun", "omuz": "Omuz", "dirsek": "Dirsek", "bilek": "Bilek", "el": "El/parmak", "sirt": "Sırt", "bel": "Bel",
             "kalca": "Kalça", "diz": "Diz", "ayak_bilegi": "Ayak bileği"}
 BJJ_POZISYONLAR = ["Guard", "Yan kontrol", "Diz üstü", "Mount", "Arkadan kontrol", "Kaplumbağa"]
@@ -244,7 +247,7 @@ PROFIL_VARSAYILAN = {
     "ad": "", "cinsiyet": "erkek", "dogum_tarihi": "", "yas": None, "boy_cm": None, "kilo_kg": None, "hedef_kilo_kg": None, "hedef_tarih": "",
     "hedefler": [], "beceri_hedefleri": [], "neden": "", "hedef_turleri": [], "deneyim": "", "motivasyon": "", "diyet": "",
     "ek_bilgi": [], "notlar": [], "gun_duzeni": {}, "beslenme_aliskanlik": {}, "saglik_degerleri": [], "aliskanlik": {}, "ara_cevaplar": {}, "program_aktif": None, "program_biten": [],
-    "gorusmeler": {}, "kontrol_istegi": "", "son_kontrol": "",
+    "gorusmeler": {}, "kontrol_istegi": "", "son_kontrol": "", "sevdikleri": [], "kardiyo_tur": "yuruyus",
     "yontemler": {"kalistenik": 2, "bjj_solo": 1, "flow": 1, "bisiklet": 1, "mobilite": 1},
     "bjj_ders": {"gunler": [], "saat": "", "sure_dk": 90},
     "ekipman": ["bisiklet", "bar", "mat"], "gunler": [0, 1, 2, 3, 4, 5, 6], "gunluk_dk": 45, "antrenman_saati": "sabah",
@@ -498,6 +501,10 @@ TESTLER = [
     ("omuz_duvar", "Duvarda kollar yukarı (bel duvardan ayrılmadan)", "secim", "", "Başparmaklar duvara değiyor | Değmiyor"),
     ("bel_cm", "Bel çevresi (göbek hizası)", "sayi", "", "Sabah, nefes verince."),
     ("dinlenme_nabzi", "Sabah dinlenme nabzı", "sayi", "", "Uyanınca, yataktan kalkmadan 60 sn."),
+    ("tek_ayak_sn", "Tek ayak üstünde durma", "sure", "tek_ayak_denge", "Gözler açık, eller belde. Kaldırdığınız ayak yere değince durun; iki ayağın kısası. En çok 60 sn."),
+    ("oturkalk", "Yere oturup kalkma", "secim", "yere_otur_kalk",
+     "Ayakta başlayın, bağdaş kurup yere oturun, sonra kalkın. Elinizi, dizinizi ya da bir şeye tutunmayı sayın: her biri bir destek. || "
+     "Hiç destek yok | Bir destek | İki destek | Üç-dört destek | Beş ve fazla"),
 ]
 
 
@@ -511,6 +518,10 @@ def test_kaydet(sonuclar, tarih=None):
         tarih = tarih or bugun().isoformat()
         once = next((x.get("sonuclar") or {} for x in t["kayitlar"] if x.get("tarih") == tarih), {})
         sonuclar = {**once, **sonuclar}                      # aynı gün parça parça yapılan testler birleşir
+        if isinstance(sonuclar.get("oturkalk"), str):        # yere oturup kalkma: seçenek → 0-10 puan (göstergeler ve hedefler sayıyla çalışır)
+            import pt_uzun
+            if sonuclar["oturkalk"] in pt_uzun.OTURKALK:
+                sonuclar["oturkalk_puan"] = pt_uzun.OTURKALK[sonuclar["oturkalk"]]
         t["kayitlar"] = [x for x in t["kayitlar"] if x.get("tarih") != tarih] + [{"tarih": tarih, "sonuclar": sonuclar}]
         t["kayitlar"].sort(key=lambda x: x["tarih"])
         _yaz(VERI / "testler.json", t)
@@ -977,6 +988,9 @@ def seansi_uyarla(seans, isik="yesil", vakit_dk=None, nerede="ev", p=None):
         if s.get("bisiklet") and s["bisiklet"].get("yogunluk") in ("aralik", "tempo"):
             s["bisiklet"]["yogunluk"] = "kolay"
             notlar.append("Bisikletteki aralıklar kolay tempoya döndü.")
+        if s.get("kardiyo") and s["kardiyo"].get("yogunluk") in ("aralik", "orta"):
+            s["kardiyo"]["yogunluk"] = "kolay"
+            notlar.append("Aralıklar kolay tempoya döndü.")
     if vakit_dk and (s.get("sure_dk") or 0) > vakit_dk + 5:
         s = kisalt(s, vakit_dk)
         notlar.append(f"Vaktiniz {vakit_dk} dk: seans kısaltıldı.")
@@ -1016,7 +1030,9 @@ def kirmizi_seans(s=None):
             "bolumler": [{"ad": "Hareketlilik", "bicim": "sure", "hareketler": [
                 {"kod": "kedi_inek", "sure_sn": 60}, {"kod": "dunya_esneme", "sure_sn": 90}, {"kod": "kalca_9090", "sure_sn": 90},
                 {"kod": "gogus_donus", "sure_sn": 90}, {"kod": "derin_squat_tutus", "sure_sn": 60}, {"kod": "kanepe_esneme", "sure_sn": 90}]}],
-            "bisiklet": {"sure_dk": 30, "yogunluk": "kolay", "aciklama": "İsterseniz en çok 45 dk çok kolay sürüş (konuşabileceğiniz tempo)."}}
+            **({"bisiklet": {"sure_dk": 30, "yogunluk": "kolay", "aciklama": "İsterseniz en çok 45 dk çok kolay sürüş (konuşabileceğiniz tempo)."}}
+               if "bisiklet" in (profil().get("ekipman") or []) else
+               {"kardiyo": {"tur": "yuruyus", "sure_dk": 20, "yogunluk": "kolay", "aciklama": "İsterseniz 20-30 dakika sakin yürüyüş."}})}
 
 # ----------------------------------------------------------------------------- haftalık plan (Claude yazar, kurallar kodda)
 
@@ -1042,6 +1058,7 @@ BU HAFTANIN KOŞULLARI:
 - Jiu-jitsu: son 8 haftada derslerde en çok zorlandığı pozisyonlar: {bjj_zor}. Solo BJJ seansında bu pozisyonların drillerini öne al: {bjj_drill}
 - Birlikte belirlenen hedefler (planı bunlara doğru kur; kısa vadeli hedef bu haftanın odağına girsin): {hedefler}
 - Son ara kontrolün kararı (uygula): {kontrol}
+- Haftalık reçete ve uzun ömür dozu (KODDA, kişi onayladı; gün türlerini ve sayılarını buna göre dağıt): {recete}
 
 İLERLEME KURALLARI (KODDA; sen hedefleri değiştirme, aynen kullan). Her zincirde ŞU AN çalışılan hareket ve hedefi:
 {basamaklar}
@@ -1058,6 +1075,8 @@ KURALLAR:
 - Solo BJJ: drill hareketleri, bicim "tur" (ör. 5 tur, calisma_sn 30-45, dinlenme_sn 15-30). Animal flow: önce tutuşlar, sonra geçişler, sonra
   flow_zinciri. Mobilite seansı 15-25 dk.
 - Bisiklet günü: "bisiklet": {{sure_dk, yogunluk: kolay|orta|aralik, aciklama (aralıksa tarif: "3×8 dk orta-zor, araları 4 dk kolay")}}.
+- Yürüyüş/koşu günü (tur "kardiyo"): "kardiyo": {{tur: yuruyus|kosu, sure_dk, yogunluk: kolay|orta|aralik, aciklama ("konuşabileceğiniz tempoda" ya da
+  aralık tarifi "5 kez 2 dk hızlı yürüyüş / 2 dk yavaş")}}; bölüm yok ya da yalnız kısa Kapanış. Kolay tempo = konuşabileceğiniz hız.
 - Günlük süre kişinin dakikasını geçmesin. Dinlenme günü de olabilir (tur "dinlenme").
 - Her güne "neden" (tek cümle: bu seans neden bugün) yaz.
 - Hafif haftada set sayısını üçte bir azalt.
@@ -1065,9 +1084,9 @@ KURALLAR:
 - "eger_ise": 3-4 önceden bağlanmış plan ("BJJ dersi iptal olursa: 20 dk solo drill" gibi), kişinin düzenine göre.
 - "not": haftanın tek cümlelik odağı.
 
-JSON: {{"gunler": [{{"tarih": "YYYY-MM-DD", "tur": "kalistenik|bjj_solo|bjj_ders|flow|bisiklet|mobilite|test|dinlenme", "baslik", "sure_dk", "saat": "sabah|ogle|aksam",
+JSON: {{"gunler": [{{"tarih": "YYYY-MM-DD", "tur": "kalistenik|bjj_solo|bjj_ders|flow|bisiklet|kardiyo|mobilite|test|dinlenme", "baslik", "sure_dk", "saat": "sabah|ogle|aksam",
 "neden", "bolumler": [{{"ad": "Isınma|Ana bölüm|Bitiriş|Kapanış|Drill|Akış", "bicim": "set|sure|tur|emom|tabata|akis", "tur_sayisi", "calisma_sn",
-"dinlenme_sn", "hareketler": [{{"kod", "set", "tekrar": "6-10" (ya da "sure_sn": 30), "rir", "dinlenme_sn", "not"}}]}}], "bisiklet": {{...}} }}],
+"dinlenme_sn", "hareketler": [{{"kod", "set", "tekrar": "6-10" (ya da "sure_sn": 30), "rir", "dinlenme_sn", "not"}}]}}], "bisiklet": {{...}}, "kardiyo": {{...}} }}],
 "asgari": {{"bolumler": [...]}}, "eger_ise": ["..."], "not": "..."}}"""
 
 
@@ -1082,7 +1101,7 @@ def program(kod=None):
 def _profil_ozeti(p):
     gorunen = {k: p.get(k) for k in ("cinsiyet", "yas", "boy_cm", "kilo_kg", "hedef_kilo_kg", "hedefler", "hedef_turleri", "beceri_hedefleri", "deneyim",
                                      "motivasyon", "yontemler", "bjj_ders", "ekipman", "gunler", "gunluk_dk", "antrenman_saati", "sakatliklar",
-                                     "yapamadiklarim", "sinirlar", "ek_bilgi", "notlar", "gun_duzeni", "beslenme_aliskanlik", "aliskanlik")}
+                                     "yapamadiklarim", "sinirlar", "ek_bilgi", "notlar", "gun_duzeni", "beslenme_aliskanlik", "aliskanlik", "sevdikleri", "kardiyo_tur")}
     gorunen["gunler"] = [GUN_AD[i] for i in p.get("gunler") or []]
     if p.get("bjj_ders", {}).get("gunler"):
         gorunen["bjj_ders"] = {**p["bjj_ders"], "gunler": [GUN_AD[i] for i in p["bjj_ders"]["gunler"]]}
@@ -1194,7 +1213,7 @@ def program_uret(kod=None, istek=""):
         katalog=_katalog_metni(p, kat), bjj_zor=", ".join(f"{a} ({n})" for a, n in bjj_ozeti(56)["zorlandigim"][:3]) or "kayıt yok",
         bjj_drill=", ".join(sorted({k for a, _ in bjj_ozeti(56)["zorlandigim"][:3] for k in BJJ_DRILL.get(a, [])})) or "-",
         hedefler=_g_metin(lambda: __import__("pt_hedef").istem_metni(), "henüz belirlenmedi"),
-        kontrol=p.get("kontrol_istegi") or "yok")
+        kontrol=p.get("kontrol_istegi") or "yok", recete=_g_metin(lambda: __import__("pt_uzun").recete_metni(), "yok"))
     c = claude_yaz.sor_json(istem, model_adi="opus", zaman_asimi=900)
     pl = plani_dogrula(c, tarihler, p, kat)
     bjj_ders_isle(pl, p)
@@ -1264,6 +1283,7 @@ def bjj_ders_isle(pl, p=None):
             g.update(tur="bjj_ders", baslik="Jiu-jitsu dersi", sure_dk=int(b.get("sure_dk") or 90), saat=b.get("saat") or g.get("saat") or "aksam",
                      bolumler=[], neden="Salondaki dersiniz; bugün başka antrenman yok.")
             g.pop("bisiklet", None)
+            g.pop("kardiyo", None)
         elif g.get("tur") == "bjj_ders" and wd not in dg and not g.get("bitti"):
             g.update(tur="dinlenme", baslik="Dinlenme", sure_dk=0, bolumler=[], neden="Bu gün ders yok.")
             degisen += 1
@@ -1307,6 +1327,14 @@ def plani_dogrula(c, tarihler, p, kat):
         if g.get("bisiklet") and "bisiklet" in (p.get("ekipman") or []):
             bs = g["bisiklet"]
             g2["bisiklet"] = {"sure_dk": _dk(bs.get("sure_dk"), 60), "yogunluk": bs.get("yogunluk") or "kolay", "aciklama": str(bs.get("aciklama") or "")[:240]}
+        elif g.get("bisiklet") or g.get("kardiyo") or g2["tur"] == "kardiyo":   # bisikleti yoksa aynı gün yürüyüş olur
+            bs = g.get("kardiyo") or g.get("bisiklet") or {}
+            ktur = bs.get("tur") if bs.get("tur") in ("yuruyus", "kosu", "merdiven", "yuzme") else (p.get("kardiyo_tur") or "yuruyus")
+            g2["kardiyo"] = {"tur": ktur, "sure_dk": _dk(bs.get("sure_dk"), g2["sure_dk"] or 30), "yogunluk": bs.get("yogunluk") if bs.get("yogunluk") in ("kolay", "orta", "aralik") else "kolay",
+                             "aciklama": str(bs.get("aciklama") or "")[:240]}
+            if g2["tur"] == "bisiklet":
+                g2["tur"] = "kardiyo"
+            g2["sure_dk"] = g2["sure_dk"] or g2["kardiyo"]["sure_dk"]
         gunler_.setdefault(t, []).append(g2)
     gunler_l = []
     for t in tarihler:
@@ -1361,7 +1389,7 @@ def gun_seansi(tarih=None):
     out = []
     for g in plan:
         nerede = s.get("nerede") or ("yolda" if (takvim_haftasi(hafta_kodu(g_)).get(tarih) or {}).get("seyahat") else "ev")
-        u = seansi_uyarla(g, isik or "yesil", s.get("vakit_dk"), nerede) if g.get("bolumler") or g.get("bisiklet") else dict(g)
+        u = seansi_uyarla(g, isik or "yesil", s.get("vakit_dk"), nerede) if g.get("bolumler") or g.get("bisiklet") or g.get("kardiyo") else dict(g)
         u["id"] = g.get("id")
         u["bitti"] = any(x.get("plan_id") == g.get("id") and x.get("bitti") for x in d["seanslar"])
         out.append(u)

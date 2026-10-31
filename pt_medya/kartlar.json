@@ -2562,5 +2562,72 @@
    "ekipman_en": "jump rope"
   },
   "zaman": 1792929620
+ },
+ "tek_ayak_denge": {
+  "adimlar": [
+   "Dik durun, kollar yanda, bakışlarınızı sabit bir noktaya çevirin.",
+   "Ağırlığı bir ayağa verin, diğer dizi yavaşça kaldırın.",
+   "Kalçanız düz, 20-30 saniye durun; ayağı indirip yan değiştirin."
+  ],
+  "hatalar": [
+   "Kalçanın yana kayması",
+   "Duruş ayağı dizini tamamen kilitlemek"
+  ],
+  "hisset": "Duruş ayağınızın tabanında, baldır ve kalça yan kaslarında hissedin.",
+  "nefes": "Düzenli ve sakin nefes alıp verin, nefesinizi tutmayın.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "baldir"
+   ],
+   "ikincil": [
+    "karin",
+    "on_bacak",
+    "arka_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing upright in a bright room, feet hip-width apart, arms relaxed at sides, hips level, eyes looking straight ahead, barefoot on a flat floor",
+   "bit": "The person balances on one leg with the standing knee slightly soft, the other knee lifted to about hip height with the thigh parallel to the floor, hips level and torso upright, arms relaxed at sides or slightly out for balance",
+   "hareket": "From standing on both feet, shift weight onto one leg and slowly lift the other knee to hip height, then hold still",
+   "kamera": "front",
+   "tutus": true,
+   "ekipman_en": "none"
+  },
+  "zaman": 1793439022
+ },
+ "yere_otur_kalk": {
+  "adimlar": [
+   "Ayakta durun, ayaklar omuz genişliğinde; kontrolle yere inmeye hazırlanın.",
+   "Bağdaş kurarak yere oturun, ardından elleri kullanmadan ayağa kalkmayı deneyin.",
+   "Dik ve dengeli şekilde ayakta bitirin; diğer bacak düzeniyle tekrarlayın."
+  ],
+  "hatalar": [
+   "Ellerle yerden güç almak",
+   "Gövdeyi öne savurarak kalkmak"
+  ],
+  "hisset": "Kalkarken kalça, uyluk ve karın bölgesinde çalışmayı hissedin.",
+  "nefes": "İnerken nefes verin, kalkarken kontrollü nefes alıp verin.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "on_bacak",
+    "arka_bacak"
+   ],
+   "ikincil": [
+    "karin",
+    "baldir",
+    "bel"
+   ]
+  },
+  "gorsel": {
+   "bas": "A single person standing upright on a flat floor, feet shoulder-width apart, arms relaxed in front of the body for balance, barefoot, torso tall",
+   "bit": "The person sits on the floor in a cross-legged position with an upright spine, hands resting on knees, then returns to a fully upright standing position with feet hip-width apart and arms relaxed",
+   "hareket": "From standing, lower down to sit cross-legged on the floor, then rise back to standing without using hands, keeping the torso controlled",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1793439022
  }
 }

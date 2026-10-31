@@ -25,7 +25,8 @@ TEST_OLCU = {k: o for k, _, o, *_ in pt.TESTLER}
 ONERI_ISTEM = """Sen PT'sin: kişisel antrenör + diyetisyen. Kişiyle ilk görüşmenin sonunda üç hedef belirliyorsunuz: kısa (4 hafta), orta (3 ay),
 uzun (1 yıl). Aşağıda KODUN ÖLÇEBİLDİĞİ aday hedefler var; YALNIZCA bu adaylardan seç (numarayla). Her vade için bir ana hedef ve bir seçenek.
 Seçerken: kısa vade alışkanlık ve ilk somut kazanım (kaçırılmayacak kadar gerçekçi), orta vade bir blok sonunda görünür fark, uzun vade kişinin
-asıl nedeni. Üç vade için üç FARKLI ölçü türü seç (ör. kısa: seri ya da seans sayısı, orta: basamak ya da test, uzun: beceri ya da hedef kilo);
+asıl nedeni. Kişi "uzun ve sağlıklı yaşamak" diyorsa yıl hedefi büyük ölçüde düzendir (haftalık sağlık dozu: en az iki güç antrenmanı +
+kolay kardiyo dakikası); denge, yere oturup kalkma ve dinlenme nabzı yaşlanmayı en iyi gösteren ölçülerdir. Üç vade için üç FARKLI ölçü türü seç (ör. kısa: seri ya da seans sayısı, orta: basamak ya da test, uzun: beceri ya da hedef kilo);
 aynı ölçüyü iki vadede kullanma. Kişinin hedef türlerine ve motivasyonuna uy; sağlık notlarına saygı göster. "metin" kişinin dilinde, somut, en çok 12 kelime,
 sayı içersin (adayın sayısını değiştirme). "neden" tek cümle, "siz" dili, klişe yok.
 KİŞİ: {profil}
@@ -114,6 +115,24 @@ def adaylar(p=None):
             ekle("kisa", f"{ad}: {v:g} → {v + a4:g} {birim}", "test", v + a4, v, kod=kod, birim=birim)
             ekle("orta", f"{ad}: {v:g} → {v + a12:g} {birim}", "test", v + a12, v, kod=kod, birim=birim)
             ekle("uzun", f"{ad}: {v:g} → {v + a52:g} {birim}", "test", v + a52, v, kod=kod, birim=birim)
+    # uzun ömür: haftalık doz düzeni ve yaşlanmayı en iyi gösteren testler (denge, yere oturup kalkma, dinlenme nabzı)
+    if "uzun_omur" in H or "saglik" in H:
+        ekle("kisa", "4 haftanın 3'ünde haftalık sağlık dozunu tamamlamak", "doz", 3, 0, birim="hafta")
+        ekle("orta", "12 haftanın 9'unda haftalık sağlık dozunu tamamlamak", "doz", 9, 0, birim="hafta")
+        ekle("uzun", "Bir yılda 40 hafta sağlık dozunu tamamlamak", "doz", 40, 0, birim="hafta")
+        if "tek_ayak_sn" in T:
+            v = T["tek_ayak_sn"][1]
+            if v < 60:
+                ekle("kisa", f"Tek ayak üstünde {v:g} → {min(60, v + 10):g} sn", "test", min(60, v + 10), v, kod="tek_ayak_sn", birim="sn")
+                ekle("orta", f"Tek ayak üstünde {min(60, max(30, v + 20)):g} sn", "test", min(60, max(30, v + 20)), v, kod="tek_ayak_sn", birim="sn")
+        if "oturkalk_puan" in T and T["oturkalk_puan"][1] < 10:
+            v = T["oturkalk_puan"][1]
+            ekle("orta", "Yere elsiz oturup kalkmak (8 puan ve üstü)" if v < 8 else "Yere hiç destek almadan oturup kalkmak",
+                 "test", 8 if v < 8 else 10, v, kod="oturkalk_puan", birim="puan")
+        if "dinlenme_nabzi" in T and T["dinlenme_nabzi"][1] > 62:
+            v = T["dinlenme_nabzi"][1]
+            ekle("uzun", f"Dinlenme nabzını {v:g} → {max(55, v - 6):g}'ya indirmek", "test", max(55, v - 6), v, kod="dinlenme_nabzi", birim="atım",
+                 yon="azalis")
     # beceri zincirleri: sonraki basamak (orta), beceri (uzun)
     try:
         for b in pt.beceriler():
@@ -150,8 +169,11 @@ def _kural_secimi(A, p):
     H = set(p.get("hedef_turleri") or [])
     secim, secenek, kullanilan = [], [], set()
     # Kısa vade düzen (seans/seri) ya da kilo; orta vade görünür fark (test/basamak); uzun vade asıl neden (beceri/hedef kilo). Üç vade aynı ölçü olmasın.
-    ONCELIK = {"kisa": (["kilo", "seans", "seri", "test", "bel"] if "kilo" in H else ["seans", "test", "seri", "kilo", "bel"]),
-               "orta": ["basamak", "test", "kilo", "seans", "bel", "seri"], "uzun": ["beceri", "kilo", "test", "seans"]}
+    ONCELIK = {"kisa": (["kilo", "seans", "seri", "test", "bel", "doz"] if "kilo" in H else ["seans", "test", "seri", "kilo", "bel", "doz"]),
+               "orta": ["basamak", "test", "kilo", "seans", "bel", "seri", "doz"], "uzun": ["beceri", "kilo", "test", "seans", "doz"]}
+    if "uzun_omur" in H:                                    # uzun ömür hedefinde düzen (haftalık doz) önce gelir; yıl hedefi de doz olur
+        ONCELIK = {"kisa": ["doz", "seans", "seri", "kilo", "test"], "orta": ["test", "basamak", "kilo", "doz", "seans"],
+                   "uzun": ["doz", "beceri", "kilo", "test", "seans"]}
     NEDEN = {"kisa": "Dört haftada tutturulabilir, ilk somut kazanım.", "orta": "Bir blok sonunda görünür fark.", "uzun": "Asıl nedeniniz; her şey buna doğru."}
     tur = lambda a: "beceri" if a["olcu"].get("beceri") else a["olcu"]["tur"]  # noqa: E731
     for vade, *_ in VADELER:
@@ -238,7 +260,7 @@ def kaydet(secilenler):
                 continue
             olcu = s.get("olcu") if isinstance(s.get("olcu"), dict) and s["olcu"].get("tur") else {"tur": "serbest"}
             olcu = {k: olcu.get(k) for k in ("tur", "kod", "hedef", "baslangic", "birim", "yon")}
-            if olcu["tur"] in ("seans", "seri", "dk"):
+            if olcu["tur"] in ("seans", "seri", "dk", "doz"):
                 olcu["baslangic"] = 0
             elif olcu["tur"] == "kilo" and olcu.get("baslangic") is None:
                 olcu["baslangic"] = _kilo(pt.profil())
@@ -298,6 +320,8 @@ def _simdi(h):
             return max(en, h.get("seri") or 0)              # hedef konulduğunda süren seri de sayılır (15 günlük seri "0" görünüyordu)
         except Exception:  # noqa: BLE001
             return 0
+    if t == "doz":
+        return __import__("pt_uzun").doz_haftalari(bas)
     if t == "basamak":
         kat = pt.katalog()
         hedef_h = kat.get(o.get("kod")) or {}

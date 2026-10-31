@@ -167,6 +167,8 @@ def ozet():
         "kontrol": _g(lambda: __import__("pt_kontrol").ozet()["kontrol"], {}),
         "degerlendirme": _g(lambda: {**__import__("pt_kontrol").ozet()["degerlendirme"], "hazirlaniyor": "degerlendirme" in calisan}, {}),
         "akis": _g(lambda: pt_koc.gun_akisi(t)["akis"], []),
+        "recete_var": _g(lambda: bool((__import__("pt_uzun").recete_oku() or {}).get("satirlar")), False),
+        "doz": _g(lambda: __import__("pt_uzun").doz_ozeti(kod), {}),
         "haftalik_gorusme": pt.bugun().weekday() >= 5 and pt._hafta_no(kod) > 1 and not (pt._json(pt.MESAJLAR / f"{kod}.gorusme.json", {}).get("cevaplar")),
     }
 
@@ -514,6 +516,56 @@ def kaydet(app):
                 pt_oyun._onbellek.clear()
             return jsonify({"hedef": h, "aktif": pt_hedef.aktif()})
         return jsonify({"hata": "islem: oner | kaydet | degistir"}), 400
+
+    # ---------------------------------------------------------------- reçete ve uzun ömür (2026-10-31)
+    @app.get("/api/pt/recete")
+    def pt_recete():
+        import pt_uzun
+        p = pt.profil()
+        kayit = pt_uzun.recete_oku()
+        return jsonify({"kayitli": kayit if kayit.get("satirlar") else None, "oneri": pt_uzun.recete(p),
+                        "uzmanlar": [{"kod": k, "ad": a, "ne": n} for k, a, n in pt_uzun.UZMANLAR]
+                        + ([{"kod": "bjj", "ad": "Jiu-jitsu koçu", "ne": "Derslerinize göre haftayı dizer; zorlandığınız pozisyonları evde çalıştırır."}]
+                           if "jiujitsu" in (p.get("sevdikleri") or []) or (p.get("bjj_ders") or {}).get("gunler") or (p.get("yontemler") or {}).get("bjj_solo") else []),
+                        "kardiyo_turleri": pt_uzun.KARDIYO_TUR, "sevdikleri": pt_uzun.SEVDIKLERI,
+                        "profil": {k: p.get(k) for k in ("sevdikleri", "ekipman", "bjj_ders", "hedef_turleri")}})
+
+    @app.post("/api/pt/recete")
+    def pt_recete_islem():
+        import pt_uzun
+        g = _govde()
+        say = g.get("sayilar") if isinstance(g.get("sayilar"), dict) else None
+        if g.get("islem") == "onizle":
+            return jsonify({"recete": pt_uzun.recete(pt.profil(), say, g.get("kardiyo_tur"))})
+        if g.get("islem") != "uygula":
+            return jsonify({"hata": "islem: onizle | uygula"}), 400
+        if g.get("uzun_omur"):                                   # kişi asıl hedefinin uzun ve sağlıklı yaşam olduğunu söyledi
+            H = list(pt.profil().get("hedef_turleri") or [])
+            if "uzun_omur" not in H:
+                pt.profil_kaydet({"hedef_turleri": H + ["uzun_omur"]})
+        kayit = pt_uzun.recete_kaydet(say, g.get("kardiyo_tur"))
+        if g.get("ilk"):                                         # kurulum: planı ve değerlendirmeyi kurulumun kendi akışı başlatır
+            return jsonify({"recete": kayit})
+        if not pt.tarama_durumu()["bekliyor"]:
+            kod = pt.hafta_kodu()
+            istek = "Haftalık reçete değişti; bu haftanın kalan günlerini yeni reçeteye göre yaz, bitmiş günlere dokunma."
+
+            def yaz():
+                pl = pt.program_uret(kod, istek)
+                sonraki = pt.hafta_kodu(pt.bugun() + dt.timedelta(days=7 - pt.bugun().weekday()))
+                if pt.program(sonraki):
+                    pt.program_uret(sonraki, "Haftalık reçete değişti; yeni reçeteye göre yaz.")
+                return pl
+            _arka("plan", "haftalık plan yeniden yazılıyor", yaz)
+            _degerlendirme_baslat(yenile=True)
+        return jsonify({"recete": kayit, "plan": "plan" in calisan})
+
+    @app.get("/api/pt/uzun")
+    def pt_uzun_omur():
+        import pt_uzun
+        p = pt.profil()
+        return jsonify({"gostergeler": pt_uzun.gostergeler(p), "doz": pt_uzun.doz_ozeti(), "dozlar": pt_uzun.dozlar(p),
+                        "recete": bool((pt_uzun.recete_oku() or {}).get("satirlar"))})
 
     @app.get("/api/pt/kontrol")
     def pt_kontrol_durum():
