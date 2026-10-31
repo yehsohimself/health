@@ -682,5 +682,23 @@
   "izlenme": 2679051,
   "neden": "Well+Good'un 2:44'lük videosu ip atlamanın doğru tekniğini gösteriyor. Kısa, net ve tanınmış bir kanal.",
   "zaman": 1792932533
+ },
+ "tek_ayak_denge": {
+  "id": "T6Dc8ewTJ9A",
+  "baslik": "Single Leg Balance Progression",
+  "kanal": "BSR Physical Therapy",
+  "sure": 64,
+  "izlenme": 16572,
+  "neden": "Fizyoterapi kliniğinden, tek ayak dengeyi zorluk basamaklarıyla (progresyon) gösteren kısa ve net bir video. Tam olarak bu hareketi gösteriyor.",
+  "zaman": 1793439268
+ },
+ "yere_otur_kalk": {
+  "id": "_FNnPK5RZNk",
+  "baslik": "Getting Up From The Floor Without Using Hands! (Pilates)",
+  "kanal": "A Room For Pilates",
+  "sure": 31,
+  "izlenme": 156764,
+  "neden": "Yerden elleri kullanmadan kalkmayı gösteren kısa Pilates anlatımı. Hareket birebir örtüşüyor ve video kısa.",
+  "zaman": 1793439268
  }
 }
