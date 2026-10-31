@@ -248,6 +248,11 @@ def _dongu():
             if p.get("kuruldu") and not pt.tarama_durumu(p)["bekliyor"]:
                 simdi = dt.datetime.now()
                 kod = pt.hafta_kodu()
+                try:                                                            # Apple Sağlık: iCloud Drive'daki yeni dosyalar (10 dk'da bir)
+                    import pt_saglik
+                    pt_saglik.icloud_tara()
+                except Exception:  # noqa: BLE001
+                    traceback.print_exc()
                 if sonuclar.get("modul_gun") != pt.bugun().isoformat():         # modüller gidişata göre, günde bir (Claude gerekmez)
                     sonuclar["modul_gun"] = pt.bugun().isoformat()
                     try:
@@ -1058,6 +1063,14 @@ def kaydet(app):
     def pt_saglik_durum():
         import pt_saglik
         return jsonify({**pt_saglik.durum(), "bugun": pt_saglik.hazirlik()})
+
+    @app.post("/api/pt/saglik/icloud")
+    def pt_saglik_icloud():
+        import pt_saglik
+        r = pt_saglik.icloud_tara()
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        return jsonify({**r, "durum": pt_saglik.durum()})
 
     @app.post("/api/pt/saglik/ice-aktar")
     def pt_saglik_ice_aktar():

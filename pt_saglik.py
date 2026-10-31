@@ -10,6 +10,7 @@ import json
 import secrets
 import statistics
 import time
+from pathlib import Path
 
 import pt
 
@@ -64,6 +65,7 @@ def _hae(veri):
         alan = adlar.get(m.get("name"))
         if not alan:
             continue
+        lb = alan == "kilo" and str(m.get("units") or "").lower() in ("lb", "lbs")
         for x in m.get("data") or []:
             t = str(x.get("date") or "")[:10]
             try:
@@ -75,20 +77,50 @@ def _hae(veri):
                 if alan == "adim":
                     out.setdefault(t, {})[alan] = (out.get(t, {}).get(alan) or 0) + int(v)
                 else:
-                    out.setdefault(t, {})[alan] = _sayi(v)
+                    v = _sayi(v)
+                    out.setdefault(t, {})[alan] = round(v * 0.453592, 1) if lb and v else v
     for w in (veri.get("data") or {}).get("workouts") or []:
         t = str(w.get("start") or "")[:10]
         if t:
-            out.setdefault(t, {}).setdefault("antrenmanlar", []).append(_antrenman(w.get("name"), w.get("duration"), w.get("start"),
+            sure = w.get("duration")
+            if isinstance(sure, dict):
+                sure = (sure.get("qty") or 0) * (60 if str(sure.get("units") or "").startswith("min") else 1)
+            out.setdefault(t, {}).setdefault("antrenmanlar", []).append(_antrenman(w.get("name"), sure, w.get("start"),
                                                                                  (w.get("activeEnergyBurned") or {}).get("qty"), (w.get("distance") or {}).get("qty")))
     return out
+
+
+_EK = {"walk": "walking", "run": "running", "cycle": "cycling", "swim": "swimming", "hiit": "highintensityintervaltraining", "football": "soccer",
+       "strengthtraining": "traditionalstrengthtraining", "mixedcardio": "crosstraining", "cardio": "crosstraining", "hike": "hiking"}
+
+
+def _tur_bul(ad):
+    """Antrenman adı (Health Auto Export 'Outdoor Walk', dışa aktarım 'HKWorkoutActivityTypeSoccer', kısayol 'Futbol') → HK_ANTRENMAN satırı."""
+    import re
+    a = re.sub(r"[^a-zçğıöşü]", "", str(ad or "").lower().replace("hkworkoutactivitytype", ""))
+    for on in ("outdoor", "indoor", "pool", "openwater"):
+        if a.startswith(on) and len(a) > len(on):
+            a = a[len(on):]
+    a = _EK.get(a, a)
+    H = {k.lower(): v for k, v in HK_ANTRENMAN.items()}
+    if a in H:
+        return H[a]
+    eski = ANTRENMAN_TUR.get(str(ad or "").lower().strip())
+    tr = {"futbol": "soccer", "maç": "soccer", "mac": "soccer", "basketbol": "basketball", "tenis": "tennis", "yüzme": "swimming", "yuzme": "swimming"}
+    if a in tr:
+        return H[tr[a]]
+    if eski:
+        return {"bisiklet": H["cycling"], "bjj_ders": H["martialarts"], "kalistenik": H["traditionalstrengthtraining"], "mobilite": H["yoga"],
+                "yuruyus": H["walking"], "kosu": H["running"]}[eski]
+    return ("spor", str(ad or "Antrenman")[:40], "diger", "orta", 5)
 
 
 def _antrenman(ad, sure, bas, kcal=None, mesafe=None):
     s = _sayi(sure) or 0
     if s > 600:                                   # saniye geldiyse
         s = s / 60
-    return {"ad": str(ad or "Antrenman")[:60], "tur": ANTRENMAN_TUR.get(str(ad or "").lower().strip(), "diger"), "sure_dk": round(s),
+    tur, tr_ad, spor, yog, zor = _tur_bul(ad)
+    return {"ad": tr_ad, "tur": tur, "spor": spor, "yogunluk": yog, "zorluk": zor, "sure_dk": round(s),
             "bas": str(bas or "")[:25], "kcal": _sayi(kcal), "mesafe_km": _sayi(mesafe)}
 
 
@@ -178,7 +210,8 @@ def durum():
     a = pt._json(AYAR, {})
     son = sorted(KLASOR.glob("*.json"))
     return {"anahtar": anahtar(), "son_gonderim": a.get("saglik_son"), "gun_sayisi": len(son), "son_gun": son[-1].stem if son else None,
-            "ice": a.get("ice_aktarma")}
+            "ice": a.get("ice_aktarma"), "icloud": a.get("icloud_son"), "icloud_bakildi": a.get("icloud_bakildi"),
+            "icloud_klasor": a.get("icloud_klasor") or []}
 
 
 # ----------------------------------------------------------------------------- Apple Sağlık dışa aktarımı (2026-10-31)
@@ -311,3 +344,84 @@ def ice_aktar(dosya, gun=120, sil=True):
                         "ilk": min(yazilan) if yazilan else None, "son": max(yazilan) if yazilan else None}
     pt._yaz(AYAR, a)
     return a["ice_aktarma"]
+
+
+# ----------------------------------------------------------------------------- iCloud Drive'dan kendiliğinden (2026-10-31)
+# Kullanıcı: "senin otomatik çekebileceğin bir düzen lazım". iPhone'daki bir uygulama (Health Auto Export, otomasyon: iCloud Drive, JSON)
+# Sağlık verisini her gün iCloud Drive'a yazar; Mac'te bu klasör 10 dakikada bir okunur. Ağ ayarı, tünel ya da açık port gerekmez; Mac kapalıyken
+# biriken dosyalar açılınca alınır. Bulut dosyası Mac'e henüz inmemişse (".dosya.json.icloud") `brctl download` ile indirilir.
+ICLOUD = Path.home() / "Library" / "Mobile Documents"
+
+
+def _icloud_klasorler():
+    if not ICLOUD.exists():
+        return []
+    L = []
+    for k in ICLOUD.iterdir():                                  # uygulamanın kendi iCloud klasörü (iCloud~...HealthAutoExport...)
+        if "health" in k.name.lower() and k.is_dir():
+            L.append(k)
+    docs = ICLOUD / "com~apple~CloudDocs"
+    if docs.exists():
+        for k in docs.iterdir():                                # iCloud Drive'da adında Health/Sağlık geçen klasör
+            if k.is_dir() and any(x in k.name.lower() for x in ("health", "sağlık", "saglik")):
+                L.append(k)
+    return L
+
+
+def _dosyalar(kok, derinlik=6):
+    out = []
+    try:
+        for p in kok.iterdir():
+            if p.is_dir() and derinlik > 0:
+                out += _dosyalar(p, derinlik - 1)
+            elif p.name.endswith(".json") or (p.name.startswith(".") and p.name.endswith(".json.icloud")):
+                out.append(p)
+    except OSError:
+        pass
+    return out
+
+
+def icloud_tara(en_cok=40):
+    """Yeni ya da değişmiş Sağlık dosyalarını okur. Döner: {dosya, gun}."""
+    import subprocess
+    a = pt._json(AYAR, {})
+    gorulen = a.get("icloud_gorulen") or {}
+    sinir = time.time() - 30 * 86400
+    adaylar = []
+    for k in _icloud_klasorler():
+        for p in _dosyalar(k):
+            try:
+                st = p.stat()
+            except OSError:
+                continue
+            if st.st_mtime < sinir:
+                continue
+            if p.name.endswith(".icloud"):                       # henüz inmemiş: indir, sonraki turda okunur
+                subprocess.run(["brctl", "download", str(p)], capture_output=True, timeout=30)
+                continue
+            if gorulen.get(str(p)) == st.st_mtime or st.st_size > 80 * 1024 * 1024:
+                continue
+            adaylar.append((st.st_mtime, p))
+    gun = set()
+    okunan = 0
+    for mt, p in sorted(adaylar)[-en_cok:]:
+        try:
+            veri = json.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError, UnicodeDecodeError):
+            gorulen[str(p)] = mt
+            continue
+        if isinstance(veri, dict) and (isinstance(veri.get("data"), dict) or veri.get("tarih")):
+            try:
+                gun |= set(kaydet(veri))
+                okunan += 1
+            except Exception:  # noqa: BLE001
+                pass
+        gorulen[str(p)] = mt
+    a = pt._json(AYAR, {})
+    a["icloud_gorulen"] = dict(sorted(gorulen.items(), key=lambda x: x[1])[-400:])
+    if okunan:
+        a["icloud_son"] = {"t": int(time.time()), "dosya": okunan, "gun": len(gun), "son_gun": max(gun) if gun else None}
+    a["icloud_bakildi"] = int(time.time())
+    a["icloud_klasor"] = [str(k).replace(str(Path.home()), "~") for k in _icloud_klasorler()]
+    pt._yaz(AYAR, a)
+    return {"dosya": okunan, "gun": len(gun)}

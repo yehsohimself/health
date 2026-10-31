@@ -669,6 +669,7 @@ body:has(.perde) #sohbetFab, body:has(.nfo) #sohbetFab, body:has(#oyn) #sohbetFa
 .kayit.geri{opacity:.55;background:none;border-color:var(--cizgi)}.kayit.hata{border-color:rgba(255,93,93,.4);background:rgba(255,93,93,.06)}.kayit.hata i{color:var(--kirmizi)}
 
 /* Apple Sağlık dosyası (2026-10-31) */
+.si-gecmis{margin-top:12px;border-top:1px solid var(--cizgi);padding-top:10px}.si-gecmis summary{cursor:pointer;font-size:14px}.si-adim a{color:var(--vurgu)}
 .si-son{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px;margin-bottom:8px}
 .si-adim{margin:4px 0 12px;padding-left:20px;font-size:14px;line-height:1.55;color:var(--ink2)}.si-adim b{color:var(--ink)}
 .si-birak{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;border:1.5px dashed rgba(var(--vurgu-rgb),.5);border-radius:14px;padding:20px 14px;cursor:pointer;font-size:14.5px;
@@ -742,7 +743,7 @@ async function api(yol, s = {}){
 function toast(m, eylem, fn){ $$('.toast').forEach(x => x.remove()); const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); t.innerHTML = `<span>${esc(m)}</span>${eylem ? `<button>${esc(eylem)}</button>` : ''}`; document.body.appendChild(t); if (eylem) $('button', t).onclick = () => { t.remove(); fn(); }; setTimeout(() => t.remove(), eylem ? 6000 : 3200); }
 function temaUygula(){ if (store.get('tema_v20', 'dark') === 'light') document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme; }
 temaUygula(); $('#tema').onclick = () => { store.set('tema_v20', store.get('tema_v20', 'dark') === 'light' ? 'dark' : 'light'); temaUygula(); };
-(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'Health', 8771]];
+(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'Health', 8771], ['ledger', 'Ledger', 8773]];
   const m = $('#urunMenu'); const yerel = /^(127\.|localhost|192\.168\.|10\.|.*\.local$)/.test(location.hostname);
   const kurulu = (document.documentElement.dataset.urunler || '').split(',').filter(Boolean);
   if (kurulu.length === 1) { $('#urunBtn').style.display = 'none'; return; }   // tek başına Health: başka ürün yok
@@ -3107,12 +3108,23 @@ function durgunBagla(m){
 async function saglikIceCiz(){
   const k = $('#saglikIce'); if (!k) return;
   let d = {}; try{ d = await api('/api/pt/saglik/durum'); }catch(e){ /* yok */ }
-  const i = d.ice;
-  k.innerHTML = `${i ? `<div class="si-son"><span class="rozet yesil"><i></i>Bağlı</span><span>Son aktarım ${esc(new Date(i.t * 1000).toLocaleDateString('tr-TR', {day: 'numeric', month: 'long'}))}: ${i.gun} gün, ${i.antrenman} antrenman${i.ilk ? ` (${esc(tarihKisa(i.ilk))} – ${esc(tarihKisa(i.son))})` : ''}</span></div>` :
-      '<p class="gri2" style="margin:0 0 10px;font-size:14px">Uykunuz, dinlenme nabzınız, adımlarınız, kilonuz ve saatinizle kaydettiğiniz antrenmanlar (maç, yürüyüş, koşu…) Health\'e gelir; sabah ayarı, sağlık dozu ve uzun ömür ölçüleri bunları kullanır.</p>'}
-    <ol class="si-adim"><li>iPhone'da <b>Sağlık</b> uygulamasını açın, sağ üstte profil resminize dokunun.</li><li><b>Tüm sağlık verilerini dışa aktar</b> → <b>Dışa aktar</b>. Birkaç dakika sürebilir.</li><li>Gelen zip dosyasını <b>AirDrop</b> ile bu Mac'e gönderin; İndirilenler'e düşer (adı <b>export.zip</b> ya da <b>dışa_aktar.zip</b>).</li></ol>
-    <label class="si-birak" id="siBirak"><input type="file" accept=".zip,.xml" hidden id="siDosya"><span>Zip dosyasını buraya bırakın ya da <u>seçin</u></span><small>Son 120 gün okunur. Dosya okunduktan sonra silinir; veriler bu bilgisayarda kalır.</small></label>
-    <div id="siDurum"></div>${i ? '<p class="gri" style="margin:8px 0 0;font-size:12.5px">Ayda bir yeniden aktarmanız yeter; aynı günler üst üste yazılmaz.</p>' : ''}`;
+  const i = d.ice, c = d.icloud;
+  const saat = t => new Date(t * 1000).toLocaleString('tr-TR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+  const otomatik = c ? `<div class="si-son"><span class="rozet yesil"><i></i>Her gün kendiliğinden</span><span>Son veri ${esc(tarihKisa(c.son_gun || bugunT()))} · son okuma ${esc(saat(d.icloud_bakildi || c.t))}</span></div>`
+    : `<p style="margin:0 0 6px;font-size:15px"><b>Her gün kendiliğinden gelsin</b></p>
+      <p class="gri2" style="margin:0 0 8px;font-size:14px">Mac, iPhone'daki Sağlık verisini doğrudan okuyamıyor. iPhone'da bir uygulama veriyi her gün iCloud Drive'a yazar; Health bu Mac'te iCloud Drive'ı 10 dakikada bir okur. Bir kez kurulur, sonra hiçbir şey yapmanız gerekmez.</p>
+      <ol class="si-adim"><li>iPhone'a <a href="https://apps.apple.com/app/id1115567069" target="_blank" rel="noopener"><b>Health Auto Export</b></a> uygulamasını yükleyin. Kendiliğinden dışa aktarma uygulamanın Premium sürümüyle çalışır (yaklaşık 7 $ yıllık ya da 25 $ ömür boyu).</li>
+        <li>Uygulamayı açın, Sağlık verilerine erişim isteğinde hepsine izin verin.</li>
+        <li>Otomasyonlar bölümünde yeni bir otomasyon açın: hedef <b>iCloud Drive</b>, biçim <b>JSON</b>, veriler <b>adım, uyku, dinlenme nabzı, nabız değişkenliği, kilo, VO2max</b> ve <b>antrenmanlar</b>, gruplama <b>günlük</b>, aralık <b>son 7 gün</b>, sıklık <b>günde bir</b> (ya da saatte bir). Kaydedip açın.</li>
+        <li>Bu Mac'te aynı Apple hesabıyla iCloud Drive açık olsun. İlk dosya geldiğinde burada "Her gün kendiliğinden" yazar.</li></ol>
+      <div class="satir" style="gap:8px"><button class="btn kucuk" id="siBak">Şimdi bak</button><span class="gri" style="font-size:12.5px">${(d.icloud_klasor || []).length ? 'İzlenen klasör: ' + esc(d.icloud_klasor.join(', ')) : 'iCloud Drive\'da henüz Sağlık klasörü yok'}</span></div>`;
+  k.innerHTML = `${otomatik}
+    <details class="si-gecmis" ${i || c ? '' : ''}><summary class="gri2">${i ? `Geçmiş aktarımı · ${esc(new Date(i.t * 1000).toLocaleDateString('tr-TR', {day: 'numeric', month: 'long'}))}, ${i.gun} gün, ${i.antrenman} antrenman` : 'Geçmişi bir kerede almak (son 120 gün)'}</summary>
+    <ol class="si-adim"><li>iPhone'da <b>Sağlık</b> uygulamasını açın, sağ üstte profil resminize dokunun.</li><li><b>Tüm sağlık verilerini dışa aktar</b> → <b>Dışa aktar</b>.</li><li>Gelen zip dosyasını <b>AirDrop</b> ile bu Mac'e gönderin.</li></ol>
+    <label class="si-birak" id="siBirak"><input type="file" accept=".zip,.xml" hidden id="siDosya"><span>Zip dosyasını buraya bırakın ya da <u>seçin</u></span><small>Dosya okunduktan sonra silinir; veriler bu bilgisayarda kalır.</small></label>
+    <div id="siDurum"></div></details>`;
+  const bk = $('#siBak', k); if (bk) bk.onclick = async () => { bk.disabled = true; bk.innerHTML = '<span class="donen"></span>'; try{ const r = await api('/api/pt/saglik/icloud', json({}));
+    toast(r.dosya ? `${r.gun} günün verisi alındı.` : 'Henüz yeni dosya yok; uygulama ilk aktarımı yapınca gelir.'); if (r.dosya) await yukle(true); saglikIceCiz(); }catch(e){ toast(e.message); bk.disabled = false; bk.textContent = 'Şimdi bak'; } };
   const z = $('#siBirak', k), inp = $('#siDosya', k), du = $('#siDurum', k);
   const yukleDosya = f => { if (!f) return; if (!/\.(zip|xml)$/i.test(f.name)) return toast('Sağlık\'tan gelen zip dosyasını seçin.');
     const fd = new FormData(); fd.append('dosya', f); const x = new XMLHttpRequest();

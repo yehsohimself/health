@@ -79,3 +79,30 @@ def _kopya(z, xml):
     with zipfile.ZipFile(z, "w") as f:
         f.writestr("apple_health_export/export.xml", xml)
     return z
+
+
+def test_icloud_drive_kendiliginden(ptv, tmp_path, monkeypatch):
+    """Health Auto Export'un iCloud Drive'a yazdığı JSON: yeni dosya okunur, aynı dosya ikinci kez okunmaz."""
+    import json
+    import pt_saglik
+    kok = tmp_path / "Mobile Documents"
+    k = kok / "iCloud~com~ifunography~HealthExport" / "Documents" / "AutoSync"
+    k.mkdir(parents=True)
+    (kok / "com~apple~CloudDocs").mkdir()
+    monkeypatch.setattr(pt_saglik, "ICLOUD", kok)
+    veri = {"data": {"metrics": [
+        {"name": "step_count", "units": "count", "data": [{"date": "2026-10-30 00:00:00 +0100", "qty": 8123}]},
+        {"name": "sleep_analysis", "units": "hr", "data": [{"date": "2026-10-30 00:00:00 +0100", "totalSleep": 6.8}]},
+        {"name": "resting_heart_rate", "units": "count/min", "data": [{"date": "2026-10-30 00:00:00 +0100", "qty": 57}]},
+        {"name": "weight_body_mass", "units": "lb", "data": [{"date": "2026-10-30 08:00:00 +0100", "qty": 205}]}],
+        "workouts": [{"name": "Outdoor Walk", "start": "2026-10-30 12:00:00 +0100", "duration": {"qty": 40, "units": "min"}},
+                     {"name": "Soccer", "start": "2026-10-30 19:00:00 +0100", "duration": 3600}]}}
+    (k / "HealthAutoExport-2026-10-30.json").write_text(json.dumps(veri), encoding="utf-8")
+    r = pt_saglik.icloud_tara()
+    assert r == {"dosya": 1, "gun": 1}
+    g = pt_saglik.gun("2026-10-30")
+    assert g["adim"] == 8123 and g["uyku_saat"] == 6.8 and g["nabiz"] == 57 and abs(g["kilo"] - 93.0) < 0.1
+    S = {s["baslik"]: s for s in ptv.gun("2026-10-30")["seanslar"]}
+    assert S["Futbol"]["kardiyo"]["yogunluk"] == "aralik" and S["Yürüyüş"]["sure_dk"] == 40
+    assert pt_saglik.icloud_tara() == {"dosya": 0, "gun": 0}
+    assert pt_saglik.durum()["icloud"]["gun"] == 1
