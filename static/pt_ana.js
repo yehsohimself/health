@@ -202,9 +202,9 @@ function sayfaSusle(){
   }
   if (sk === 'beslenme'){                                                                       // başlıksız iki büyük kart için bölüm adı
     const pk = [...m.querySelectorAll(':scope > .kart')].find(k => /Yeme saatleri/.test((k.querySelector('.mono') || {}).textContent || ''));
-    if (pk && !(pk.previousElementSibling || {}).matches?.('h2.bolum')) pk.insertAdjacentHTML('beforebegin', '<h2 class="bolum">Yeme saatleri</h2>');
+    if (pk && !m.querySelector('#b-yeme-saatleri')) pk.insertAdjacentHTML('beforebegin', '<h2 class="bolum" id="b-yeme-saatleri">Yeme saatleri</h2>');
     const mk = m.querySelector(':scope > #menuKart');
-    if (mk && !(mk.previousElementSibling || {}).matches?.('h2.bolum')) mk.insertAdjacentHTML('beforebegin', '<h2 class="bolum">Haftalık menü</h2>');
+    if (mk && !m.querySelector('#b-haftalik-menu')) mk.insertAdjacentHTML('beforebegin', '<h2 class="bolum" id="b-haftalik-menu">Haftalık menü</h2>');
   }
   const altsek = m.querySelector(':scope > .altsek');
   if (altsek && ALT_ACIK[S.alt]){
@@ -229,7 +229,11 @@ function sayfaSusle(){
   }
 }
 const mainEl = document.getElementById('main');
-if (mainEl){ let bekle = 0; new MutationObserver(() => { clearTimeout(bekle); bekle = setTimeout(sayfaSusle, 30); }).observe(mainEl, {childList: true, subtree: true}); }
+if (mainEl){                                                  // kendi eklediklerimiz gözlemciyi yeniden tetiklemesin (2026-11-01: başlıklar durmadan çoğalıyordu)
+  let bekle = 0; const AYAR = {childList: true, subtree: true};
+  const gozcu = new MutationObserver(() => { clearTimeout(bekle); bekle = setTimeout(() => { gozcu.disconnect(); try{ sayfaSusle(); }finally{ gozcu.takeRecords(); gozcu.observe(mainEl, AYAR); } }, 30); });
+  gozcu.observe(mainEl, AYAR);
+}
 
 window.bugunCiz = function(){
   const o = S.o, m = $('#main');

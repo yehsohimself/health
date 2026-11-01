@@ -67,7 +67,7 @@ POLITIKA = [
     ("pt_cizim", "Health", "arka", "dusuk", 10), ("pt_youtube", "Health", "arka", "dusuk", 6), ("pt", "Health", "devam", "orta", 0),
     ("couple", "Couple", "arka", "dusuk", 4), ("atolye", "Atölye", "arka", "dusuk", 20),
     ("capital_sohbet", "Capital", "siz", "yuksek", 0), ("capital_dil", "Capital", "arka", "dusuk", 10), ("capital", "Capital", "devam", "orta", 0),
-    ("ledger", "Ledger", "devam", "orta", 0), ("office", "Office", "devam", "orta", 0),
+    ("money_guncel", "Money", "arka", "orta", 2), ("money_danisman", "Money", "devam", "orta", 0), ("ledger", "Money", "devam", "orta", 0), ("office_guncel", "Office", "arka", "orta", 4), ("office", "Office", "devam", "orta", 0),
     ("dil_cevir", "Arayüz çevirisi", "arka", "dusuk", 60), ("Doluluk yoklaması", "Dengeleyici", "devam", "yuksek", 0),
 ]
 # Kendiliğinden yalnız haftada bir tur çalışan ürünler (2026-10-31; kullanıcı: "Content'in arka planda dev çalışması saçma; görev verdikçe
@@ -76,7 +76,7 @@ HAFTALIK = {"content": 7 * 86400}
 TUR_ARA = 3 * 3600
 HAFTA_DURUM = KLASOR / "kayitlar" / ".claude_butce_hafta.json"
 
-URUN_SIRA = ["Ghost", "Meet", "Studio", "Content", "Health", "Capital", "Ledger", "Office", "Couple", "Atölye", "Arayüz çevirisi", "Diğer"]
+URUN_SIRA = ["Ghost", "Meet", "Studio", "Content", "Health", "Capital", "Money", "Ledger", "Office", "Couple", "Atölye", "Arayüz çevirisi", "Diğer"]
 
 
 def politika(is_adi):

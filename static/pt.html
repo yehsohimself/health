@@ -843,7 +843,7 @@ async function api(yol, s = {}){
 function toast(m, eylem, fn){ $$('.toast').forEach(x => x.remove()); const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); t.innerHTML = `<span>${esc(m)}</span>${eylem ? `<button>${esc(eylem)}</button>` : ''}`; document.body.appendChild(t); if (eylem) $('button', t).onclick = () => { t.remove(); fn(); }; setTimeout(() => t.remove(), eylem ? 6000 : 3200); }
 function temaUygula(){ if (store.get('tema_v20', 'dark') === 'light') document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme; }
 temaUygula(); $('#tema').onclick = () => { store.set('tema_v20', store.get('tema_v20', 'dark') === 'light' ? 'dark' : 'light'); temaUygula(); };
-(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'Health', 8771], ['ledger', 'Wallet', 8773], ['office', 'Paperwork', 8772]];
+(() => { const U = [['transcript', 'Studio', 8765], ['note', 'Meet', 8766], ['ghost', 'Ghost', 8767], ['content', 'Content', 8769], ['pt', 'Health', 8771], ['ledger', 'Money', 8773], ['office', 'Legal', 8772]];
   const m = $('#urunMenu'); const yerel = /^(127\.|localhost|192\.168\.|10\.|.*\.local$)/.test(location.hostname);
   const kurulu = (document.documentElement.dataset.urunler || '').split(',').filter(Boolean);
   if (kurulu.length === 1) { $('#urunBtn').style.display = 'none'; return; }   // tek başına Health: başka ürün yok
@@ -3898,7 +3898,7 @@ if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.reg
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !mesgul()) yukle(true); });
 yukle();
 </script>
-<script src="/static/pt_ana.js?v=9"></script>
+<script src="/static/pt_ana.js?v=10"></script>
 <script src="/static/pt_gorsel.js?v=6"></script>
 </body>
 </html>
