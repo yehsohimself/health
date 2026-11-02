@@ -10,6 +10,7 @@ haftalık sağlık dozu (yoğun, kolay kardiyo) buradan sayılır. Yemek BLS tab
 """
 import datetime as dt
 import json
+import re
 import time
 
 import pt
@@ -22,7 +23,9 @@ yığını yok. Türkçe, "siz" dili, çoğunlukla 1-3 cümle (kişi açıklama 
 Kişi soruya soruyla karşılık verebilir, itiraz edebilir, konu açabilir: hepsine açıksın. Bir şeyi neden yaptığını sorarsa nedenini sade anlat.
 Kullanıcı sana bir durum söyledi ya da yaptığı bir şeyi anlattı. YAPTIĞI ya da ÖLÇTÜĞÜ bir şeyi söylüyorsa (maç, yürüyüş, koşu, ders,
 yediği yemek, kilo, uyku, içtiği su) onu "kayitlar" listesine yaz: bunlar onay beklemeden kaydedilir; yanıtta kaydettiğini kısa söyle ve
-gerekiyorsa tek cümle yorum ekle (ör. maç yoğun çalışma sayılır, yarın hafif tutalım). Tarihleri {bugun} gününe göre çöz ("dün", "cumartesi").
+gerekiyorsa tek cümle yorum ekle (ör. maç yoğun çalışma sayılır, yarın hafif tutalım). Yalnız YENİ yapılan işi kayıt aç. Daha önce söylediği bir işin ayrıntısını ya da düzeltmesini
+veriyorsa ("tek seferde yaptım", "60 dakikaydı") SON KAYITLAR'daki kimliği "guncelle"ye yaz, yalnız değişen alanları ver. Aynı işi gerçekten bir kez daha yaptıysa ("50 squat daha") "ayri": true yaz.
+Soru sorduğu ya da konuştuğu mesajlarda ("ne yapayım?") kayıt açma. Kaydetmediğin ya da güncellemediğin şeyi yaptım deme. Tarihleri {bugun} gününe göre çöz ("dün", "cumartesi").
 Süre ya da zorluk söylenmediyse makul tahmin et (zorluk 1-10: halı saha/büyük saha futbol 7-8, tempolu yürüyüş 3-4). Ayrıca görevin: (a) durumu anlamak için gerekiyorsa TEK seçenekli soru sormak, (b) yeterince biliyorsan planda yapacağın
 değişikliği önermek. Teşhis koyma. Göğüs ağrısı, baş dönmesi, bayılma, yayılan uyuşma, şişlikle keskin eklem ağrısı gibi uyarı belirtilerinde
 antrenmanı durdur ve doktora/112'ye yönlendir (eylem: dinlenme).
@@ -46,7 +49,7 @@ JSON döndür:
 {{"yanit": "cevabın",
   "oneriler": ["kişinin bundan sonra sana söyleyebileceği 2-3 kısa şey (en çok 5 kelime, onun ağzından): 'Neden test var?', 'Yarına alalım'"],
   "kartlar": ["gerekirse göster: seans (bugünün seansı, başlat düğmesiyle) | doz (haftalık sağlık dozu) | nefes (nefes çalışması başlat) | program (haftalık yapı) | kilo (kilo eğrisi) | hareket:<kod> (hareketin kartı)"],
-  "kayitlar": [{{"tur": "aktivite|yemek|kilo|uyku|su", "tarih": "YYYY-MM-DD",
+  "kayitlar": [{{"tur": "aktivite|yemek|kilo|uyku|su", "tarih": "YYYY-MM-DD", "guncelle": "düzeltilen aktivite kaydının id'si, varsa", "ayri": "aynı iş bir kez daha yapıldıysa true",
      "spor": "futbol|basketbol|tenis|voleybol|padel|yuzme|kosu|yuruyus|bisiklet|jiujitsu|yoga|fitness|dans|diger", "ad": "kısa ad: 'Futbol (büyük saha)'",
      "sure_dk": sayı, "zorluk": 1-10, "saat": "aktivite bittiği saat HH:MM, söylendiyse", "not": "...", "metin": "yemek için: yenen her şey miktarıyla", "ogun": "kahvalti|ogle|aksam|ara",
      "kilo_kg": sayı, "bel_cm": sayı, "uyku_saat": sayı, "ml": sayı}}],
@@ -78,6 +81,53 @@ def _tarih(t):
     return max(bugun - dt.timedelta(days=14), min(bugun, d)).isoformat()
 
 
+KAYIT_BIRLESTIR_SN = 600     # aynı işin on dakika içindeki ikinci kaydı ayrıntı ya da düzeltmedir (2026-11-01: yürüyüş, squat, baldır ikişer kez yazıldı)
+
+
+def _ad_kokleri(ad):
+    ad = re.sub(r"\(.*?\)", " ", str(ad or "")).replace("İ", "i").replace("I", "ı").lower()
+    return {w[:5] for w in re.findall(r"[a-zçğıöşü]+", ad) if len(w) > 2}
+
+
+def _ayni_is(a, b):
+    A, B = _ad_kokleri(a), _ad_kokleri(b)
+    return bool(A and B) and len(A & B) / len(A | B) >= 0.5
+
+
+def _duzeltilen_seans(k, t, ad):
+    """Bu kayıt var olan bir seansın düzeltmesi mi? Modelin verdiği kimlik önce; yoksa az önce yazılmış aynı iş (kod kararı). (tarih, seans) ya da None."""
+    if k.get("guncelle"):
+        for i in range(0, 15):
+            g = (pt.bugun() - dt.timedelta(days=i)).isoformat()
+            s = next((x for x in pt.gun(g).get("seanslar") or [] if x.get("id") == k["guncelle"]), None)
+            if s:
+                return g, s
+    if k.get("ayri"):
+        return None
+    for s in reversed(pt.gun(t).get("seanslar") or []):
+        m = re.fullmatch(r"k(\d{13})", str(s.get("id") or ""))
+        if m and s.get("kaynak") == "sohbet" and time.time() - int(m.group(1)) / 1000 <= KAYIT_BIRLESTIR_SN and _ayni_is(s.get("baslik"), ad):
+            return t, s
+    return None
+
+
+def _seans_bicimle(seans, spor, dk, zor, saat, t):
+    st = seans["tur"]
+    sa = str(saat or "")
+    if len(sa) >= 4 and ":" in sa:                              # "bitti" saati söylendiyse oruç fazına doğru yerleşsin
+        try:
+            h, m = (int(x) for x in sa.split(":")[:2])
+            bt = dt.datetime.combine(dt.date.fromisoformat(t), dt.time(h % 24, m % 60)).timestamp()
+            if bt <= time.time() + 60:
+                seans["bitis_t"] = int(bt)
+        except ValueError:
+            pass
+    if st in ("spor", "kardiyo", "bisiklet"):
+        yog = "aralik" if zor >= 7 else "orta" if zor >= 5 else "kolay"
+        seans["bisiklet" if st == "bisiklet" else "kardiyo"] = {"tur": spor, "sure_dk": dk, "yogunluk": yog}
+    return seans
+
+
 def kayit_isle(k):
     """Tek kaydı uygular. Döner: {tur, tarih, ozet, geri} (geri: geri almak için gereken bilgi) ya da None."""
     tur = k.get("tur")
@@ -85,25 +135,25 @@ def kayit_isle(k):
     gun_ad = "Bugün" if t == pt.bugun().isoformat() else "Dün" if t == (pt.bugun() - dt.timedelta(days=1)).isoformat() else \
         pt.GUN_AD[dt.date.fromisoformat(t).weekday()]
     if tur == "aktivite":
+        ad_k = str(k.get("ad") or "")[:60]
+        esle = _duzeltilen_seans(k, t, ad_k or SPOR.get(k.get("spor"), ("", ""))[1])
+        if esle:                                                # yeni kayıt açılmaz, var olan güncellenir; söylenmeyen alan olduğu gibi kalır
+            t_e, eski = esle
+            spor = k.get("spor") if k.get("spor") in SPOR and k.get("spor") != "diger" else eski.get("spor") or "diger"
+            dk = int(pt.sayi(k.get("sure_dk"), 1, 600, eski.get("sure_dk") or 30))
+            zor = int(pt.sayi(k.get("zorluk"), 1, 10, eski.get("zorluk") or 6))
+            ad = ad_k or eski.get("baslik") or ""
+            yeni = _seans_bicimle({**eski, "baslik": ad, "sure_dk": dk, "zorluk": zor, "spor": spor, "not": str(k.get("not") or eski.get("not") or "")[:200]}, spor, dk, zor, k.get("saat"), t_e)
+            pt.seans_kaydet(t_e, yeni)
+            return {"tur": tur, "tarih": t_e, "ozet": f"{gun_ad} · {ad} · {dk} dk · güncellendi", "geri": {"seans_once": eski}}
         spor = k.get("spor") if k.get("spor") in SPOR else "diger"
         st, ad0 = SPOR[spor]
         dk = int(pt.sayi(k.get("sure_dk"), 1, 600, 30))
         zor = int(pt.sayi(k.get("zorluk"), 1, 10, 6))
-        ad = str(k.get("ad") or ad0)[:60]
+        ad = ad_k or ad0
         seans = {"id": f"k{int(time.time() * 1000)}", "tur": st, "baslik": ad, "sure_dk": dk, "zorluk": zor, "kaynak": "sohbet", "spor": spor,
                  "not": str(k.get("not") or "")[:200]}
-        sa = str(k.get("saat") or "")
-        if len(sa) >= 4 and ":" in sa:                          # "bitti" saati söylendiyse oruç fazına doğru yerleşsin
-            try:
-                h, m = (int(x) for x in sa.split(":")[:2])
-                bt = dt.datetime.combine(dt.date.fromisoformat(t), dt.time(h % 24, m % 60)).timestamp()
-                if bt <= time.time() + 60:
-                    seans["bitis_t"] = int(bt)
-            except ValueError:
-                pass
-        if st in ("spor", "kardiyo", "bisiklet"):
-            yog = "aralik" if zor >= 7 else "orta" if zor >= 5 else "kolay"
-            seans["bisiklet" if st == "bisiklet" else "kardiyo"] = {"tur": spor, "sure_dk": dk, "yogunluk": yog}
+        _seans_bicimle(seans, spor, dk, zor, k.get("saat"), t)
         pt.seans_kaydet(t, seans)
         return {"tur": tur, "tarih": t, "ozet": f"{gun_ad} · {ad} · {dk} dk", "geri": {"seans": seans["id"]}}
     if tur == "yemek" and str(k.get("metin") or "").strip():
@@ -145,6 +195,9 @@ def kayit_geri(r):
     t, g = r["tarih"], r.get("geri") or {}
     if g.get("seans"):
         pt.gun_degistir(t, lambda d: d.update(seanslar=[s for s in d.get("seanslar") or [] if s.get("id") != g["seans"]]))
+    elif g.get("seans_once"):
+        once = g["seans_once"]
+        pt.gun_degistir(t, lambda d: d.update(seanslar=[once if s.get("id") == once.get("id") else s for s in d.get("seanslar") or []]))
     elif g.get("yemek"):
         import pt_beslenme
         pt_beslenme.yemek_sil(t, g["yemek"])
@@ -208,7 +261,7 @@ def baglam():
     son = []
     for g in pt.gunler(5):
         for s in g.get("seanslar") or []:
-            son.append({"tarih": g["tarih"], "tur": s.get("tur"), "zorluk": s.get("zorluk"), "not": s.get("not")})
+            son.append({"id": s.get("id"), "tarih": g["tarih"], "tur": s.get("tur"), "baslik": s.get("baslik"), "sure_dk": s.get("sure_dk"), "zorluk": s.get("zorluk"), "not": s.get("not")})
         for a in g.get("agri") or []:
             son.append({"tarih": g["tarih"], "agri": a.get("bolge"), "puan": a.get("puan")})
     return dict(
@@ -217,7 +270,7 @@ def baglam():
                                for s in gs["seanslar"]], ensure_ascii=False),
         sabah=json.dumps(gs.get("sabah") or {}, ensure_ascii=False)[:600],
         hafta=json.dumps([{"id": g.get("id"), "tarih": g["tarih"], "tur": g["tur"], "baslik": g.get("baslik")} for g in pl.get("gunler") or []], ensure_ascii=False),
-        son=json.dumps(son[:20], ensure_ascii=False), kurallar=" ".join(pt.KURALLAR_METNI), bolgeler="|".join(pt.BOLGELER),
+        son=json.dumps(son[-30:], ensure_ascii=False), kurallar=" ".join(pt.KURALLAR_METNI), bolgeler="|".join(pt.BOLGELER),
         saglik=_g(_saglik_ozet, "yok"), doz=_g(lambda: json.dumps(__import__("pt_uzun").doz_ozeti().get("satirlar"), ensure_ascii=False), "yok"),
         moduller=_g(lambda: ", ".join(f"{m['ad']}{' (bugün yapıldı)' if m.get('bitti') else ''}" for m in __import__("pt_modul").gunun()) or "yok", "yok"),
         gunluk=_g(lambda: __import__("pt_gunluk").baglam_metni(p), "yok"),

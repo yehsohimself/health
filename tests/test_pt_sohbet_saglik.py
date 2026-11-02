@@ -1,5 +1,6 @@
 """Health: sohbetten kayıt (maç, kilo, su) ve Apple Sağlık dışa aktarımı (2026-10-31)."""
 import datetime as dt
+import time
 import zipfile
 
 import pytest
@@ -106,3 +107,48 @@ def test_icloud_drive_kendiliginden(ptv, tmp_path, monkeypatch):
     assert S["Futbol"]["kardiyo"]["yogunluk"] == "aralik" and S["Yürüyüş"]["sure_dk"] == 40
     assert pt_saglik.icloud_tara() == {"dosya": 0, "gun": 0}
     assert pt_saglik.durum()["icloud"]["gun"] == 1
+
+
+def _spor(pt_sohbet, **k):
+    return pt_sohbet.kayit_isle({"tur": "aktivite", "tarih": BUGUN.isoformat(), "spor": "fitness", **k})
+
+
+def test_ayni_is_ikinci_kez_kayit_acmaz_ve_geri_alinir(ptv):
+    import pt_sohbet
+    _spor(pt_sohbet, ad="Squat (vücut ağırlığı)", sure_dk=5, zorluk=5, **{"not": "set belirtilmedi"})
+    r = _spor(pt_sohbet, ad="Squat (50 tekrar, tek set)", **{"not": "tek seferde"})
+    L = ptv.gun(BUGUN.isoformat())["seanslar"]
+    assert len(L) == 1 and L[0]["baslik"] == "Squat (50 tekrar, tek set)" and L[0]["not"] == "tek seferde"
+    assert L[0]["sure_dk"] == 5 and L[0]["zorluk"] == 5           # söylenmeyen süre ve zorluk varsayılana dönmez
+    assert "güncellendi" in r["ozet"]
+    pt_sohbet.kayit_geri(r)
+    L = ptv.gun(BUGUN.isoformat())["seanslar"]
+    assert len(L) == 1 and L[0]["baslik"] == "Squat (vücut ağırlığı)"
+
+
+def test_farkli_is_ve_acik_tekrar_ayri_kalir(ptv):
+    import pt_sohbet
+    _spor(pt_sohbet, ad="Squat", sure_dk=5)
+    time.sleep(0.002)
+    _spor(pt_sohbet, ad="Baldır kaldırma", sure_dk=3)
+    time.sleep(0.002)
+    _spor(pt_sohbet, ad="Squat", sure_dk=5, ayri=True)
+    assert [s["baslik"] for s in ptv.gun(BUGUN.isoformat())["seanslar"]] == ["Squat", "Baldır kaldırma", "Squat"]
+
+
+def test_on_dakikadan_eski_ayni_is_yeni_kayittir(ptv):
+    import pt_sohbet
+    eski = f"k{int((time.time() - 3 * 3600) * 1000)}"
+    ptv.seans_kaydet(BUGUN.isoformat(), {"id": eski, "tur": "kardiyo", "baslik": "Yürüyüş", "sure_dk": 45, "kaynak": "sohbet"})
+    _spor(pt_sohbet, ad="Yürüyüş", sure_dk=45)
+    assert len(ptv.gun(BUGUN.isoformat())["seanslar"]) == 2
+
+
+def test_kimlikle_eski_kayit_duzeltilir(ptv):
+    import pt_sohbet
+    eski = f"k{int((time.time() - 3 * 3600) * 1000)}"
+    ptv.seans_kaydet(BUGUN.isoformat(), {"id": eski, "tur": "kardiyo", "baslik": "Yürüyüş", "sure_dk": 35, "kaynak": "sohbet"})
+    _spor(pt_sohbet, guncelle=eski, sure_dk=60)
+    L = ptv.gun(BUGUN.isoformat())["seanslar"]
+    assert len(L) == 1 and L[0]["sure_dk"] == 60 and L[0]["baslik"] == "Yürüyüş"
+
