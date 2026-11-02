@@ -103,3 +103,20 @@ def git_kayitlari(sure, klasor=None, en_cok=80):
             if len(p) == 4:
                 out.append((int(p[2]) if p[2].isdigit() else 0, p[0], p[1], p[3]))
     return [(h, t, s) for _, h, t, s in sorted(out, reverse=True)][:en_cok]
+
+
+SORU_KARTI_ISTEM = ('Devam etmek için kişiden birkaç şey öğrenmen gerekiyorsa soruları düz yazıda sıralama; "sorular" alanına yaz: '
+                    '[{"soru": "kısa soru", "secenekler": ["kısa seçenek", "..."], "coklu": false}] (en çok 4 soru; soru başına 2-6 seçenek, her biri en çok 6 kelime; '
+                    'birden çok seçilebiliyorsa coklu true). Metinde kısaca neden sorduğunu söyle, soruları tekrar yazma. Sormadan cevap verebiliyorsan bu alanı boş bırak.')
+
+
+def soru_karti(ham):
+    """Modelin verdiği "sorular" alanını güvenli biçime getirir: en çok 4 soru, soru başına 2-6 seçenek; bozuksa boş liste."""
+    out = []
+    for q in ham if isinstance(ham, list) else []:
+        if not isinstance(q, dict) or not str(q.get("soru") or "").strip():
+            continue
+        s = list(dict.fromkeys(re.sub(r"\s+", " ", str(x)).strip()[:70] for x in (q.get("secenekler") or []) if str(x).strip()))[:6]
+        if len(s) >= 2:
+            out.append({"soru": re.sub(r"\s+", " ", str(q["soru"])).strip()[:200], "secenekler": s, "coklu": bool(q.get("coklu"))})
+    return out[:4]

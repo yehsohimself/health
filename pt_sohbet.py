@@ -31,6 +31,7 @@ KİŞİ: {profil}
 BUGÜN ({bugun}): {bugun_plan}
 SABAH KONTROLÜ: {sabah}
 BU HAFTA: {hafta}
+GÜNLÜK LİSTE: {gunluk}
 SON KAYITLAR: {son}
 APPLE SAĞLIK (son günler): {saglik}
 ORUÇ (koddan; oruç, otofaji, açlık, yemek saati sorulursa bunu kullan, saatleri yaklaşık söyle, otofajinin insanlarda başlama saatinin ölçülemediğini açıkça söyle; spor varsa birlikte yorumla): {oruc}
@@ -50,12 +51,14 @@ JSON döndür:
      "sure_dk": sayı, "zorluk": 1-10, "saat": "aktivite bittiği saat HH:MM, söylendiyse", "not": "...", "metin": "yemek için: yenen her şey miktarıyla", "ogun": "kahvalti|ogle|aksam|ara",
      "kilo_kg": sayı, "bel_cm": sayı, "uyku_saat": sayı, "ml": sayı}}],
   "soru": null ya da {{"soru": "...", "secenekler": ["3-5 kısa, aynı düzeyde seçenek"]}},
-  "eylem": null ya da {{"tur": "bugun|hafta|tasi|profil|not|dinlenme", "aciklama": "kullanıcıya tek cümle: ne değişecek",
+  "eylem": null ya da {{"tur": "bugun|hafta|liste|tasi|profil|not|dinlenme", "aciklama": "kullanıcıya tek cümle: ne değişecek",
      "vakit_dk": sayı|null, "nerede": "ev|park|salon|yolda"|null, "isik": "yesil|sari|kirmizi"|null, "agri": [{{"bolge": "{bolgeler}", "puan": 0-10}}],
+     "ekle": ["liste için sabit listeye eklenecek kod"], "cikar": ["sabit listeden çıkacak kod"], "surpriz_cikar": ["sürprizlerden çıkacak kod"], "seviye": {{"kod": "orta günde bir setin yeni hedefi"}},
      "istek": "hafta için yönlendirme cümlesi", "id": "taşınacak seans id", "tarih": "YYYY-MM-DD",
      "ekle": {{"ekipman": [], "sakatliklar": [], "hassasiyetler": []}}, "cikar": {{"ekipman": [], "sakatliklar": [], "hassasiyetler": []}}, "not": "..."}}}}
 Kayıt yoksa "kayitlar": []. Aynı şey için hem kayıt hem eylem yazma. Soru sorarken eylem null olsun. Değişiklik gerekmiyorsa eylem null, yalnız yanıt.
-Alanları yalnız ilgili türde doldur: bugun → vakit_dk/nerede/isik/agri; hafta → istek; tasi → id/tarih; profil → ekle/cikar (hassasiyetler = GIDA
+Yapmadığın ya da yapmayacağın şeyi yaptım deme. GÜNLÜK LİSTE doluysa antrenman planını sen yazmazsın, "hafta" kullanma; listeyle ilgili istek "liste" eylemiyle hemen uygulanır (yalnız yukarıdaki kodlar, aletsiz). Kişi zaten söylediğini tekrar ettirme.
+Alanları yalnız ilgili türde doldur: bugun → vakit_dk/nerede/isik/agri; liste → ekle/cikar/surpriz_cikar/seviye; hafta → istek; tasi → id/tarih; profil → ekle/cikar (hassasiyetler = GIDA
 hassasiyeti, ağrı ya da sakatlık değil; ağrı sakatliklar'a); not → not."""
 
 
@@ -217,6 +220,7 @@ def baglam():
         son=json.dumps(son[:20], ensure_ascii=False), kurallar=" ".join(pt.KURALLAR_METNI), bolgeler="|".join(pt.BOLGELER),
         saglik=_g(_saglik_ozet, "yok"), doz=_g(lambda: json.dumps(__import__("pt_uzun").doz_ozeti().get("satirlar"), ensure_ascii=False), "yok"),
         moduller=_g(lambda: ", ".join(f"{m['ad']}{' (bugün yapıldı)' if m.get('bitti') else ''}" for m in __import__("pt_modul").gunun()) or "yok", "yok"),
+        gunluk=_g(lambda: __import__("pt_gunluk").baglam_metni(p), "yok"),
         oruc=_g(lambda: __import__("pt_oruc").anlat(__import__("pt_beslenme").pencere_durumu(p).get("oruc")), "yok"))
 
 
@@ -264,6 +268,13 @@ def gonder(metin):
     if c.get("soru") and (c["soru"].get("secenekler") or []):
         cevap["soru"] = {"soru": str(c["soru"].get("soru") or "")[:200], "secenekler": [str(x)[:60] for x in c["soru"]["secenekler"]][:5]}
     e = c.get("eylem")
+    import pt_gunluk
+    if isinstance(e, dict) and pt_gunluk.acik() and e.get("tur") == "hafta":
+        e = None                                     # plan kodla kuruluyor; "yeniden yazdım" denmesin
+    if isinstance(e, dict) and e.get("tur") == "liste":
+        cevap["sonuc"] = pt_gunluk.liste_degistir(e)  # kişi açıkça istedi, onay beklemez
+        cevap["kartlar"] = ["program"]
+        e = None
     yeni_eylem = isinstance(e, dict) and e.get("tur") in ("bugun", "hafta", "tasi", "profil", "not", "dinlenme")
     if yeni_eylem:
         cevap["eylem"] = {k: v for k, v in e.items() if v not in (None, "", [], {})}

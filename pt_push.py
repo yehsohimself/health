@@ -75,6 +75,11 @@ def abonelik_sil(endpoint):
 
 def gonder(baslik, metin, url="/?u=pt", etiket=""):
     """Bütün abone cihazlara; arka planda, hata akışı durdurmaz. Döner gönderilen sayısı (eşzamanlı çağrıda 0 olabilir)."""
+    try:
+        import bildirimler                                 # telefon bağlı olmasa da zilde görünür (2026-11-02)
+        bildirimler.kaydet(baslik, metin, "pt", "http://127.0.0.1:8771/")
+    except Exception:  # noqa: BLE001
+        pass
     L = aboneler()
     if not L:
         return 0

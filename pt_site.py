@@ -200,10 +200,8 @@ SABAH_SAAT = {"sabah": "07:30", "ogle": "10:30", "aksam": "15:00", "degisir": "0
 
 
 def _bildirim_kontrol():
-    """Telefona bildirim: sabah kontrolü, pencere kapanmadan 30 dk, saati belli antrenmandan 10 dk önce. Gün başına tür başına bir kez."""
+    """Hatırlatma (zil, varsa telefon): sabah kontrolü, pencere kapanmadan 30 dk, saati belli antrenmandan 10 dk önce. Gün başına tür başına bir kez."""
     import pt_push
-    if not pt_push.aboneler():
-        return
     p = pt.profil()
     if not p.get("kuruldu"):
         return

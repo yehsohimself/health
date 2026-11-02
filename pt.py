@@ -88,6 +88,17 @@ KATALOG_HAM = [
     ("duvar_sinav", "Duvar şınavı", "kalistenik", "tekrar", "duvar", "omuz,bilek", "itme", 1, "Eller duvarda, gövde düz."),
     ("egimli_sinav", "Eğimli şınav", "kalistenik", "tekrar", "yok", "omuz,bilek", "itme", 2, "Eller sehpa ya da bankta."),
     ("sinav", "Şınav", "kalistenik", "tekrar", "yok", "omuz,bilek,dirsek", "itme", 3, "Göğüs yere yaklaşana kadar, dirsekler 45°."),
+    ("genis_sinav", "Geniş şınav", "kalistenik", "tekrar", "yok", "omuz,bilek", "", 0, "Eller omuz hizasından bir karış geniş; göğüs daha çok çalışır."),
+    ("ayak_yuksek_sinav", "Ayak yüksekte şınav", "kalistenik", "tekrar", "yok", "omuz,bilek", "", 0, "Ayaklar koltuk ya da yatak kenarında; üst göğüs."),
+    ("sandalye_dips", "Koltukta arka kol (dips)", "kalistenik", "tekrar", "yok", "omuz,dirsek", "", 0, "Eller koltuk kenarında, dirsekler geriye bükülür."),
+    ("duvar_oturus", "Duvar oturuşu", "kalistenik", "sure", "duvar", "diz,kalca", "", 0, "Sırt duvarda, dizler 90 derece, sandalyede oturur gibi."),
+    ("cift_baldir", "Baldır kaldırma", "kalistenik", "tekrar", "yok", "ayak_bilegi", "", 0, "İki ayak, parmak ucunda yüksel, yavaş in."),
+    ("superman", "Süpermen tutuşu", "kalistenik", "sure", "mat", "bel", "", 0, "Yüzüstü, kollar ve bacaklar yerden kalkar; sırt ve kalça."),
+    ("mountain_climber", "Mountain climber", "kalistenik", "sure", "yok", "omuz,bilek", "", 0, "Şınav duruşunda dizler sırayla göğse; karın sıkı."),
+    ("bisiklet_crunch", "Bisiklet mekik", "kalistenik", "tekrar", "mat", "bel", "", 0, "Sağ dirsek sol dize, sol dirsek sağ dize; acele etme."),
+    ("yer_bacak_kaldirma", "Yerde bacak kaldırma", "kalistenik", "tekrar", "mat", "bel", "", 0, "Sırtüstü, bel yere yapışık, bacaklar yavaş iner."),
+    ("ters_lunge", "Geri adım lunge", "kalistenik", "tekrar", "yok", "diz,kalca", "", 0, "Bir ayak geri, diz yere yaklaşır; iki taraf."),
+    ("yan_lunge", "Yan lunge", "kalistenik", "tekrar", "yok", "diz,kalca", "", 0, "Yana geniş adım, kalça geriye; iki taraf."),
     ("elmas_sinav", "Elmas şınav", "kalistenik", "tekrar", "yok", "dirsek,bilek", "itme", 4, "Eller göğüs altında birleşik."),
     ("yaslanan_sinav", "Öne yaslanan şınav", "kalistenik", "tekrar", "yok", "omuz,bilek", "itme", 5, "Omuzlar ellerin önünde (planche hazırlığı)."),
     ("arcer_sinav", "Okçu şınavı", "kalistenik", "tekrar", "yok", "omuz,dirsek", "itme", 6, "Bir kol bükülür, öbürü yana açık."),
@@ -251,7 +262,7 @@ PROFIL_VARSAYILAN = {
     "yontemler": {"kalistenik": 2, "bjj_solo": 1, "flow": 1, "bisiklet": 1, "mobilite": 1},
     "bjj_ders": {"gunler": [], "saat": "", "sure_dk": 90},
     "ekipman": ["bisiklet", "bar", "mat"], "gunler": [0, 1, 2, 3, 4, 5, 6], "gunluk_dk": 45, "antrenman_saati": "sabah",
-    "sinirlar": [], "sakatliklar": [], "yapamadiklarim": [],
+    "gunluk_liste": None, "sinirlar": [], "sakatliklar": [], "yapamadiklarim": [],
     "beslenme": {"pencere_bas": "12:00", "pencere_saat": 6, "hassasiyetler": [], "sevmedikleri": [], "mutfak": "Türk ev yemekleri",
                  "ogun_sayisi": 2, "kilo_hizi": 0.7},
     "konum": {"ad": "", "lat": None, "lon": None},
@@ -548,6 +559,8 @@ def test_eksikleri(gun=35):
 
 def test_gerekli():
     """İlk kurulumda ya da son testten 5 hafta geçtiyse yeniden test (temel testlerden biri eksikse)."""
+    if __import__("pt_gunluk").acik():
+        return False
     return bool(test_eksikleri())
 
 # ----------------------------------------------------------------------------- ilerleme kuralları (kodda; Claude açıklar)
@@ -634,6 +647,9 @@ def aktif_basamak(zincir, kat=None):
 
 def seans_sonrasi_ilerleme(seans):
     """Kaydedilen setlerden kuralları uygula; değişiklik listesini döndür (koç mesajı ve ekranda gösterilir)."""
+    import pt_gunluk
+    if pt_gunluk.acik() and seans.get("plan_id"):       # günlük listede basamak değişmez, adetler ilerler
+        return pt_gunluk.ilerle(seans)
     kat = katalog()
     degisen = []
     agrili = {a.get("bolge") for a in seans.get("agri") or [] if a.get("tur") != "kas" and sayi(a.get("puan"), 0, 10, 0) > 5}
@@ -711,9 +727,13 @@ def degisiklik_geri_al(did):
             H.setdefault(x["kod"], {})["aktif"] = True
         elif x.get("tur") == "aralik":
             H.setdefault(x["kod"], {})["aralik"] = x.get("eski")
+        elif x.get("tur") == "gunluk":
+            H.setdefault(x["kod"], {})["gunluk_hedef"] = x.get("eski")
         x["geri"] = int(time.time())
         _ilerleme_yaz(il)
-        return True
+    if x.get("tur") == "gunluk":
+        __import__("pt_gunluk").hafta_yaz()
+    return True
 
 # ----------------------------------------------------------------------------- yorgunluk: kondisyon / yorgunluk / form (zorluk × dakika)
 
@@ -954,6 +974,9 @@ def seansi_uyarla(seans, isik="yesil", vakit_dk=None, nerede="ev", p=None):
     kat = katalog()
     s = json.loads(json.dumps(seans))
     notlar = []
+    if isik == "kirmizi" and s.get("tur") not in ("dinlenme",) and s.get("gunluk"):
+        return {"tur": "dinlenme", "baslik": "Bugün hareket yok", "sure_dk": 0, "bolumler": [], "gunluk": True,
+                "uyarlama": ["Sabah kontrolü kırmızı: bugün yük yok. Yarın listeye dönersiniz."]}
     if isik == "kirmizi" and s.get("tur") not in ("dinlenme",):
         return {**kirmizi_seans(s), "uyarlama": ["Sabah kontrolü kırmızı: bugün yük yok, yalnızca hareketlilik ve isterseniz kolay sürüş."]}
     var_olan = set(p.get("ekipman") or [])
@@ -977,7 +1000,7 @@ def seansi_uyarla(seans, isik="yesil", vakit_dk=None, nerede="ev", p=None):
                 if alt:
                     notlar.append(f"{kat[kod]['ad']} yerine {kat[alt]['ad']} ({', '.join(BOLGELER.get(x, x) for x in set(kat[kod]['bolge']) & set(koru))} korunuyor)")
                     h["kod"], h["ad"] = alt, kat[alt]["ad"]
-            if isik == "sari" and b.get("ad") == "Ana bölüm":
+            if isik == "sari" and b.get("ad") in ("Ana bölüm", "Günlük liste"):
                 if (h.get("set") or 3) > 2:
                     h["set"] = (h.get("set") or 3) - 1
                 h["rir"] = (h.get("rir") or 2) + 1
@@ -1006,7 +1029,7 @@ def kisalt(s, dk):
     oran = dk / max(1, s.get("sure_dk") or dk)
     for b in s.get("bolumler") or []:
         hs = b.get("hareketler") or []
-        if b.get("ad") != "Ana bölüm":
+        if b.get("ad") not in ("Ana bölüm", "Günlük liste"):
             b["hareketler"] = hs[:max(1, round(len(hs) * oran))]
         else:
             b["hareketler"] = hs[:max(2, round(len(hs) * min(1, oran + .15)))]
@@ -1016,6 +1039,9 @@ def kisalt(s, dk):
 
 def asgari_seans(s=None):
     """Kötü günler için 10 dakika: seri bozulmasın ("iki kez kaçırma")."""
+    import pt_gunluk
+    if pt_gunluk.acik():
+        return pt_gunluk.asgari()
     il = [aktif_basamak("itme"), aktif_basamak("bacak"), aktif_basamak("govde")]
     return {"tur": "asgari", "baslik": "10 dakikalık kısa antrenman", "sure_dk": 10, "asgari": True,
             "bolumler": [
@@ -1194,7 +1220,12 @@ def _g_metin(fn, varsayilan=""):
 def program_uret(kod=None, istek=""):
     """Haftanın planı: Claude yazar, sonra kodla doğrulanır (bilinmeyen hareket atılır, hedefler kurallardan, ekipman denetimi)."""
     import claude_yaz
+    import pt_gunluk
     kod = kod or hafta_kodu()
+    if pt_gunluk.acik():                                # kişinin sabit listesi var: plan kodla kurulur, yapay zekâya yazdırılmaz
+        pl = pt_gunluk.hafta_kur(kod, istek)
+        plan_yaz(kod, pl)
+        return pl
     p = profil()
     kat = katalog()
     tarihler = [g.isoformat() for g in hafta_gunleri(kod)]
@@ -1231,6 +1262,14 @@ def program_uret(kod=None, istek=""):
             _yaz(PROGRAM / "gecmis" / f"{kod}_{eski.get('olusturma', 0)}.json", eski)
         _yaz(program_yolu(kod), pl)
     return pl
+
+
+def plan_yaz(kod, pl, yedek=True):
+    with _kilit:
+        eski = program(kod)
+        if eski and yedek:
+            _yaz(PROGRAM / "gecmis" / f"{kod}_{eski.get('olusturma', 0)}.json", eski)
+        _yaz(program_yolu(kod), pl)
 
 
 def _hareket_dogrula(h, kat, var_olan):

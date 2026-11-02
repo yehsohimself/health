@@ -2629,5 +2629,354 @@
    "ekipman_en": "none"
   },
   "zaman": 1793439022
+ },
+ "duvar_oturus": {
+  "adimlar": [
+   "Sırtınızı duvara yaslayın, ayaklar kalça genişliğinde ve duvardan biraz ileride olsun.",
+   "Duvardan kayarak inin; dizler 90 derece olunca durun.",
+   "Pozisyonu koruyun, sonra yavaşça kayarak yukarı çıkın."
+  ],
+  "hatalar": [
+   "Dizlerin ayak uçlarından öne taşması",
+   "Ellerle uyluklara yaslanmak"
+  ],
+  "hisset": "Uyluk önünde ve kalçada yanma hissedin.",
+  "nefes": "Tutuş boyunca düzenli ve yavaş nefes alın.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "baldir",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person standing upright with their back flat against a plain wall, feet hip-width apart and about half a meter in front of the wall, arms relaxed at sides",
+   "bit": "A person with their back flat against the wall, hips and knees both bent at 90 degrees like sitting on an invisible chair, thighs parallel to the floor, shins vertical, arms hanging or crossed on chest",
+   "hareket": "The person slides down the wall until thighs are parallel to the floor and holds that position",
+   "kamera": "side",
+   "tutus": true,
+   "ekipman_en": "plain wall"
+  },
+  "zaman": 1793583730
+ },
+ "cift_baldir": {
+  "adimlar": [
+   "Ayaklar kalça genişliğinde, dik durun; gerekirse bir yere hafifçe tutunun.",
+   "Topuklarınızı kaldırarak parmak ucunda yükselin ve kısaca durun.",
+   "Topuklarınızı yavaşça indirerek başlangıca dönün."
+  ],
+  "hatalar": [
+   "Hareketi hızlı ve sıçrayarak yapmak",
+   "Ayak bileklerinin dışa ya da içe kayması"
+  ],
+  "hisset": "Baldır kaslarında gerilme ve yanma hissedin.",
+  "nefes": "Yükselirken nefes verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "baldir"
+   ],
+   "ikincil": [
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person standing upright with feet hip-width apart, both heels flat on the floor, arms relaxed at sides, looking forward",
+   "bit": "A person standing tall on the balls of both feet with heels lifted high, legs straight, arms at sides",
+   "hareket": "The person rises slowly onto the toes, pauses, then lowers the heels back to the floor",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1793583730
+ },
+ "superman": {
+  "adimlar": [
+   "Mat üzerinde yüzüstü uzanın; kollar öne, bacaklar düz uzansın.",
+   "Kollarınızı ve bacaklarınızı aynı anda yerden kaldırın, kısaca tutun.",
+   "Yavaşça indirip gevşeyin."
+  ],
+  "hatalar": [
+   "Boynu yukarı kırıp başı fazla kaldırmak",
+   "Belden aşırı kıvrılıp zorlamak"
+  ],
+  "hisset": "Sırt, bel ve kalça kaslarında çalışma hissedin.",
+  "nefes": "Kaldırırken nefes verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "bel",
+    "kalca"
+   ],
+   "ikincil": [
+    "ust_sirt",
+    "arka_bacak",
+    "arka_omuz"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person lying face down on an exercise mat, arms extended straight overhead, legs straight and together, forehead close to the mat",
+   "bit": "A person lying face down on an exercise mat with both arms and both legs lifted off the floor, chest slightly raised, neck neutral, gaze toward the mat",
+   "hareket": "The person lifts arms and legs simultaneously off the mat, holds briefly, then lowers them",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1793583730
+ },
+ "genis_sinav": {
+  "adimlar": [
+   "Eller omuz hizasından bir karış geniş, vücut baştan topuğa düz olsun.",
+   "Dirsekleri yana açarak göğsünüzü yere yaklaştırın.",
+   "Yere itip kolları uzatarak başlangıca dönün."
+  ],
+  "hatalar": [
+   "Belin çökmesi ya da kalçanın yükselmesi",
+   "Başı öne uzatmak"
+  ],
+  "hisset": "Göğüs kaslarında ve omuz önünde çalışma hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "gogus"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "triceps",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person in a high plank push-up position on the floor, hands placed wider than shoulder-width, arms straight, body in a straight line from head to heels, toes on the floor",
+   "bit": "A person at the bottom of a wide push-up, chest close to the floor, elbows flared out about 45 degrees, body still in a straight line",
+   "hareket": "The person lowers the chest toward the floor with elbows out, then pushes back up to straight arms",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1793583730
+ },
+ "ayak_yuksek_sinav": {
+  "adimlar": [
+   "Ayaklarınızı koltuk kenarına koyun, eller yerde omuz genişliğinde olsun.",
+   "Vücudu düz tutarak göğsünüzü yere doğru indirin.",
+   "Kolları uzatarak yukarı itin ve başlangıca dönün."
+  ],
+  "hatalar": [
+   "Belin çökmesi",
+   "Dirseklerin gövdeden çok açılması"
+  ],
+  "hisset": "Üst göğüs ve omuz önünde çalışma hissedin.",
+  "nefes": "İnerken nefes alın, iterken verin.",
+  "kaslar": {
+   "birincil": [
+    "gogus",
+    "on_omuz"
+   ],
+   "ikincil": [
+    "triceps",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person in a push-up position with hands on the floor shoulder-width apart and feet resting on the edge of a couch, body in a straight diagonal line sloping downward from heels to head, arms straight",
+   "bit": "A person at the bottom of a decline push-up with feet on the couch edge, chest close to the floor, elbows bent about 45 degrees, body straight",
+   "hareket": "The person lowers the chest toward the floor with feet elevated on the couch, then pushes back up",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "couch or sofa edge"
+  },
+  "zaman": 1793583730
+ },
+ "sandalye_dips": {
+  "adimlar": [
+   "Elleriniz koltuk kenarında, kalçanız önde, bacaklar ileri uzansın.",
+   "Dirsekleri geriye bükerek kalçayı yere doğru indirin.",
+   "Avuç içiyle itip kolları uzatın."
+  ],
+  "hatalar": [
+   "Omuzların kulaklara doğru yükselmesi",
+   "Kalçanın koltuktan çok uzaklaşması"
+  ],
+  "hisset": "Kolun arka yüzünde, triceps kasında yanma hissedin.",
+  "nefes": "İnerken nefes alın, kalkarken verin.",
+  "kaslar": {
+   "birincil": [
+    "triceps"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "gogus"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person seated at the edge of a couch with hands gripping the edge beside the hips, hips lifted just off the seat in front of the couch, arms straight, legs extended forward with heels on the floor",
+   "bit": "A person with elbows bent about 90 degrees pointing straight backward, hips lowered close to the floor in front of the couch, back close to the couch edge, hands on the edge",
+   "hareket": "The person bends the elbows to lower the hips toward the floor, then presses up until arms are straight",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "couch or sofa"
+  },
+  "zaman": 1793583730
+ },
+ "mountain_climber": {
+  "adimlar": [
+   "Şınav duruşuna geçin; eller omuz altında, vücut düz olsun.",
+   "Dizlerinizi sırayla hızlıca göğsünüze doğru çekin.",
+   "Karnı sıkı tutarak ritmi koruyun, sonra durup bırakın."
+  ],
+  "hatalar": [
+   "Kalçanın yukarı kalkması",
+   "Ellerin omuz altından kayması"
+  ],
+  "hisset": "Karın ve kalça önü kaslarında çalışma hissedin.",
+  "nefes": "Ritme uygun, düzenli ve kesintisiz nefes alıp verin.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "on_omuz",
+    "kalca",
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person in a high plank position on the floor, hands under shoulders, arms straight, body in a straight line from head to heels",
+   "bit": "A person in a high plank with one knee drawn forward toward the chest and the other leg extended straight back, hips level",
+   "hareket": "The person alternately drives each knee toward the chest in a running motion while staying in plank",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1793583730
+ },
+ "bisiklet_crunch": {
+  "adimlar": [
+   "Matta sırtüstü yatın, eller ensede, bacaklar havada olsun.",
+   "Sağ dirseği sol dize, sonra sol dirseği sağ dize getirin.",
+   "Yavaşça sırayla devam edin, sonra bacakları indirin."
+  ],
+  "hatalar": [
+   "Boynu elle çekmek",
+   "Hızlanıp dirsekle diz arasında temas aramamak"
+  ],
+  "hisset": "Karın ve yan karın kaslarında çalışma hissedin.",
+  "nefes": "Her bükülmede nefes verin, açılırken alın.",
+  "kaslar": {
+   "birincil": [
+    "karin",
+    "yan_karin"
+   ],
+   "ikincil": [
+    "on_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person lying on their back on an exercise mat, hands lightly behind the head, elbows wide, knees bent with shins raised in the air",
+   "bit": "A person with shoulders lifted off the mat, torso twisted so the right elbow approaches the left knee while the right leg is extended straight out",
+   "hareket": "The person alternates twisting the torso to bring each elbow toward the opposite knee in a pedaling motion",
+   "kamera": "three-quarter",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1793583730
+ },
+ "yer_bacak_kaldirma": {
+  "adimlar": [
+   "Matta sırtüstü yatın, bacaklar düz, eller yanda olsun.",
+   "Bacakları düz tutarak yaklaşık 90 dereceye kaldırın.",
+   "Belinizi yerden ayırmadan bacakları yavaşça indirin."
+  ],
+  "hatalar": [
+   "Belin yerden kalkıp kemerlenmesi",
+   "Bacakları hızla bırakmak"
+  ],
+  "hisset": "Alt karında çalışma hissedin.",
+  "nefes": "Kaldırırken nefes verin, inerken alın.",
+  "kaslar": {
+   "birincil": [
+    "karin"
+   ],
+   "ikincil": [
+    "on_bacak",
+    "kalca"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person lying flat on their back on an exercise mat, legs straight together just above the floor, arms by the sides with palms down, lower back pressed to the mat",
+   "bit": "A person lying on their back with legs straight and raised vertically to 90 degrees, feet pointing to the ceiling, lower back flat on the mat",
+   "hareket": "The person raises straight legs up to vertical, then lowers them slowly without arching the back",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "exercise mat"
+  },
+  "zaman": 1793583730
+ },
+ "ters_lunge": {
+  "adimlar": [
+   "Ayaklar kalça genişliğinde, dik durun.",
+   "Bir ayakla geriye adım atın, dizi yere yaklaştırın.",
+   "Ön ayakla iterek başlangıca dönün, tarafı değiştirin."
+  ],
+  "hatalar": [
+   "Ön dizin ayak ucundan öne taşması",
+   "Gövdeyi öne eğmek"
+  ],
+  "hisset": "Ön bacakta uyluk ve kalçada çalışma hissedin.",
+  "nefes": "İnerken nefes alın, kalkarken verin.",
+  "kaslar": {
+   "birincil": [
+    "on_bacak",
+    "kalca"
+   ],
+   "ikincil": [
+    "arka_bacak",
+    "baldir",
+    "karin"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person standing upright with feet hip-width apart, hands on hips, looking forward",
+   "bit": "A person in a lunge with the front knee bent at 90 degrees above the ankle, the back leg stepped behind with the knee close to the floor and heel lifted, torso upright",
+   "hareket": "The person steps one foot backward and lowers the back knee toward the floor, then pushes back to standing",
+   "kamera": "side",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1793583730
+ },
+ "yan_lunge": {
+  "adimlar": [
+   "Ayaklar bir arada, dik durun.",
+   "Yana geniş adım atın, kalçayı geriye ve aşağı itin.",
+   "Adım atan ayakla itip başlangıca dönün, tarafı değiştirin."
+  ],
+  "hatalar": [
+   "Dizin içe kapanması",
+   "Ağırlığı iki ayağa dağıtıp topukları kaldırmak"
+  ],
+  "hisset": "Kalça, uyluk ve iç bacakta çalışma hissedin.",
+  "nefes": "Adım atarken nefes alın, kalkarken verin.",
+  "kaslar": {
+   "birincil": [
+    "kalca",
+    "on_bacak"
+   ],
+   "ikincil": [
+    "ic_bacak",
+    "arka_bacak"
+   ]
+  },
+  "gorsel": {
+   "bas": "A person standing upright with feet together, hands clasped in front of the chest, facing the camera",
+   "bit": "A person in a side lunge with one knee bent and hips pushed back, the other leg straight out to the side, feet flat and toes pointing forward, torso slightly leaning forward",
+   "hareket": "The person steps wide to the side, sits the hips back over the bent leg, then pushes back to the center",
+   "kamera": "front",
+   "tutus": false,
+   "ekipman_en": "none"
+  },
+  "zaman": 1793583730
  }
 }

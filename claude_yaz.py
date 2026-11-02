@@ -19,6 +19,8 @@ import contextvars
 import tempfile
 import threading
 import time
+import types
+import urllib.parse
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -433,6 +435,77 @@ def _doluluk_oku(satirlar):
             claude_butce.gosterge_yaz(d["rate_limit_info"])
 
 
+IZLE = contextvars.ContextVar("claude_iz", default=None)
+
+
+@contextmanager
+def iz(fn):
+    """Bu blokta web araçlı sor() çağrılarının yaptığı aramalar ve açtığı sayfalar fn({m, u}) ile canlı bildirilir (araştırma izi, 2026-11-02)."""
+    t = IZLE.set(fn)
+    try:
+        yield
+    finally:
+        IZLE.reset(t)
+
+
+def iz_olaylari(satir):
+    """stream-json satırından kullanıcıya gösterilecek gerçek web adımları: [{m: yazı, u: adres}]."""
+    if '"tool_use"' not in satir:
+        return []
+    try:
+        d = json.loads(satir)
+    except ValueError:
+        return []
+    if d.get("type") != "assistant":
+        return []
+    out = []
+    for c in (d.get("message") or {}).get("content") or []:
+        if not isinstance(c, dict) or c.get("type") != "tool_use":
+            continue
+        g = c.get("input") or {}
+        if c.get("name") == "WebSearch" and g.get("query"):
+            out.append({"m": f"Aranıyor: {str(g['query'])[:120]}"})
+        elif c.get("name") == "WebFetch" and g.get("url"):
+            site = re.sub(r"^www\.", "", urllib.parse.urlparse(str(g["url"])).netloc)
+            if site:
+                out.append({"m": f"Okunuyor: {site}", "u": str(g["url"])[:500]})
+    return out
+
+
+def _izli_calistir(komut, istem, zaman_asimi, cwd, fn):
+    """subprocess.run ile aynı sonuç; satırlar geldikçe web adımlarını bildirir."""
+    p = subprocess.Popen(komut, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=_ortam(), cwd=cwd)
+    asildi = []
+
+    def _kes():
+        asildi.append(1); p.kill()
+    saat = threading.Timer(zaman_asimi, _kes); saat.start()
+    hata = []
+
+    def _yaz():
+        try:
+            p.stdin.write(istem); p.stdin.close()
+        except OSError:
+            pass
+    threading.Thread(target=_yaz, daemon=True).start()
+    threading.Thread(target=lambda: hata.append(p.stderr.read()), daemon=True).start()
+    satirlar = []
+    try:
+        for s in p.stdout:
+            satirlar.append(s)
+            for o in iz_olaylari(s):
+                try:
+                    fn(o)
+                except Exception:  # noqa: BLE001
+                    pass
+        p.wait()
+    finally:
+        saat.cancel()
+    if asildi:
+        raise subprocess.TimeoutExpired(komut, zaman_asimi)
+    return types.SimpleNamespace(stdout="".join(satirlar), stderr="".join(hata))
+
+
 def sor(istem, sistem="", zaman_asimi=600, model_adi=None, araclar="", _is=None):
     """İstemi Claude'a verir, yanıt metnini döndürür. Varsayılan araç yok; yalnızca metin. `araclar` yalnız web için verilir
     ("WebSearch,WebFetch"; 2026-10-29 Content'in akım araması: anahtarsız arama motorları otomatik sorguyu engelliyor)."""
@@ -453,7 +526,9 @@ def sor(istem, sistem="", zaman_asimi=600, model_adi=None, araclar="", _is=None)
     t0 = time.time()
     with tempfile.TemporaryDirectory() as bos:                       # boş çalışma klasörü: proje dosyalarına bakmasın
         try:
-            r = subprocess.run(komut, input=istem, capture_output=True, text=True, timeout=zaman_asimi, env=_ortam(), cwd=bos)
+            izle = IZLE.get() if araclar else None
+            r = (_izli_calistir(komut, istem, zaman_asimi, bos, izle) if izle
+                 else subprocess.run(komut, input=istem, capture_output=True, text=True, timeout=zaman_asimi, env=_ortam(), cwd=bos))
         except subprocess.TimeoutExpired:
             _kullanim_yaz(is_adi, m_adi, time.time() - t0, hata="zaman aşımı", tur=tur); raise ClaudeHata("zaman aşımı")
     satirlar = (r.stdout or "").splitlines()

@@ -318,5 +318,49 @@
  "yere_otur_kalk": {
   "arama_en": "how to sit to stand from floor without hands tutorial proper form (cross-legged get up)",
   "arama_tr": "yere bağdaş kurup oturma ve elsiz kalkma egzersizi nasıl yapılır doğru form"
+ },
+ "genis_sinav": {
+  "arama_en": "how to wide push up tutorial proper form",
+  "arama_tr": "geniş şınav nasıl yapılır doğru form"
+ },
+ "ayak_yuksek_sinav": {
+  "arama_en": "how to decline push up tutorial proper form",
+  "arama_tr": "ayak yüksekte şınav nasıl yapılır doğru form"
+ },
+ "sandalye_dips": {
+  "arama_en": "how to bench dips triceps tutorial proper form",
+  "arama_tr": "koltukta arka kol dips nasıl yapılır doğru form"
+ },
+ "duvar_oturus": {
+  "arama_en": "how to wall sit tutorial proper form",
+  "arama_tr": "duvar oturuşu nasıl yapılır doğru form"
+ },
+ "cift_baldir": {
+  "arama_en": "how to calf raises tutorial proper form",
+  "arama_tr": "baldır kaldırma nasıl yapılır doğru form"
+ },
+ "superman": {
+  "arama_en": "how to superman exercise tutorial proper form",
+  "arama_tr": "süpermen egzersizi nasıl yapılır doğru form"
+ },
+ "mountain_climber": {
+  "arama_en": "how to mountain climbers tutorial proper form",
+  "arama_tr": "mountain climber nasıl yapılır doğru form"
+ },
+ "bisiklet_crunch": {
+  "arama_en": "how to bicycle crunches tutorial proper form",
+  "arama_tr": "bisiklet mekik nasıl yapılır doğru form"
+ },
+ "yer_bacak_kaldirma": {
+  "arama_en": "how to lying leg raises tutorial proper form",
+  "arama_tr": "yerde bacak kaldırma nasıl yapılır doğru form"
+ },
+ "ters_lunge": {
+  "arama_en": "how to reverse lunge tutorial proper form",
+  "arama_tr": "geri adım lunge nasıl yapılır doğru form"
+ },
+ "yan_lunge": {
+  "arama_en": "how to lateral lunge side lunge tutorial proper form",
+  "arama_tr": "yan lunge nasıl yapılır doğru form"
  }
 }

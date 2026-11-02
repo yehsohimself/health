@@ -246,9 +246,14 @@ def _topla(seanslar):
     return t
 
 
+def _rutin_yuruyus():
+    return int((pt.profil().get("gunluk_liste") or {}).get("yuruyus_dk") or 0)
+
+
 def hafta_olcumu(kod=None):
     """Bu hafta (Pzt-Paz) YAPILAN: bitmiş seanslar + işaretlenmiş yürüyüş görevleri + uyku ortalaması."""
     kod = kod or pt.hafta_kodu()
+    rutin = _rutin_yuruyus()
     L = []
     uyku = []
     adim = []
@@ -259,6 +264,8 @@ def hafta_olcumu(kod=None):
         for s in d.get("seanslar") or []:
             if s.get("bitti"):
                 L.append((g.isoformat(), s))
+        if rutin and g < pt.bugun():                  # kişinin kendi yaptığı günlük yürüyüş (plana yazılmaz, doza sayılır)
+            L.append((g.isoformat(), {"tur": "yuruyus", "sure_dk": rutin}))
         ek = set(d.get("ek_gorev") or [])
         if "yuruyus" in ek:
             L.append((g.isoformat(), {"tur": "yuruyus", "sure_dk": 20}))
@@ -283,7 +290,9 @@ def hafta_olcumu(kod=None):
 def plan_dozu(pl=None):
     """Bu haftanın PLANI dozu ne kadar karşılıyor."""
     pl = pl if pl is not None else pt.program()
-    return _topla([(g.get("tarih"), g) for g in pl.get("gunler") or [] if g.get("tur") != "dinlenme"])
+    rutin = _rutin_yuruyus()
+    return _topla([(g.get("tarih"), g) for g in pl.get("gunler") or [] if g.get("tur") != "dinlenme"]
+                  + [(g.get("tarih"), {"tur": "yuruyus", "sure_dk": rutin}) for g in pl.get("gunler") or [] if rutin])
 
 
 def doz_ozeti(kod=None):
