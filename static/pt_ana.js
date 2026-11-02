@@ -110,7 +110,11 @@ function anaHtml(){
   const saat = new Date().getHours(), selam = saat < 12 ? 'Günaydın' : saat < 18 ? 'İyi günler' : 'İyi akşamlar';
   const tar = new Date().toLocaleDateString('tr-TR', {weekday: 'long', day: 'numeric', month: 'long'});
   const biten = Object.values(D).filter(x => x.tamam).length;
-  let h = `<section class="an-ust"><p class="mono">${esc(tar)}</p><h1 class="bas">${selam}${p.ad ? ', ' + esc(p.ad.split(' ')[0]) : ''}.</h1>
+  const y = o.oyun, seriVar = y && (y.seri || y.en_uzun || (y.bugun || {}).durum === 'tamam' || ((y.puan || {}).toplam || 0) > 0);
+  const gs = gidisatHtml();
+  let h = `<section class="an-ust"><p class="mono">${esc(tar)}</p><h1 class="bas">${selam}${p.ad ? ', ' + esc(p.ad.split(' ')[0]) : ''}.</h1></section>`;
+  if (gs) h += (seriVar ? puanSerit() : '') + gs + `<h2 class="an-bolum">Bugün</h2>`;
+  h += `<section class="an-ust">
     <p class="an-amac">Health, uzun ve sağlıklı yaşamanız için her gün <b>üç işi</b> takip eder. Bugün <b>${biten}/3</b> tamam. <button class="metin" data-nasil>Nasıl çalışır?</button></p>
     <div class="an-uc" role="tablist">${Object.entries(AYAK).map(([k, a]) => `<button class="an-ayak ${k === sec ? 'on' : ''} ${D[k].tamam ? 'tamam' : ''}" role="tab" aria-selected="${k === sec}" data-ayak="${k}">
       ${halka(D[k].oran, a.renk, a.ikon, D[k].tamam)}<b>${a.ad}</b><small>${esc(D[k].satir)}</small></button>`).join('')}</div></section>`;
@@ -120,9 +124,8 @@ function anaHtml(){
   h += kutlamaKart() + durgunKart() + agriTakipKart();          // acil olanlar (kutlama, uzun ara, dünkü ağrı) Şimdi'nin hemen altında
   h += `<section class="an-detay"><div class="an-dbas"><span class="an-dik" style="color:${AYAK[sec].renk}">${AYAK[sec].ikon}</span><div><h2>${AYAK[sec].ad}</h2><p>${esc(AYAK[sec].neden)}</p></div></div>
     ${Object.keys(AYAK).map(k => `<div data-ayakic="${k}" ${k === sec ? '' : 'hidden'}>${ayakDetay(k)}</div>`).join('')}</section>`;
-  const y = o.oyun, seriVar = y && (y.seri || y.en_uzun || (y.bugun || {}).durum === 'tamam' || ((y.puan || {}).toplam || 0) > 0);
   h += `<h2 class="an-bolum">Haftanız <span>Uzun ömrün asıl ölçüsü günler değil, haftalar.</span></h2>`;
-  h += haftaHalka(true) + (seriVar ? puanSerit() : '') + hikayeKart() + hedefKart(true) + (o.oyun ? gorevKart() : '');
+  h += haftaHalka(true) + (seriVar && !gs ? puanSerit() : '') + hikayeKart() + hedefKart(true) + (o.oyun ? gorevKart() : '');
   const notlar = [degerlendirmeKart(), receteKart(), araKontrolKart(), kontrolKart(), haftalikKart(),
     o.mesaj && o.mesaj.hafta && Date.now() / 1000 - o.mesaj.zaman < 4 * 86400 ? `<div class="kart"><div class="kbas"><h3>Haftalık mesajınız</h3><span class="mono">${esc(haftaYazi(o.mesaj.hafta))}</span></div><p class="gri2" style="margin:0 0 6px;font-size:14px">${esc(o.mesaj.degisecek || '')}</p><button class="metin" data-mesaj>Oku</button></div>` : '',
     o.oyun ? oneriKart() : '', araSoruKart(), aliskanlikKart(), tanismaKart()].filter(Boolean);
@@ -130,6 +133,94 @@ function anaHtml(){
     + (notlar.length > 2 ? `<details class="an-daha"><summary>${notlar.length - 2} not daha</summary>${notlar.slice(2).join('')}</details>` : '');
   h += '<div id="telKart"></div>';
   return {h, N};
+}
+/* ---------- gidişat: seriler, takvim, bir günün dökümü (2026-11-02; kullanıcı: "kaç günlük streak'teyim, şu gün şu kadar saat oruç yapmışım; güne tıklayınca o gün ne yapmışım çıkacak") ---------- */
+let gsTak = null, gsCizildi = false;
+const gsSa = x => { const dk = Math.round((+x || 0) * 60), s = Math.floor(dk / 60), d = dk % 60; return s ? `${s} sa${d ? ' ' + d + ' dk' : ''}` : `${d} dk`; };
+const gsVir = x => String(Math.round((+x || 0) * 10) / 10).replace('.', ',');
+const gsTarih = (t, o = {weekday: 'long', day: 'numeric', month: 'long'}) => new Date(t + 'T12:00').toLocaleDateString('tr-TR', o);
+const GS_IK = {hareket: AYAK.hareket.ikon, oruc: '<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>'};
+function gsCubuk(L, tur, hedef){
+  const en = tur === 'oruc' ? Math.max(24, ...L.map(g => g.oruc_sa || 0)) : Math.max(60, ...L.map(g => g.hareket_dk || 0));
+  return `<div class="gs-yedi ${tur}">${tur === 'oruc' && hedef ? `<i class="gs-hedef" style="bottom:calc(16px + (100% - 16px) * ${hedef / en})"></i>` : ''}${L.map(g => {
+    const d = tur === 'oruc' ? g.oruc_sa : g.hareket_dk, ok = tur === 'oruc' ? g.oruc_tamam : g.hareket;
+    const yaz = tur === 'oruc' ? (d != null ? gsSa(d) + ' oruç' : 'oruç kaydı yok') : (g.hareket ? g.hareket_dk + ' dk hareket' : 'hareket yok');
+    return `<button data-gsgun="${g.tarih}" title="${esc(gsTarih(g.tarih, {day: 'numeric', month: 'long'}))}: ${yaz}" aria-label="${esc(gsTarih(g.tarih))}: ${yaz}" class="${ok ? 'ok' : ''} ${g.tarih === bugunT() ? 'bugun' : ''}"><span><u style="height:${d ? Math.max(6, Math.round(d / en * 100)) : 0}%"></u></span><small>${esc(gsTarih(g.tarih, {weekday: 'narrow'}))}</small></button>`; }).join('')}</div>`;
+}
+function gsTakvimHtml(T){
+  const G = T.gunler || [], ilk = G[0], son = G[G.length - 1];
+  const aralik = ilk && son ? `${gsTarih(ilk.tarih, {day: 'numeric', month: 'short'})} – ${gsTarih(son.tarih, {day: 'numeric', month: 'short'})}` : '';
+  const gunler = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'].map(x => `<span>${x}</span>`).join('');
+  const hucre = G.map((g, i) => {
+    const n = +g.tarih.slice(8);
+    if (g.gelecek) return `<span class="gs-gun gel"><b>${n}</b></span>`;
+    const sol = i % 7 && G[i - 1].hareket, sag = i % 7 < 6 && G[i + 1] && G[i + 1].hareket;
+    const yaz = [g.hareket ? g.hareket_dk + ' dk hareket' : '', g.oruc_sa != null ? gsSa(g.oruc_sa) + ' oruç' : ''].filter(Boolean).join(', ') || 'kayıt yok';
+    return `<button class="gs-gun ${g.hareket ? 'h' : ''} ${g.hareket && sol ? 'sol' : ''} ${g.hareket && sag ? 'sag' : ''} ${g.tarih === bugunT() ? 'bugun' : ''}" data-gsgun="${g.tarih}" aria-label="${esc(gsTarih(g.tarih))}: ${yaz}" style="--g:${g.hareket ? Math.min(1, .45 + (g.hareket_dk || 0) / 120) : 0}">
+      <b>${n}</b>${g.hareket ? `<small>${g.hareket_dk ? g.hareket_dk + ' dk' : '✓'}</small>` : ''}${g.oruc_sa != null ? `<small class="o ${g.oruc_tamam ? 'ok' : ''}">${g.oruc_tahmini ? '~' : ''}${gsVir(g.oruc_sa)} sa</small>` : ''}</button>`; }).join('');
+  return `<div class="gs-tbas"><h3>Takvim</h3><span class="gri">${esc(aralik)}</span><span class="gs-ok"><button data-gsok="-" aria-label="Önceki haftalar" ${T.onceki ? '' : 'disabled'}>‹</button><button data-gsok="+" aria-label="Sonraki haftalar" ${T.sonraki ? '' : 'disabled'}>›</button></span></div>
+    <div class="gs-gunler">${gunler}</div><div class="gs-izgara">${hucre}</div>
+    <p class="gs-acik"><span><i class="h"></i>Hareket</span><span><i class="o"></i>Oruç hedefi tuttu</span><span><i class="z"></i>Tutmadı</span><em>Bir güne dokunun, o gün ne yaptığınızı görün.</em></p>`;
+}
+function gidisatHtml(){
+  const g = S.o.gidisat; if (!g || !g.var) return '';
+  const H = g.hareket, O = g.oruc, sn = O.suren;
+  const altH = `${H.en_uzun > H.seri ? `En uzunu ${H.en_uzun} gün · ` : ''}Bu hafta ${H.hafta_gun} gün, ${H.hafta_dk} dk`;
+  const simdiO = !sn ? '' : sn.durum === 'yeme' ? 'Şu an yeme saatindesiniz' : `Şu an ${sure(Date.now() / 1000 - sn.bas_t)}${sn.tahmini ? ' (tahmini)' : ''} oruçtasınız`;
+  const sonO = O.son ? `Son oruç ${gsSa(O.son.oruc_sa)} · hedef ${gsVir(O.hedef)} sa` : `Hedef ${gsVir(O.hedef)} sa. Yemeye başlayınca işaretleyin, burada birikir.`;
+  const kart = (tur, ad, seri, alt, cub) => `<div class="kart gs-kart ${tur} ${seri ? '' : 'sifir'}"><div class="gs-kb"><span class="gs-ik">${GS_IK[tur]}</span><span>${ad}</span></div>
+    <p class="gs-sayi"><b data-yuvarla="health-gs-${tur}">${seri}</b> gün seri</p><p class="gs-alt">${alt}</p>${cub}</div>`;
+  const ilk = !gsCizildi; gsCizildi = true;                     // çubuklar yalnız ilk açılışta büyür; veri yenilenince oynamaz
+  return `<section class="gs ${ilk ? 'ilk' : ''}"><div class="gs-kartlar">
+    ${kart('hareket', 'Hareket', H.seri, esc(altH), gsCubuk(g.yedi, 'hareket'))}
+    ${kart('oruc', 'Oruç', O.seri, esc(sonO) + (simdiO ? `<br>${esc(simdiO)}` : ''), gsCubuk(g.yedi, 'oruc', O.hedef))}</div>
+    <div class="kart gs-takvim" id="gsTakvim">${gsTakvimHtml(gsTak || g.takvim)}</div></section>`;
+}
+function gsSeritHtml(r){
+  const y = r.yeme, bas0 = new Date(r.tarih + 'T00:00').getTime() / 1000, oran = t => Math.max(0, Math.min(100, (t - bas0) / 864));
+  if (!y || !y.bas_t) return '';
+  const bugunMu = r.tarih === bugunT(), simdi = Date.now() / 1000;
+  const bitis = y.bit_t || (bugunMu ? simdi : y.bas_t);
+  const nokta = (r.seanslar || []).filter(s => s.bitis_t && s.bitis_t >= bas0 && s.bitis_t < bas0 + 86400).map(s => `<i class="n" style="left:${oran(s.bitis_t)}%" title="${esc(s.baslik)}"></i>`).join('');
+  return `<div class="gs-serit"><span class="z" style="width:${bugunMu ? oran(simdi) : 100}%"></span><span class="y" style="left:${oran(y.bas_t)}%;width:${Math.max(.8, oran(bitis) - oran(y.bas_t))}%"></span>${nokta}</div>
+    <div class="gs-saat"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>`;
+}
+async function gunDokum(tarih){
+  const p = sayfa(`<h3>${esc(gsTarih(tarih))}</h3><div class="satir gri"><span class="donen"></span> Alınıyor</div>`, {sabit: true});
+  let r; try{ r = await api('/api/pt/gun-dokum?tarih=' + tarih); }catch(e){ p.kapat(); return toast(e.message); }
+  const s = r.satir, S_ = r.sabah, sa = t => t ? saatYaz(t) : '';
+  const modAd = k => ((S.o.moduller || []).find(m => m.kod === k) || {}).ad || k;
+  const kutu = (ad, deger, alt, cl) => `<div class="gs-m ${cl || ''}"><small>${ad}</small><b>${deger}</b>${alt ? `<small>${alt}</small>` : ''}</div>`;
+  let h = `<div class="gs-mler">${kutu('Hareket', s.hareket ? (s.hareket_dk ? s.hareket_dk + ' dk' : 'Yapıldı') : '—', r.seanslar.length ? r.seanslar.length + ' kayıt' : '', s.hareket ? 'h' : '')}
+    ${kutu('Oruç', r.oruc ? (r.oruc.tahmini ? '~' : '') + gsSa(r.oruc.saat) : '—', r.oruc ? `hedef ${gsVir(r.hedef_oruc)} sa` : '', s.oruc_tamam ? 'o' : '')}
+    ${kutu('Uyku', S_ && S_.uyku_saat ? gsVir(S_.uyku_saat) + ' sa' : '—', S_ && S_.enerji ? `enerji ${Math.round(S_.enerji)}/5` : '')}</div>`;
+  let ic = '';
+  if (r.seanslar.length || r.bjj.length){
+    ic += `<h4>Hareket</h4>` + r.seanslar.map(x => `<div class="gs-is"><div class="gs-isb"><b>${esc(x.baslik)}</b><span>${x.dk ? x.dk + ' dk' : ''}</span></div>${x.not ? `<p>${esc(x.not)}</p>` : ''}${x.hareketler.length ? `<ul>${x.hareketler.map(k => `<li><span>${esc(k.ad)}</span><span>${esc(k.setler)}</span></li>`).join('')}</ul>` : ''}</div>`).join('')
+      + r.bjj.map(b => `<div class="gs-is"><div class="gs-isb"><b>Jiu-jitsu dersi</b><span>${b.sure_dk ? b.sure_dk + ' dk' : ''}</span></div>${b.not ? `<p>${esc(b.not)}</p>` : ''}</div>`).join('');
+  }
+  if (r.oruc || r.yeme){
+    const o = r.oruc, y = r.yeme;
+    const gun0 = new Date(tarih + 'T00:00').getTime() / 1000;
+    const c = o ? `Oruç: ${o.bas_t < gun0 ? 'önceki gün ' : ''}${sa(o.bas_t)}${o.tahmini ? ' (tahmini)' : ''} – ${sa(o.bit_t)}. ` : '';
+    const d = y ? (y.bit_t ? `Yeme saati: ${sa(y.bas_t)} – ${sa(y.bit_t)}${y.tahmini ? ' (tahmini)' : ''}.` : `Yemeye başlama: ${sa(y.bas_t)}.`) : '';
+    ic += `<h4>Oruç</h4><p class="gs-c">${esc(c + d)}</p>${gsSeritHtml(r)}`;
+  }
+  if (r.yemekler.length) ic += `<h4>Yemek <span class="gri">${r.toplam.kcal} kcal · ${r.toplam.protein} g protein</span></h4>` + r.yemekler.map(y => `<div class="gs-is"><div class="gs-isb"><b>${esc(y.ad || 'Öğün')}</b><span>${y.kcal} kcal</span></div></div>`).join('');
+  const dig = [r.kilo ? `Kilo ${gsVir(r.kilo)} kg` : '', r.bel_cm ? `Bel ${gsVir(r.bel_cm)} cm` : '', r.su_ml ? `Su ${gsVir(r.su_ml / 1000)} L` : ''].filter(Boolean);
+  const mod = (r.moduller || []).map(modAd);
+  if (dig.length || mod.length || r.agri.length) ic += `<h4>Diğer</h4><div class="gs-cip">${dig.concat(mod).map(x => `<span>${esc(x)}</span>`).join('')}${r.agri.map(a => `<span class="ag">${esc(a.bolge || 'Ağrı')}${a.puan ? ' ' + a.puan + '/10' : ''}</span>`).join('')}</div>`;
+  if (r.aksam) ic += `<h4>Akşam notu</h4><p class="gs-c">${esc(r.aksam)}</p>`;
+  if (!ic) ic = `<p class="gri2" style="margin:14px 0 0;font-size:14px">Bu gün için kayıt yok.</p>`;
+  $('.sayfa', p).innerHTML = `<div class="tutac"></div><button class="kapatx" data-kapat aria-label="Kapat">×</button><h3>${esc(gsTarih(tarih))}</h3>${h}<div class="gs-dok">${ic}</div>`;
+}
+function gsBagla(k){
+  $$('[data-gsgun]', k).forEach(b => b.onclick = () => gunDokum(b.dataset.gsgun));
+  $$('[data-gsok]', k).forEach(b => b.onclick = async () => {
+    const T = gsTak || S.o.gidisat.takvim, d = new Date(T.son + 'T12:00'); d.setDate(d.getDate() + (b.dataset.gsok === '-' ? -35 : 35));
+    const t = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    try{ gsTak = (await api('/api/pt/gidisat?son=' + t)).takvim; const kutu = $('#gsTakvim', k.closest ? k.closest('#main') || k : k); if (kutu){ kutu.innerHTML = gsTakvimHtml(gsTak); gsBagla(kutu); } }catch(e){ toast(e.message); }
+  });
 }
 function nasilSayfa(){
   const A = [['Siz anlatırsınız', 'Hedefiniz, gününüz, ağrılarınız. Sabah 30 saniyelik kontrol, yediğinizin fotoğrafı, "dün maç yaptım" gibi bir cümle.'],
@@ -242,7 +333,7 @@ window.bugunCiz = function(){
   $$('.btn.ana', m).forEach((x, i) => { if (i && !x.closest('.an-simdi')) x.classList.remove('ana'); });   // tek birincil: Şimdi kartınınki
   durgunBagla(m); haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); selamBagla(m);
   hikayeBagla(m); if (typeof oneriBagla === 'function') oneriBagla(m); hizliFotoBagla(m); kontrolBagla(m); if (typeof sohbetBagla === 'function') sohbetBagla(m);
-  suBagla(m); if (typeof kocBagla === 'function') kocBagla(m); seriBagla(m); yeniBagla(m);
+  gsBagla(m); suBagla(m); if (typeof kocBagla === 'function') kocBagla(m); seriBagla(m); yeniBagla(m);
   $$('[data-sekme]', m).forEach(x => x.onclick = () => { S.sek = 'plan'; S.alt = 'program'; store.set('pt_sek', 'plan'); store.set('pt_alt', 'program'); window.scrollTo(0, 0); ciz(); });
   $$('[data-tikla]', m).forEach(x => x.onclick = () => { const h = $(`[data-ayakic] ${x.dataset.tikla}`, m); if (h) h.click(); });
   $$('[data-nasil]', m).forEach(x => x.onclick = nasilSayfa);

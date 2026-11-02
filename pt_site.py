@@ -22,6 +22,7 @@ from flask import Response, abort, jsonify, request, send_file
 
 import pt
 import pt_beslenme
+import pt_gidisat
 import pt_hareket
 import pt_koc
 import pt_oyun
@@ -166,7 +167,7 @@ def ozet():
         "eksik_video": _g(lambda: pt_hareket.eksik_videolar()[:8], []), "calisan": dict(calisan), "koru": _g(pt.koru_bolgeler, []),
         "trend": _g(lambda: pt_beslenme.trend(60), []), "kurallar": pt.KURALLAR_METNI,
         "nabiz": _g(lambda: pt.nabiz_bolgeleri(p)), "su_hedef": _g(lambda: pt.su_hedefi(p), 2500),
-        "oyun": _g(pt_oyun.ozet), "program_aktif": _g(_program_ozet), "baslangic": _g(pt.baslangic_durumu, {}), "ilk": _g(_ilk_durum, {}), "dun_ogun": _g(lambda: len(pt_beslenme.dunku_yemekler(t)["liste"]), 0), "agri_takip": _g(lambda: pt.agri_takip_bekleyen(t), []),
+        "gidisat": _g(pt_gidisat.ozet), "oyun": _g(pt_oyun.ozet), "program_aktif": _g(_program_ozet), "baslangic": _g(pt.baslangic_durumu, {}), "ilk": _g(_ilk_durum, {}), "dun_ogun": _g(lambda: len(pt_beslenme.dunku_yemekler(t)["liste"]), 0), "agri_takip": _g(lambda: pt.agri_takip_bekleyen(t), []),
         "blok": _g(lambda: pt_koc.blok(kod, p)), "aliskanlik": _g(lambda: pt_koc.aliskanlik_bugun(t)), "ara_soru": _g(pt_koc.ara_soru),
         "kutlama": _g(lambda: pt_koc.kutlamalar(t), []),
         "gorusme_eksik": [g for g, alan in (("diyet", "beslenme_aliskanlik"), ("gun", "gun_duzeni")) if not p.get(alan)],
@@ -841,6 +842,15 @@ def kaydet(app):
             return jsonify({"hata": str(e)}), 400
 
     # ---------------------------------------------------------------- seri, rozetler, kitaplık, hızlı antrenman (2026-10-27)
+    @app.get("/api/pt/gidisat")
+    def pt_gidisat_uc():
+        return jsonify(pt_gidisat.ozet(request.args.get("son")))
+
+    @app.get("/api/pt/gun-dokum")
+    def pt_gun_dokum():
+        t = _tarih()
+        return jsonify(pt_gidisat.gun_ozet(t))
+
     @app.get("/api/pt/oyun")
     def pt_oyun_tam():
         return jsonify(pt_oyun.tam())

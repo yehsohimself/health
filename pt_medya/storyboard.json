@@ -1,8 +1,9 @@
 {
- "calisiyor": true,
+ "calisiyor": false,
  "bas": 1793583765,
- "kalan": 10,
+ "kalan": 0,
  "hata": null,
  "durdu": null,
- "son": "duvar_oturus"
+ "son": "yan_lunge",
+ "bitis": 1793595558
 }

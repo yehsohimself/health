@@ -384,6 +384,15 @@ def _istekten_mi():
         return False
 
 
+_butce_sira = {"n": 0}
+_butce_sira_kilit = threading.Lock()
+
+
+def butce_bekleyen():
+    """Şu an dengeleyicide sıra bekleyen arka plan çağrısı sayısı (Claude çalışmıyor, yalnız bekliyor)."""
+    return _butce_sira["n"]
+
+
 def _izin(is_adi, model_adi, akis=False):
     """Çağrıdan önce: toplantı işi işaret bırakır; dengeleyiciye (claude_butce) sorulur. Kullanıcının istekleri ve toplantılar hiç beklemez;
     kendiliğinden çalışan arka plan işi doluluk düşene dek bekler (en çok 2 saat), günlük payı dolduysa hiç çalışmaz. (model, tür) döner."""
@@ -403,22 +412,29 @@ def _izin(is_adi, model_adi, akis=False):
             claude_butce.olay("hafif_model", is_adi, eski=model_adi, yeni=k["model"], seviye=k.get("seviye"))
         return k["model"], tur
     son, yazdi = time.time() + 7200, False
-    while True:
-        try:
-            if toplanti_suruyor():
-                raise claude_butce.Bekle("toplantı sürüyor")
-            k = claude_butce.karar(is_adi, tur, model_adi)
-            if k["model"] != model_adi:
-                claude_butce.olay("hafif_model", is_adi, eski=model_adi, yeni=k["model"], seviye=k.get("seviye"))
-            return k["model"], tur
-        except claude_butce.Bekle as b:
-            if b.kalici or time.time() > son:
-                claude_butce.olay("atlandi", is_adi, neden=b.neden)
-                raise ClaudeHata(f"Claude dengeleyicisi: {b.neden}")
-            if not yazdi:
-                print(f"Claude: {is_adi} bekliyor ({b.neden})", flush=True); yazdi = True
-                claude_butce.olay("bekletildi", is_adi, neden=b.neden)
-            time.sleep(60)
+    try:
+        while True:
+            try:
+                if toplanti_suruyor():
+                    raise claude_butce.Bekle("toplantı sürüyor")
+                k = claude_butce.karar(is_adi, tur, model_adi)
+                if k["model"] != model_adi:
+                    claude_butce.olay("hafif_model", is_adi, eski=model_adi, yeni=k["model"], seviye=k.get("seviye"))
+                return k["model"], tur
+            except claude_butce.Bekle as b:
+                if b.kalici or time.time() > son:
+                    claude_butce.olay("atlandi", is_adi, neden=b.neden)
+                    raise ClaudeHata(f"Claude dengeleyicisi: {b.neden}")
+                if not yazdi:
+                    print(f"Claude: {is_adi} bekliyor ({b.neden})", flush=True); yazdi = True
+                    claude_butce.olay("bekletildi", is_adi, neden=b.neden)
+                    with _butce_sira_kilit:
+                        _butce_sira["n"] += 1
+                time.sleep(60)
+    finally:
+        if yazdi:
+            with _butce_sira_kilit:
+                _butce_sira["n"] -= 1
 
 
 def _doluluk_oku(satirlar):
