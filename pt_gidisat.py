@@ -100,7 +100,10 @@ def hareket_gunu(tarih):
     dk = sum(_sayi(s.get("sure_dk")) for s in S)
     if not any(s.get("tur") == "bjj_ders" for s in S):
         dk += sum(_sayi(b.get("sure_dk")) for b in d.get("bjj") or [])
-    return {"dk": int(dk), "adet": len(S), "var": bool(S or d.get("bjj"))}
+    import pt_saglik
+    Y = pt_saglik.yuruyusler(tarih)
+    dk += sum(w["dk"] for w in Y)
+    return {"dk": int(dk), "adet": len(S) + len(Y), "var": bool(S or d.get("bjj") or Y)}
 
 
 def _sayi(x):
@@ -200,6 +203,11 @@ def gun_ozet(tarih):
                          "bitis_t": s.get("bitis_t"), "sohbet": s.get("kaynak") == "sohbet",
                          "hareketler": [{"ad": (pt.KATALOG.get(h.get("kod")) or {}).get("ad") or h.get("ad") or h.get("kod") or "", "setler": _set_yazi(h)}
                                         for h in s.get("hareketler") or [] if h.get("setler")]})
+    import pt_saglik
+    for w in pt_saglik.yuruyusler(tarih):
+        seanslar.append({"baslik": w["ad"], "dk": w["dk"], "bitis_t": w["bit"], "yuruyus": True, "hareketler": [],
+                         "not": f"{dt.datetime.fromtimestamp(w['bas']).strftime('%H:%M')} · telefon {w['adim']:,} adım saydı".replace(",", ".")})
+    seanslar.sort(key=lambda x: x.get("bitis_t") or 0)
     yemekler = []
     for y in d.get("yemekler") or []:
         t = pt_beslenme.gun_toplam({"yemekler": [y]})
@@ -208,7 +216,8 @@ def gun_ozet(tarih):
     bas = _yeme_bas(d)
     bit, bit_tahmini = _yeme_bit(d, pen if tarih != pt.bugun().isoformat() else None)
     sabah = d.get("sabah") or {}
-    return {"tarih": tarih, "satir": gun_satiri(tarih, p), "hedef_oruc": oruc_hedefi(p), "oruc": oruc_gunu(tarih, p),
+    import pt_saglik
+    return {"tarih": tarih, "adim": pt_saglik.adim_bilgi((pt_saglik.gun(tarih) or {}).get("adim"), p), "satir": gun_satiri(tarih, p), "hedef_oruc": oruc_hedefi(p), "oruc": oruc_gunu(tarih, p),
             "yeme": {"bas_t": bas, "bit_t": bit, "tahmini": bit_tahmini} if bas else None,
             "seanslar": seanslar, "yemekler": yemekler, "toplam": pt_beslenme.gun_toplam(d),
             "bjj": [{k: b.get(k) for k in ("sure_dk", "zorluk", "not")} for b in d.get("bjj") or []],

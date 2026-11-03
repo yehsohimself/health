@@ -1771,7 +1771,7 @@ async function hikayeOynat(kod){
   if (h.doz.length){ const tam = h.doz.filter(x => x.oran >= 1).length;
     K.push({html: `<p class="hk-etk">Sağlık dozu</p><h2>${tam === h.doz.length ? 'Bütün doz tamam.' : tam ? `${tam} / ${h.doz.length} tamam.` : 'Doz bu hafta dolmadı.'}</h2>
       <div class="hk-halkalar">${h.doz.map((x, i) => `<div class="hk-halka" style="--g:${i}"><svg viewBox="0 0 98 98"><circle cx="49" cy="49" r="36" class="iz"/><circle cx="49" cy="49" r="36" class="dol" style="--o:${(226 * (1 - Math.min(1, x.oran || 0))).toFixed(1)}"/></svg><b>${esc(x.ad)}</b><small>${x.yapilan} / ${x.hedef} ${esc(x.birim)}</small></div>`).join('')}</div>`}); }
-  const V = [h.adim && ['Günlük adım', h.adim.toLocaleString('tr-TR'), `${h.adim_gun} günün ortalaması`], h.uyku && ['Uyku', virgul(h.uyku), 'saat · ortalama'],
+  const V = [h.adim && ['Günlük adım', (h.adim_duzeltildi ? '~' : '') + h.adim.toLocaleString('tr-TR'), `${h.adim_gun} günün ortalaması${h.adim_duzeltildi ? `, telefon ${h.adim_sayilan.toLocaleString('tr-TR')} saydı` : ''}`], h.uyku && ['Uyku', virgul(h.uyku), 'saat · ortalama'],
     h.kilo && h.kilo.fark != null && ['Kilo', (h.kilo.fark > 0 ? '+' : '') + virgul(h.kilo.fark), 'kg bu hafta'], h.enerji && ['Sabah enerjisi', virgul(h.enerji), '5 üzerinden']].filter(Boolean);
   if (V.length) K.push({html: `<p class="hk-etk">Vücudunuz</p><h2>Ölçtüklerimiz.</h2><div class="hk-olcu">${V.map(([a, b, c], i) => `<div style="--g:${i}"><span>${esc(a)}</span><b>${esc(b)}</b><small>${esc(c)}</small></div>`).join('')}</div>`});
   K.push({html: `<p class="hk-etk">${h.suruyor ? 'Önümüzdeki günler' : 'Gelecek hafta'}</p><h2>${esc(h.kapanis)}</h2>${h.seri ? `<p class="hk-alt">Seriniz: ${h.seri} gün</p>` : ''}
@@ -3901,7 +3901,7 @@ if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.reg
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !mesgul()) yukle(true); });
 yukle();
 </script>
-<script src="/static/pt_ana.js?v=14"></script>
+<script src="/static/pt_ana.js?v=15"></script>
 <script src="/static/pt_gorsel.js?v=6"></script>
 <script src="/static/zil.js?v=2"></script>
 </body>

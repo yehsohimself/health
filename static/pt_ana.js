@@ -207,7 +207,7 @@ async function gunDokum(tarih){
     ic += `<h4>Oruç</h4><p class="gs-c">${esc(c + d)}</p>${gsSeritHtml(r)}`;
   }
   if (r.yemekler.length) ic += `<h4>Yemek <span class="gri">${r.toplam.kcal} kcal · ${r.toplam.protein} g protein</span></h4>` + r.yemekler.map(y => `<div class="gs-is"><div class="gs-isb"><b>${esc(y.ad || 'Öğün')}</b><span>${y.kcal} kcal</span></div></div>`).join('');
-  const dig = [r.kilo ? `Kilo ${gsVir(r.kilo)} kg` : '', r.bel_cm ? `Bel ${gsVir(r.bel_cm)} cm` : '', r.su_ml ? `Su ${gsVir(r.su_ml / 1000)} L` : ''].filter(Boolean);
+  const dig = [r.adim ? (r.adim.duzeltildi ? `~${r.adim.tahmin.toLocaleString('tr-TR')} adım (telefon ${r.adim.sayilan.toLocaleString('tr-TR')} saydı)` : `${r.adim.sayilan.toLocaleString('tr-TR')} adım`) : '', r.kilo ? `Kilo ${gsVir(r.kilo)} kg` : '', r.bel_cm ? `Bel ${gsVir(r.bel_cm)} cm` : '', r.su_ml ? `Su ${gsVir(r.su_ml / 1000)} L` : ''].filter(Boolean);
   const mod = (r.moduller || []).map(modAd);
   if (dig.length || mod.length || r.agri.length) ic += `<h4>Diğer</h4><div class="gs-cip">${dig.concat(mod).map(x => `<span>${esc(x)}</span>`).join('')}${r.agri.map(a => `<span class="ag">${esc(a.bolge || 'Ağrı')}${a.puan ? ' ' + a.puan + '/10' : ''}</span>`).join('')}</div>`;
   if (r.aksam) ic += `<h4>Akşam notu</h4><p class="gs-c">${esc(r.aksam)}</p>`;

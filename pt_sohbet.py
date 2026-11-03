@@ -290,7 +290,13 @@ def _saglik_ozet():
     for i in range(0, 4):
         t = (pt.bugun() - dt.timedelta(days=i)).isoformat()
         g = pt_saglik.gun(t) or {}
-        x = {k: g[k] for k in ("adim", "uyku_saat", "nabiz", "hrv", "kilo") if g.get(k)}
+        x = {k: g[k] for k in ("uyku_saat", "nabiz", "hrv", "kilo") if g.get(k)}
+        ab = pt_saglik.adim_bilgi(g.get("adim"))
+        if ab:
+            x["adim"] = f"yaklaşık {ab['tahmin']} (telefonun saydığı {ab['sayilan']}; telefon hep üzerinde olmadığı için eksik sayar)" if ab["duzeltildi"] else ab["sayilan"]
+        Y = pt_saglik.yuruyusler(t)
+        if Y:
+            x["adım kayıtlarından ölçülen yürüyüş (yeniden kaydetme)"] = ", ".join(f"{w['ad']} {w['dk']} dk" for w in Y)
         if x:
             L.append(f"{t}: " + ", ".join(f"{k} {v}" for k, v in x.items()))
     return "; ".join(L) or "yok"

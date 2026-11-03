@@ -262,7 +262,7 @@ PROFIL_VARSAYILAN = {
     "yontemler": {"kalistenik": 2, "bjj_solo": 1, "flow": 1, "bisiklet": 1, "mobilite": 1},
     "bjj_ders": {"gunler": [], "saat": "", "sure_dk": 90},
     "ekipman": ["bisiklet", "bar", "mat"], "gunler": [0, 1, 2, 3, 4, 5, 6], "gunluk_dk": 45, "antrenman_saati": "sabah",
-    "gunluk_liste": None, "sinirlar": [], "sakatliklar": [], "yapamadiklarim": [],
+    "gunluk_liste": None, "adim_eksik": 0, "yuruyus_rutin_ad": "", "sinirlar": [], "sakatliklar": [], "yapamadiklarim": [],
     "beslenme": {"pencere_bas": "12:00", "pencere_saat": 6, "hassasiyetler": [], "sevmedikleri": [], "mutfak": "Türk ev yemekleri",
                  "ogun_sayisi": 2, "kilo_hizi": 0.7},
     "konum": {"ad": "", "lat": None, "lon": None},

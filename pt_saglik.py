@@ -172,6 +172,67 @@ def gun(tarih=None):
     return pt._json(KLASOR / f"{pt.tarih_gecerli(tarih or pt.bugun().isoformat())}.json", {})
 
 
+# Adım kayıtlarından yürüyüş (2026-11-03): saat yok, antrenman kaydı yok; yürüyüş adımların sürdüğü bloktan çıkar. Seans DEĞİL, sağlık gününe yazılır:
+# günlük liste "yapıldı" görünmez, kalori hedefi ve yorgunluk şişmez; gün dökümünde, Hareket serisinde ve haftalık kolay kardiyoda sayılır.
+YURUYUS_ARA_SN, YURUYUS_EN_AZ_SN, YURUYUS_EN_AZ_ADIM, YURUYUS_TEMPO = 420, 900, 700, 40   # 7 dk ara: köpek durur, ışıkta beklenir; yürüyüş bölünmesin
+
+
+def _dilim(saat):
+    return "sabah" if saat < 12 else "aksam" if saat >= 17 else "gun"
+
+
+def yuruyus_bul(ornekler, rutin_ad=None):
+    """[(başlangıç, bitiş, adım)] (epoch) → [{bas, bit, dk, adim, ad}]. Sabah ve akşamki düzenli yürüyüşlerin adı profilden (`yuruyus_rutin_ad`)."""
+    rutin_ad = rutin_ad or pt.profil().get("yuruyus_rutin_ad") or "Yürüyüş"
+    L, c = [], None
+    for b, e, v in sorted(ornekler):
+        if c and b - c[1] <= YURUYUS_ARA_SN:
+            c[1] = max(c[1], e)
+            c[2] += v
+        else:
+            c = [b, e, v]
+            L.append(c)
+    out = []
+    for b, e, v in L:
+        sn = e - b
+        if sn < YURUYUS_EN_AZ_SN or v < YURUYUS_EN_AZ_ADIM or v / (sn / 60) < YURUYUS_TEMPO:
+            continue
+        ds = _dilim(dt.datetime.fromtimestamp(b).hour)
+        out.append({"bas": int(b), "bit": int(e), "dk": round(sn / 60), "adim": int(round(v)), "ad": "Yürüyüş" if ds == "gun" else rutin_ad, "dilim": ds})
+    return out
+
+
+def yuruyusler(tarih):
+    """O günün ölçülen yürüyüşleri; kişinin kendi yazdığı yürüyüşle aynı dilime düşen tekrar edilmez (kendi kaydı önce gelir)."""
+    W = gun(tarih).get("yuruyusler") or []
+    if not W:
+        return []
+    d = pt._json(pt.gun_yolu(tarih), {})
+    kendi = set()
+    for s in d.get("seanslar") or []:
+        ad = str(s.get("baslik") or "").lower()
+        if s.get("bitti") and ((s.get("kardiyo") or {}).get("tur") == "yuruyus" or any(x in ad for x in ("yürüy", "köpek", "gezi"))) and s.get("bitis_t"):
+            kendi.add(_dilim(dt.datetime.fromtimestamp(s["bitis_t"]).hour))
+    return [w for w in W if w.get("dilim") not in kendi]
+
+
+def adim_bilgi(sayilan, p=None):
+    """Telefon üstte değilken atılan adımlar sayılmaz. Dosyada telefonun saydığı kalır; profil `adim_eksik` (0-0,5) doluysa tahmin yüze yuvarlanır."""
+    try:
+        sayilan = int(sayilan)
+    except (TypeError, ValueError):
+        return None
+    if sayilan <= 0:
+        return None
+    try:
+        oran = float((p if p is not None else pt.profil()).get("adim_eksik") or 0)
+    except (TypeError, ValueError):
+        oran = 0
+    if not 0 < oran <= .5:
+        return {"sayilan": sayilan, "tahmin": sayilan, "duzeltildi": False}
+    return {"sayilan": sayilan, "tahmin": int(round(sayilan / (1 - oran) / 100) * 100), "duzeltildi": True, "oran": oran}
+
+
 def hazirlik(tarih=None):
     """Kişinin kendi ortalamasına göre: hrv (normal|dusuk|yuksek), nabız, uyku → kısa açıklama ve ışığa katkı."""
     son = dt.date.fromisoformat(tarih) if tarih else pt.bugun()
@@ -254,7 +315,7 @@ def ice_aktar(dosya, gun=120, sil=True):
     from pathlib import Path
     dosya = Path(dosya)
     bas = (pt.bugun() - dt.timedelta(days=gun)).isoformat()
-    G, uyku = {}, {}
+    G, uyku, adim_ornek = {}, {}, {}
     sayac = {"kayit": 0, "antrenman": 0}
     try:
         if zipfile.is_zipfile(dosya):
@@ -271,6 +332,13 @@ def ice_aktar(dosya, gun=120, sil=True):
                 tip = el.get("type") or ""
                 t = (el.get("startDate") or "")[:10]
                 if t >= bas and t <= pt.bugun().isoformat():
+                    if tip == "HKQuantityTypeIdentifierStepCount":
+                        try:
+                            f_ = "%Y-%m-%d %H:%M:%S %z"
+                            adim_ornek.setdefault(t, []).append((dt.datetime.strptime(el.get("startDate"), f_).timestamp(),
+                                                                 dt.datetime.strptime(el.get("endDate"), f_).timestamp(), float(el.get("value"))))
+                        except (TypeError, ValueError):
+                            pass
                     if tip in HK_GUN:
                         alan, nasil = HK_GUN[tip]
                         v = _hk_sayi(el.get("value"))
@@ -335,6 +403,8 @@ def ice_aktar(dosya, gun=120, sil=True):
                 son_e = e if not son_e or e > son_e else son_e
         if top > 1800:
             gunler.setdefault(t, {})["uyku_saat"] = round(top / 3600, 2)
+    for t, ornek in adim_ornek.items():
+        gunler.setdefault(t, {})["yuruyusler"] = yuruyus_bul(ornek)
     for g in gunler.values():
         if g.get("kilo"):
             g["kilo"] = round(g["kilo"], 1)
@@ -388,10 +458,11 @@ def _dosyalar(kok, derinlik=6):
 HAE_OLCU = {"step_count": ("adim", "toplam"), "resting_heart_rate": ("nabiz", "ort"), "heart_rate_variability": ("hrv", "ort"),
             "weight_body_mass": ("kilo", "son"), "vo2_max": ("vo2max", "son")}
 SF_DATALESS = 0x40000000
+APPLE_ZAMAN = 978307200
+HAE_SURUM = 3                                                   # okuma değişince eski .hae dosyaları bir kez yeniden okunur
 
 
-def hae_coz(ham):
-    """.hae baytları → sözlük; çözülemezse (Mac dışı, dosya yarım inmiş) None."""
+def _lzfse(ham):
     import ctypes
     try:
         f = ctypes.CDLL("/usr/lib/libcompression.dylib").compression_decode_buffer
@@ -400,20 +471,41 @@ def hae_coz(ham):
     f.restype = ctypes.c_size_t
     f.argtypes = [ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p, ctypes.c_int]
     kaynak = ctypes.create_string_buffer(ham, len(ham))
-    n = max(1 << 20, len(ham) * 30)
+    n = max(1 << 16, len(ham) * 30)
     while n <= 256 << 20:
         hedef = ctypes.create_string_buffer(n)
         r = f(hedef, n, kaynak, len(ham), None, 0x801)          # 0x801 = COMPRESSION_LZFSE
-        if r == 0:
-            return None
-        if r < n:                                               # tam dolduysa çıktı kesilmiş olabilir: büyüt
-            try:
-                d = json.loads(ctypes.string_at(hedef, r))
-            except (ValueError, UnicodeDecodeError):
-                return None
-            return d if isinstance(d, dict) else None
-        n *= 4
+        if 0 < r < n:
+            return ctypes.string_at(hedef, r)
+        n *= 4                                                  # sığmayınca 0 ya da tam dolu döner: büyüt
     return None
+
+
+def hae_coz(ham):
+    """.hae baytları → sözlük; çözülemezse (Mac dışı, dosya yarım inmiş) None. İki biçim var: tek LZFSE bloğu, ya da 'HAE1' + art arda [4 bayt uzunluk][blok]."""
+    try:
+        if ham[:4] != b"HAE1":
+            c = _lzfse(ham)
+            d = json.loads(c) if c else None
+            return d if isinstance(d, dict) else None
+        i, sonuc = 4, None
+        while i < len(ham):
+            n = int.from_bytes(ham[i:i + 4], "big")
+            parca = ham[i + 4:i + 4 + n]
+            if not n or len(parca) < n:
+                return None
+            c = _lzfse(parca)
+            d = json.loads(c) if c else None
+            if not isinstance(d, dict):
+                return None
+            if sonuc is None:
+                sonuc = d
+            else:
+                sonuc["data"] = (sonuc.get("data") or []) + (d.get("data") or [])
+            i += 4 + n
+        return sonuc
+    except (ValueError, UnicodeDecodeError):
+        return None
 
 
 def hae_deger(olcu, d):
@@ -466,6 +558,11 @@ def _hae_tara(kok, gorulen, sinir):
             sonuc = hae_deger(olcu, d)
             if sonuc:
                 gunler.setdefault(t, {})[sonuc[0]] = sonuc[1]
+            if olcu == "step_count":
+                ornek = [(x["start"] + APPLE_ZAMAN, x["end"] + APPLE_ZAMAN, x["qty"]) for x in d.get("data") or []
+                         if isinstance(x, dict) and all(isinstance(x.get(k), (int, float)) for k in ("start", "end", "qty"))]
+                if ornek:
+                    gunler.setdefault(t, {})["yuruyusler"] = yuruyus_bul(ornek)
     return gunler
 
 
@@ -474,6 +571,8 @@ def icloud_tara(en_cok=40):
     import subprocess
     a = pt._json(AYAR, {})
     gorulen = a.get("icloud_gorulen") or {}
+    if a.get("hae_surum") != HAE_SURUM:
+        gorulen = {k: v for k, v in gorulen.items() if not k.endswith(".hae")}
     sinir = time.time() - 30 * 86400
     adaylar = []
     for k in _icloud_klasorler():
@@ -517,6 +616,7 @@ def icloud_tara(en_cok=40):
     if okunan:
         a["icloud_son"] = {"t": int(time.time()), "dosya": okunan, "gun": len(gun), "son_gun": max(gun) if gun else None}
     a["icloud_bakildi"] = int(time.time())
+    a["hae_surum"] = HAE_SURUM
     a["icloud_klasor"] = [str(k).replace(str(Path.home()), "~") for k in _icloud_klasorler()]
     pt._yaz(AYAR, a)
     return {"dosya": okunan, "gun": len(gun)}

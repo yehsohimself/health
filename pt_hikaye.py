@@ -29,6 +29,12 @@ def _tur(s):
     return TUR_AD.get(s.get("tur"), str(s.get("tur") or "Antrenman").capitalize())
 
 
+def _adim_alanlari(adim):
+    import pt_saglik
+    b = pt_saglik.adim_bilgi(round(statistics.mean(adim))) if adim else None
+    return {"adim": b["tahmin"] if b else None, "adim_sayilan": b["sayilan"] if b else None, "adim_duzeltildi": bool(b and b["duzeltildi"]), "adim_gun": len(adim)}
+
+
 def hikaye(kod=None):
     import pt_saglik
     kod = pt.hafta_gecerli(kod) if kod else varsayilan_hafta()
@@ -91,7 +97,7 @@ def hikaye(kod=None):
         "an": {"baslik": an.get("baslik") or _tur(an), "tur": _tur(an), "dk": int(an.get("sure_dk") or 0), "not": (an.get("not") or "")[:120],
                "gun": GUN[dt.date.fromisoformat(an["tarih"]).weekday()], "zorluk": an.get("zorluk")} if an else None,
         "yukselen": len(yukselen), "doz": doz, "seri": seri,
-        "adim": round(statistics.mean(adim)) if adim else None, "adim_gun": len(adim),
+        **_adim_alanlari(adim),
         "uyku": round(statistics.mean(uyku), 1) if uyku else None, "uyku_gun": len(uyku),
         "kilo": {"bas": kilo[0], "son": kilo[-1], "fark": round(kilo[-1] - kilo[0], 1)} if len(kilo) >= 2 else ({"son": kilo[0]} if kilo else None),
         "sabah": len(sabahlar), "enerji": round(statistics.mean(enerji), 1) if enerji else None, "yemek": yemek,

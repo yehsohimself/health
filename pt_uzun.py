@@ -264,7 +264,10 @@ def hafta_olcumu(kod=None):
         for s in d.get("seanslar") or []:
             if s.get("bitti"):
                 L.append((g.isoformat(), s))
-        if rutin and g < pt.bugun():                  # kişinin kendi yaptığı günlük yürüyüş (plana yazılmaz, doza sayılır)
+        import pt_saglik
+        if "yuruyusler" in pt_saglik.gun(g.isoformat()):   # ölçülen yürüyüş varsa onun süresi
+            L += [(g.isoformat(), {"tur": "yuruyus", "sure_dk": w["dk"]}) for w in pt_saglik.yuruyusler(g.isoformat())]
+        elif rutin and g < pt.bugun():                # ölçüm yoksa kişinin söylediği günlük yürüyüş (plana yazılmaz, doza sayılır)
             L.append((g.isoformat(), {"tur": "yuruyus", "sure_dk": rutin}))
         ek = set(d.get("ek_gorev") or [])
         if "yuruyus" in ek:
