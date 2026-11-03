@@ -381,6 +381,94 @@ def _dosyalar(kok, derinlik=6):
     return out
 
 
+# ----------------------------------------------------------------------------- AutoSync klasörü (2026-11-03)
+# Health Auto Export'un iCloud eşitlemesi JSON değil: Documents/AutoSync/HealthMetrics/<ölçü>/<YYYYMMDD>.hae (Apple LZFSE ile sıkıştırılmış JSON;
+# {metric, date, data: [{start, end, qty, unit}]}, zamanlar 2001'den saniye). Bir gün dosyası gün içinde yeniden yazılır, bu yüzden günün değeri eklenmez, üstüne yazılır.
+# Yalnız kullanılan ölçülerin klasörü okunur (yüzü aşkın ölçü var). Mac'e inmemiş dosya okunmaz: okuma iCloud'u bekleyip döngüyü durdurabilir; indirilir, sonraki turda okunur.
+HAE_OLCU = {"step_count": ("adim", "toplam"), "resting_heart_rate": ("nabiz", "ort"), "heart_rate_variability": ("hrv", "ort"),
+            "weight_body_mass": ("kilo", "son"), "vo2_max": ("vo2max", "son")}
+SF_DATALESS = 0x40000000
+
+
+def hae_coz(ham):
+    """.hae baytları → sözlük; çözülemezse (Mac dışı, dosya yarım inmiş) None."""
+    import ctypes
+    try:
+        f = ctypes.CDLL("/usr/lib/libcompression.dylib").compression_decode_buffer
+    except OSError:
+        return None
+    f.restype = ctypes.c_size_t
+    f.argtypes = [ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p, ctypes.c_int]
+    kaynak = ctypes.create_string_buffer(ham, len(ham))
+    n = max(1 << 20, len(ham) * 30)
+    while n <= 256 << 20:
+        hedef = ctypes.create_string_buffer(n)
+        r = f(hedef, n, kaynak, len(ham), None, 0x801)          # 0x801 = COMPRESSION_LZFSE
+        if r == 0:
+            return None
+        if r < n:                                               # tam dolduysa çıktı kesilmiş olabilir: büyüt
+            try:
+                d = json.loads(ctypes.string_at(hedef, r))
+            except (ValueError, UnicodeDecodeError):
+                return None
+            return d if isinstance(d, dict) else None
+        n *= 4
+    return None
+
+
+def hae_deger(olcu, d):
+    """Bir günün dosyası → (alan, değer) ya da None. Kaynak birimi: kilo lb ise kg'ye çevrilir."""
+    alan, yol = HAE_OLCU[olcu]
+    kayit = [x for x in d.get("data") or [] if isinstance(x, dict) and isinstance(x.get("qty"), (int, float))]
+    if not kayit:
+        return None
+    if yol == "toplam":
+        v = sum(x["qty"] for x in kayit)
+    elif yol == "ort":
+        v = sum(x["qty"] for x in kayit) / len(kayit)
+    else:
+        v = max(kayit, key=lambda x: x.get("start") or 0)["qty"]
+        if alan == "kilo" and str(kayit[-1].get("unit") or "").lower() in ("lb", "lbs"):
+            v *= 0.453592
+    return alan, (int(round(v)) if alan == "adim" else round(v, 1))
+
+
+def _hae_tara(kok, gorulen, sinir):
+    """kok/HealthMetrics altındaki yeni .hae dosyaları → {tarih: {alan: değer}}."""
+    import subprocess
+    gunler = {}
+    for olcu in HAE_OLCU:
+        for p in sorted((kok / "HealthMetrics" / olcu).glob("*.hae")):
+            try:
+                st = p.stat()
+            except OSError:
+                continue
+            if st.st_mtime < sinir or gorulen.get(str(p)) == st.st_mtime:
+                continue
+            if getattr(st, "st_flags", 0) & SF_DATALESS:
+                try:
+                    subprocess.run(["brctl", "download", str(p)], capture_output=True, timeout=30)
+                except (OSError, subprocess.SubprocessError):
+                    pass
+                continue
+            try:
+                d = hae_coz(p.read_bytes())
+            except OSError:
+                continue
+            if d is None:                                       # yarım inmiş: görüldü sayılmaz, sonraki turda yeniden
+                continue
+            gorulen[str(p)] = st.st_mtime
+            t = p.stem
+            try:
+                t = pt.tarih_gecerli(f"{t[:4]}-{t[4:6]}-{t[6:8]}")
+            except ValueError:
+                continue
+            sonuc = hae_deger(olcu, d)
+            if sonuc:
+                gunler.setdefault(t, {})[sonuc[0]] = sonuc[1]
+    return gunler
+
+
 def icloud_tara(en_cok=40):
     """Yeni ya da değişmiş Sağlık dosyalarını okur. Döner: {dosya, gun}."""
     import subprocess
@@ -417,6 +505,13 @@ def icloud_tara(en_cok=40):
             except Exception:  # noqa: BLE001
                 pass
         gorulen[str(p)] = mt
+    for k in _icloud_klasorler():
+        for kok in (k / "Documents" / "AutoSync", k / "AutoSync"):
+            if (kok / "HealthMetrics").is_dir():
+                hae = _hae_tara(kok, gorulen, sinir)
+                if hae:
+                    gun |= set(_gunleri_yaz(hae))
+                    okunan += 1
     a = pt._json(AYAR, {})
     a["icloud_gorulen"] = dict(sorted(gorulen.items(), key=lambda x: x[1])[-400:])
     if okunan:
