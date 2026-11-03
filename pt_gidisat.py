@@ -204,7 +204,12 @@ def gun_ozet(tarih):
                          "hareketler": [{"ad": (pt.KATALOG.get(h.get("kod")) or {}).get("ad") or h.get("ad") or h.get("kod") or "", "setler": _set_yazi(h)}
                                         for h in s.get("hareketler") or [] if h.get("setler")]})
     import pt_saglik
-    for w in pt_saglik.yuruyusler(tarih):
+    kalan_y, eslesen = pt_saglik.yuruyus_eslesme(tarih)
+    for s, kaynak in zip(seanslar, [x for x in d.get("seanslar") or [] if x.get("bitti") and x.get("tur") != "dinlenme"]):
+        w = eslesen.get(kaynak.get("id"))
+        if w:
+            s["not"] = (s.get("not") + " · " if s.get("not") else "") + f"Telefon {w['dk']} dk, {w['adim']:,} adım ölçtü".replace(",", ".")
+    for w in kalan_y:
         seanslar.append({"baslik": w["ad"], "dk": w["dk"], "bitis_t": w["bit"], "yuruyus": True, "hareketler": [],
                          "not": f"{dt.datetime.fromtimestamp(w['bas']).strftime('%H:%M')} · telefon {w['adim']:,} adım saydı".replace(",", ".")})
     seanslar.sort(key=lambda x: x.get("bitis_t") or 0)
@@ -225,3 +230,15 @@ def gun_ozet(tarih):
             "kilo": d.get("kilo"), "bel_cm": d.get("bel_cm"), "su_ml": d.get("su_ml"), "agri": [{k: a.get(k) for k in ("bolge", "puan", "tur")} for a in d.get("agri") or []],
             "moduller": sorted((d.get("moduller") or {}).keys()) if isinstance(d.get("moduller"), dict) else (d.get("moduller") or []),
             "aksam": (d.get("aksam") or {}).get("koc") if isinstance(d.get("aksam"), dict) else None}
+
+
+def hareket_bugun(tarih=None):
+    """Hareket ekle sayfası ve Bugün kartı: elle girilenler ve telefonun ölçüp henüz eşleşmeyen yürüyüşleri (bugün ve dün)."""
+    import pt_saglik
+    tarih = tarih or pt.bugun().isoformat()
+    elle = [{"id": s.get("id"), "ad": s.get("baslik"), "dk": s.get("sure_dk"), "t": s.get("bitis_t"), "kaynak": s.get("kaynak")} for s in _gun(tarih).get("seanslar") or []
+            if s.get("bitti") and s.get("kaynak") in ("elle", "sohbet")]
+    gorulen = []
+    for t in (tarih, _onceki(tarih)):
+        gorulen += [{**w, "tarih": t} for w in pt_saglik.yuruyusler(t)]
+    return {"elle": elle, "telefon": gorulen}

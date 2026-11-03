@@ -42,7 +42,7 @@ def yapilan_dk_haftalik(gun=14):
     son, top = pt.bugun(), 0
     for i in range(gun):
         d = pt._json(pt.gun_yolu((son - dt.timedelta(days=i)).isoformat()), {})
-        top += sum(int(s.get("sure_dk") or 0) for s in d.get("seanslar") or [] if s.get("bitti"))
+        top += sum(int(s.get("sure_dk") or 0) for s in d.get("seanslar") or [] if s.get("bitti") and not pt.gunluk_yuruyus(s))
     return top * 7 / gun
 
 

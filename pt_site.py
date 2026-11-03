@@ -394,6 +394,8 @@ def kaydet(app):
             if kr:
                 t = int((medya / k / "k1.jpg").stat().st_mtime)
                 h["kareler"] = [{"b": f"/pt-medya/{k}/k{n}.jpg?t={t}", "k": f"/pt-medya/{k}/k{n}_k.jpg?t={t}"} for n in kr]
+                if (medya / k / "hareket.mp4").exists():
+                    h["hareket"] = f"/pt-medya/{k}/hareket.mp4?t={int((medya / k / 'hareket.mp4').stat().st_mtime)}"
             if (medya / k / "anatomi.jpg").exists():
                 t = int((medya / k / "anatomi.jpg").stat().st_mtime)
                 h["anatomi"] = {"b": f"/pt-medya/{k}/anatomi.jpg?t={t}", "k": f"/pt-medya/{k}/anatomi_k.jpg?t={t}"}
@@ -1014,6 +1016,36 @@ def kaydet(app):
         d = pt.gun(_tarih())
         return jsonify({"yemek": y, "toplam": pt_beslenme.gun_toplam(d), "pencere": pt_beslenme.pencere_durumu(tarih=_tarih())})
 
+    @app.get("/api/pt/aktivite")
+    def pt_aktivite_liste():
+        import pt_gidisat
+        import pt_sohbet
+        return jsonify({"liste": pt_sohbet.aktivite_listesi(), **pt_gidisat.hareket_bugun()})
+
+    @app.post("/api/pt/aktivite")
+    def pt_aktivite_ekle():
+        import pt_sohbet
+        g = request.get_json(silent=True) or {}
+        pt_sohbet.aktivite_ekle(g.get("ad"), g.get("spor"), g.get("sure_dk"), g.get("zorluk"), g.get("t"))
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        return jsonify({"tamam": True})
+
+    @app.delete("/api/pt/aktivite/<tarih>/<sid>")
+    def pt_aktivite_sil(tarih, sid):
+        import pt_sohbet
+        pt_sohbet.aktivite_sil(_tarih(tarih), sid)
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        return jsonify({"tamam": True})
+
+    @app.post("/api/pt/yuruyus-gizle")
+    def pt_yuruyus_gizle():
+        import pt_saglik
+        g = request.get_json(silent=True) or {}
+        pt_saglik.yuruyus_gizle(_tarih(g.get("tarih")), pt.sayi(g.get("bas"), 0, 4e9, 0))
+        return jsonify({"tamam": True})
+
     @app.get("/api/pt/hazir")
     def pt_hazir():
         return jsonify(pt_beslenme.hazir_liste())
@@ -1470,7 +1502,7 @@ def kaydet(app):
     # ---------------------------------------------------------------- hareket görselleri (pt_medya: yapay zekâ animasyonları)
     @app.get("/pt-medya/<kod>/<ad>")
     def pt_medya_dosya(kod, ad):
-        if ad not in ("video.mp4", "kapak.jpg", "bas.png", "bit.png", "k1.jpg", "k2.jpg", "k3.jpg", "k1_k.jpg", "k2_k.jpg", "k3_k.jpg",
+        if ad not in ("hareket.mp4", "video.mp4", "kapak.jpg", "bas.png", "bit.png", "k1.jpg", "k2.jpg", "k3.jpg", "k1_k.jpg", "k2_k.jpg", "k3_k.jpg",
                       "anatomi.jpg", "anatomi_k.jpg") or "/" in kod or ".." in kod:
             abort(404)
         p_ = pt.KLASOR / "pt_medya" / kod / ad

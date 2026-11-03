@@ -68,4 +68,46 @@ window.hazirSayfa = async function(){
   $('#hzYok', ku).onclick = () => { p.kapat(); yemekSayfa(); };
   ciz();
 };
+
+/* "Yaptığımı ekle" (2026-11-03; kullanıcı: "Harekette de 'yürüyüş yaptım' gibi seçenekler. Köpek gezdirme, 45 dk gibi seçebilmeliyim. Apple Health'ten de onları matchleyebilirsin.")
+   Yapay zekâ çağrılmaz. Telefonun ölçtüğü yürüyüş üstte: dokununca doldurulmuş gelir; seçilen kayıt zamanla eşleşir, aynı yürüyüş iki kez sayılmaz. */
+const EFOR = [[3, 'Rahat'], [5, 'Orta'], [7, 'Zor']];
+const efor = z => z >= 7 ? 7 : z >= 5 ? 5 : 3;
+const saatYaz = t => new Date(t * 1000).toLocaleTimeString('tr-TR', {hour: '2-digit', minute: '2-digit'});
+window.hareketSayfa = async function(hazir){
+  const p = sayfa(`<h3>Ne yaptınız?</h3><div class="satir gri"><span class="donen"></span> Liste geliyor</div>`, {sabit: true});
+  let v; try{ v = await api('/api/pt/aktivite'); }catch(e){ p.kapat(); toast(e.message); return; }
+  const ku = $('.sayfa', p); ku.classList.add('hz');
+  let sec = null, dk = 30, zor = 3, zaman = 0, ozel = '', tarih = null;
+  const adSec = (a, dk_, z, t) => { sec = a; dk = dk_; zor = efor(z); ozel = t ? new Date(t * 1000 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''; zaman = 0; ciz(); requestAnimationFrame(() => { const d = $('#hzHEkle', ku); if (d) d.scrollIntoView({block: 'nearest', behavior: 'smooth'}); }); };
+  const ciz = () => {
+    const TEL = v.telefon || [];
+    ku.innerHTML = `<div class="tutac"></div><button class="kapatx" data-kapat aria-label="Kapat">×</button><h3>Ne yaptınız?</h3>
+      ${TEL.length ? `<div class="hz-tel"><b>Telefonun gördükleri</b>${TEL.map((w, i) => `<div class="hz-ts"><span><b>${esc(w.ad)}</b><small>${w.tarih === bugunT() ? 'Bugün' : 'Dün'} ${saatYaz(w.bas)} · ${w.dk} dk · ${w.adim.toLocaleString('tr-TR')} adım</small></span>
+        <button class="btn kucuk" data-tok="${i}">Onayla</button><button class="metin sessiz" data-tyok="${i}">Değildi</button></div>`).join('')}</div>` : ''}
+      <div class="hz-gr hz-akt">${v.liste.map(a => `<button data-a="${esc(a.ad)}" class="${sec && sec.ad === a.ad ? 'on' : ''}">${esc(a.ad)}</button>`).join('')}</div>
+      <input class="alan hz-ara" id="hzOzelAd" placeholder="Listede yoksa yazın: bahçe işi, taşınma…" value="${sec && sec.ozel ? esc(sec.ad) : ''}">
+      <div class="hz-tepsi hz-duz" ${sec ? '' : 'hidden'}>
+        <div class="hz-sat"><span>Süre</span><div class="hz-c">${[10, 15, 20, 30, 45, 60, 90].map(x => `<button data-d="${x}" class="${dk === x ? 'on' : ''}">${x} dk</button>`).join('')}<input type="number" min="1" max="600" id="hzDk" value="${[10, 15, 20, 30, 45, 60, 90].includes(dk) ? '' : dk}" placeholder="dk" aria-label="Dakika"></div></div>
+        <div class="hz-sat"><span>Efor</span><div class="hz-c">${EFOR.map(([z, a]) => `<button data-e="${z}" class="${zor === z ? 'on' : ''}">${a}</button>`).join('')}</div></div>
+        <div class="hz-sat"><span>Ne zaman</span><div class="hz-c">${[[0, 'Şimdi bitti'], [60, '1 sa önce'], [180, '3 sa önce']].map(([d, a]) => `<button data-z="${d}" class="${!ozel && zaman === d ? 'on' : ''}">${a}</button>`).join('')}<input type="datetime-local" id="hzZ" value="${ozel}" aria-label="Tarih ve saat"></div></div>
+        <button class="btn ana genis" id="hzHEkle">${sec ? esc(sec.ad) + ' · ' + dk + ' dk ekle' : 'Ekle'}</button></div>
+      ${(v.elle || []).length ? `<div class="hz-tel"><b>Bugün eklediğiniz</b>${v.elle.map(x => `<div class="hz-ts"><span><b>${esc(x.ad)}</b><small>${x.t ? saatYaz(x.t) + ' · ' : ''}${x.dk} dk</small></span>${x.kaynak === 'elle' ? `<button class="an-ys" data-sil="${esc(x.id)}" aria-label="Kaldır">×</button>` : ''}</div>`).join('')}</div>` : ''}`;
+    $$('[data-kapat]', ku).forEach(b => b.onclick = () => p.kapat());
+    $$('[data-a]', ku).forEach(b => b.onclick = () => { const a = v.liste.find(x => x.ad === b.dataset.a); adSec(a, a.dk, a.zorluk); });
+    const oz = $('#hzOzelAd', ku); oz.onchange = () => { const t = oz.value.trim(); if (t) adSec({ad: t, spor: 'diger', ozel: true}, dk, 5); };
+    $$('[data-tok]', ku).forEach(b => b.onclick = () => { const w = TEL[+b.dataset.tok], a = v.liste.find(x => x.ad === w.ad) || {ad: w.ad, spor: 'yuruyus'}; adSec(a, w.dk, 3, w.bit); });
+    $$('[data-tyok]', ku).forEach(b => b.onclick = async () => { const w = TEL[+b.dataset.tyok]; await api('/api/pt/yuruyus-gizle', json({tarih: w.tarih, bas: w.bas})); TEL.splice(+b.dataset.tyok, 1); toast('Bu yürüyüş sayılmayacak.'); ciz(); yukle(); });
+    $$('[data-d]', ku).forEach(b => b.onclick = () => { dk = +b.dataset.d; ciz(); });
+    const dki = $('#hzDk', ku); if (dki) dki.onchange = () => { const x = +dki.value; if (x > 0){ dk = Math.min(600, Math.round(x)); ciz(); } };
+    $$('[data-e]', ku).forEach(b => b.onclick = () => { zor = +b.dataset.e; ciz(); });
+    $$('[data-z]', ku).forEach(b => b.onclick = () => { zaman = +b.dataset.z; ozel = ''; ciz(); });
+    const zi = $('#hzZ', ku); if (zi) zi.onchange = () => { ozel = zi.value; ciz(); };
+    const ek = $('#hzHEkle', ku); if (ek) ek.onclick = async () => {
+      const t = ozel ? Math.floor(new Date(ozel).getTime() / 1000) : Math.floor(Date.now() / 1000) - zaman * 60;
+      try{ await api('/api/pt/aktivite', json({ad: sec.ad, spor: sec.spor, sure_dk: dk, zorluk: zor, t})); p.kapat(); toast(`${sec.ad} eklendi.`); yukle(); }catch(e){ toast(e.message); } };
+    $$('[data-sil]', ku).forEach(b => b.onclick = async () => { await fetch(`/api/pt/aktivite/${bugunT()}/${b.dataset.sil}`, {method: 'DELETE'}); v.elle = v.elle.filter(x => x.id !== b.dataset.sil); toast('Kaldırıldı.'); ciz(); yukle(); });
+  };
+  ciz();
+};
 })();

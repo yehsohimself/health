@@ -9,7 +9,9 @@ import pytest
 def g(kok, tmp_path, monkeypatch):
     import pt
     import pt_gidisat
+    import pt_saglik
     v = tmp_path / "pt"
+    monkeypatch.setattr(pt_saglik, "KLASOR", v / "saglik")
     for ad, yol in (("VERI", v), ("GUNLUK", v / "gunluk"), ("PROGRAM", v / "program")):
         monkeypatch.setattr(pt, ad, yol)
         yol.mkdir(parents=True, exist_ok=True)

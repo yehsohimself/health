@@ -202,18 +202,47 @@ def yuruyus_bul(ornekler, rutin_ad=None):
     return out
 
 
-def yuruyusler(tarih):
-    """O günün ölçülen yürüyüşleri; kişinin kendi yazdığı yürüyüşle aynı dilime düşen tekrar edilmez (kendi kaydı önce gelir)."""
+def _kendi_yuruyus_mu(s):
+    ad = str(s.get("baslik") or "").lower()
+    return bool(s.get("bitti") and ((s.get("kardiyo") or {}).get("tur") == "yuruyus" or any(x in ad for x in ("yürüy", "köpek", "gezi"))))
+
+
+def _ortusuyor(w, s):
+    """Elle girilen kayıt (başlangıcı biliniyor) ölçülen yürüyüşle aynı an mı: kısa olanın en az üçte biri çakışıyor."""
+    bas, bit = s.get("bas_t"), s.get("bitis_t")
+    if not bas or not bit:
+        return False
+    ort = min(bit, w["bit"]) - max(bas, w["bas"])
+    return ort > 0 and ort >= min(bit - bas, w["bit"] - w["bas"]) / 3
+
+
+def yuruyus_eslesme(tarih):
+    """(kendi kaydıyla eşleşmeyen ölçülen yürüyüşler, {seans id: ölçülen yürüyüş}). Saati bilinen kayıt zamanla, sohbetten gelen eski kayıt dilimle eşleşir."""
     W = gun(tarih).get("yuruyusler") or []
     if not W:
-        return []
+        return [], {}
     d = pt._json(pt.gun_yolu(tarih), {})
-    kendi = set()
-    for s in d.get("seanslar") or []:
-        ad = str(s.get("baslik") or "").lower()
-        if s.get("bitti") and ((s.get("kardiyo") or {}).get("tur") == "yuruyus" or any(x in ad for x in ("yürüy", "köpek", "gezi"))) and s.get("bitis_t"):
-            kendi.add(_dilim(dt.datetime.fromtimestamp(s["bitis_t"]).hour))
-    return [w for w in W if w.get("dilim") not in kendi]
+    gizli = d.get("yuruyus_gizli") or []
+    W = [w for w in W if not any(abs(w["bas"] - g) < 600 for g in gizli)]
+    K = [s for s in d.get("seanslar") or [] if _kendi_yuruyus_mu(s)]
+    kalan, es = [], {}
+    for w in W:
+        s = next((x for x in K if _ortusuyor(w, x)), None)
+        if s:
+            es.setdefault(s.get("id"), w)
+            continue
+        if not any(not x.get("bas_t") and x.get("bitis_t") and _dilim(dt.datetime.fromtimestamp(x["bitis_t"]).hour) == w.get("dilim") for x in K):
+            kalan.append(w)
+    return kalan, es
+
+
+def yuruyusler(tarih):
+    """O günün ölçülen yürüyüşleri; kişinin kendi yazdığı kayıtla eşleşen ya da 'yürüyüş değildi' dediği tekrar edilmez."""
+    return yuruyus_eslesme(tarih)[0]
+
+
+def yuruyus_gizle(tarih, bas):
+    pt.gun_degistir(tarih, lambda d: d.setdefault("yuruyus_gizli", []).append(int(bas)))
 
 
 def adim_bilgi(sayilan, p=None):

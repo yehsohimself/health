@@ -149,6 +149,7 @@ input.alan.kisa{width:96px} input.alan.orta{width:150px}
 .sb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease} .sb img.on{opacity:1}
 .sb-nok{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px} .sb-nok i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.25)} .sb-nok i.on{background:rgba(0,0,0,.7)}
 .sb-ad{position:absolute;right:10px;top:8px;font-size:10.5px;color:rgba(0,0,0,.5)}
+.sb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.sbv .sb-nok i{background:rgba(255,255,255,.3)}.sbv .sb-nok i.on{background:var(--vurgu)}.sbv .sb-ad{color:rgba(255,255,255,.75)}.oyn .sb.oynsb video{object-fit:contain}
 .oyn .sb.oynsb{position:absolute;inset:0;width:auto;aspect-ratio:auto;border-radius:0;background:#000} .oyn .sb.oynsb img{object-fit:contain}
 .oyn .sb.oynsb .sb-nok i{background:rgba(255,255,255,.3)} .oyn .sb.oynsb .sb-nok i.on{background:#fff} .oyn .sb.oynsb .sb-ad{color:rgba(255,255,255,.5)}
 .hkart .adimlar li.fotolu{cursor:pointer;align-items:center} .hkart .adimlar li img{width:84px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex:none;opacity:.55;transition:opacity .3s}
@@ -778,7 +779,7 @@ body:has(.perde) #yazDock,body:has(.nfo) #yazDock,body:has(#oyn) #yazDock,body:h
 </style>
 <link rel="stylesheet" href="/static/pt_gorsel.css?v=6">
 <link rel="stylesheet" href="/static/pt_ana.css?v=9">
-<link rel="stylesheet" href="/static/pt_hazir.css?v=3">
+<link rel="stylesheet" href="/static/pt_hazir.css?v=4">
 <script src="/static/bekleme.js?v=4"></script>
 </head>
 <body>
@@ -2891,11 +2892,22 @@ function videoSayfa(kod, pozisyon){
 }
 /* storyboard: hareketin gerçekçi kareleri (başlangıç → hareket → bitiş); kendiliğinden ilerler, dokununca durur/ilerler */
 function sbKutu(kod, sinif = ''){ const K = kat(kod).kareler || []; if (!K.length) return '';
+  if (kat(kod).hareket) return `<div class="sb sbv ${sinif}" data-sb="${esc(kod)}" data-n="${K.length}"><video src="${kat(kod).hareket}" poster="${K[0].b}" autoplay loop muted playsinline preload="metadata"></video>
+    <div class="sb-nok">${K.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div><span class="sb-ad mono"></span></div>`;
   return `<div class="sb ${sinif}" data-sb="${esc(kod)}">${K.map((x, i) => `<img src="${x.b}" alt="" class="${i ? '' : 'on'}" ${i ? 'loading="lazy"' : ''}>`).join('')}
     ${K.length > 1 ? `<div class="sb-nok">${K.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div><span class="sb-ad mono">1 / ${K.length}</span>` : ''}</div>`; }
 /* Hareket kareleri ileri-geri akar (1 → 2 → 3 → 2 → 1): başlangıç ve bitiş pozunda kısa bekleme, aralarda yumuşak geçiş ve hafif yakınlaşma;
    altta limon yeşili ilerleme çizgisi. Dokununca durur ve tek tek ilerler. */
-function sbBaslat(k){ $$('[data-sb]', k).forEach(e => { if (e.dataset.basladi) return; e.dataset.basladi = 1;
+/* hareketli video (pt_hareketli.py ile aynı sayılar): oynarken alttaki noktalar ve "Nasıl yapılır" adımı o anki poza göre yanar; dokununca yavaşlar */
+const SBV = {fps: 14, gecis: 13, bekle: 7};
+function sbVideo(e){ const v = $('video', e), n = +e.dataset.n, nk = $$('.sb-nok i', e), ad = $('.sb-ad', e), g = SBV.gecis - 1, ileri = SBV.bekle + g * (n - 1) + 1, top = ileri + SBV.bekle + g * (n - 1) + 1; let son = -1;
+  const yan = i => { if (i === son) return; son = i; nk.forEach((x, t) => x.classList.toggle('on', t === i)); $$(`[data-sbadim="${e.dataset.sb}"]`).forEach((x, t) => x.classList.toggle('on', t === i)); };
+  const kare = () => { if (!e.isConnected) return; let f = Math.floor(v.currentTime * SBV.fps) % top; if (f >= ileri + SBV.bekle) f = ileri - 1 - (f - ileri - SBV.bekle); yan(Math.min(n - 1, Math.round(Math.max(0, f - SBV.bekle) / g))); requestAnimationFrame(kare); };
+  requestAnimationFrame(kare);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); }
+  e.onclick = () => { if (v.paused) v.play().catch(() => {}); v.playbackRate = v.playbackRate === 1 ? .5 : 1; ad.textContent = v.playbackRate === 1 ? '' : 'Yavaş'; };
+  e._git = j => { v.pause(); v.currentTime = (SBV.bekle + j * g) / SBV.fps; yan(j); ad.textContent = 'Dokunun, sürsün'; e.onclick = () => { ad.textContent = ''; v.play().catch(() => {}); e.onclick = () => { v.playbackRate = v.playbackRate === 1 ? .5 : 1; ad.textContent = v.playbackRate === 1 ? '' : 'Yavaş'; }; }; }; }
+function sbBaslat(k){ $$('[data-sb]', k).forEach(e => { if (e.dataset.basladi) return; e.dataset.basladi = 1; if (e.classList.contains('sbv')) return sbVideo(e);
   const im = $$('img', e), n = $$('.sb-nok i', e), ad = $('.sb-ad', e); if (im.length < 2) return; let i = 0, dur = false;
   const cz = document.createElement('i'); cz.className = 'sb-cizgi'; e.appendChild(cz);
   const sira = im.length > 2 ? [...im.keys(), ...[...im.keys()].slice(1, -1).reverse()] : [0, 1]; let si = 0;
@@ -3902,8 +3914,8 @@ if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.reg
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !mesgul()) yukle(true); });
 yukle();
 </script>
-<script src="/static/pt_hazir.js?v=1"></script>
-<script src="/static/pt_ana.js?v=17"></script>
+<script src="/static/pt_hazir.js?v=3"></script>
+<script src="/static/pt_ana.js?v=18"></script>
 <script src="/static/pt_gorsel.js?v=6"></script>
 <script src="/static/zil.js?v=2"></script>
 </body>

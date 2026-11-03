@@ -738,6 +738,11 @@ def degisiklik_geri_al(did):
 # ----------------------------------------------------------------------------- yorgunluk: kondisyon / yorgunluk / form (zorluk × dakika)
 
 
+def gunluk_yuruyus(s):
+    """Rahat yürüyüş (köpek gezdirme gibi) gündelik harekettir: kaydedilir, kardiyoya sayılır, ama antrenman yükü ve kalori çarpanına girmez."""
+    return (s.get("kardiyo") or {}).get("tur") == "yuruyus" and (s.get("kardiyo") or {}).get("yogunluk") == "kolay"
+
+
 def yuk_serisi(gun_sayisi=120):
     """Günlük yük (seans zorluğu × dakika; araştırma: sRPE çok sporda geçerli, BJJ dahil). Kondisyon = 42 günlük, yorgunluk = 7 günlük üstel ortalama,
     form = kondisyon − yorgunluk. Eşikler katı kural değil, yol gösterici (kanıt zayıf)."""
@@ -747,7 +752,7 @@ def yuk_serisi(gun_sayisi=120):
     for i in range(gun_sayisi - 1, -1, -1):
         g_ = son - dt.timedelta(days=i)
         d = _json(gun_yolu(g_.isoformat()), {})
-        yuk = sum(int(s.get("yuk") or 0) for s in d.get("seanslar") or [] if s.get("bitti"))
+        yuk = sum(int(s.get("yuk") or 0) for s in d.get("seanslar") or [] if s.get("bitti") and not gunluk_yuruyus(s))
         ctl += (yuk - ctl) / 42
         atl += (yuk - atl) / 7
         L.append({"tarih": g_.isoformat(), "yuk": yuk, "kondisyon": round(ctl, 1), "yorgunluk": round(atl, 1), "form": round(ctl - atl, 1)})

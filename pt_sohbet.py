@@ -128,6 +128,41 @@ def _seans_bicimle(seans, spor, dk, zor, saat, t):
     return seans
 
 
+AKTIVITE = [("Köpek gezdirme", "yuruyus", 45, 3), ("Yürüyüş", "yuruyus", 30, 3), ("Tempolu yürüyüş", "yuruyus", 30, 5), ("Koşu", "kosu", 30, 6), ("Bisiklet", "bisiklet", 45, 5),
+            ("Futbol", "futbol", 60, 7), ("Basketbol", "basketbol", 45, 7), ("Tenis", "tenis", 60, 6), ("Padel", "padel", 60, 6), ("Yüzme", "yuzme", 30, 6), ("Jiu-jitsu", "jiujitsu", 60, 7),
+            ("Yoga", "yoga", 30, 3), ("Esneme", "yoga", 15, 2), ("Dans", "dans", 45, 5), ("Merdiven", "kosu", 15, 6), ("Ev antrenmanı", "fitness", 20, 6)]
+
+
+def aktivite_listesi():
+    """Hazır hareketler + son 45 günde sık girilenler önde (son süreyle)."""
+    sayac, son = {}, {}
+    for i in range(45, -1, -1):
+        for s in pt.gun((pt.bugun() - dt.timedelta(days=i)).isoformat()).get("seanslar") or []:
+            if s.get("kaynak") == "elle" and s.get("baslik"):
+                sayac[s["baslik"]] = sayac.get(s["baslik"], 0) + 1
+                son[s["baslik"]] = {"dk": s.get("sure_dk"), "zorluk": s.get("zorluk")}
+    L = [{"ad": a, "spor": b, "dk": (son.get(a) or {}).get("dk") or c, "zorluk": (son.get(a) or {}).get("zorluk") or z, "kez": sayac.get(a, 0)} for a, b, c, z in AKTIVITE]
+    L.sort(key=lambda x: -x["kez"])
+    return L
+
+
+def aktivite_ekle(ad, spor, dk, zorluk, t=None):
+    """Hazır listeden seçilen hareket. t = bittiği an; kayıt o günün. Başlangıcı bilindiği için telefonun ölçtüğü yürüyüşle zamanla eşleşir."""
+    spor = spor if spor in SPOR else "diger"
+    st, ad0 = SPOR[spor]
+    simdi = int(time.time())
+    t = max(simdi - 14 * 86400, min(int(pt.sayi(t, 0, 4e9, simdi)), simdi))
+    dk, zor = int(pt.sayi(dk, 1, 600, 30)), int(pt.sayi(zorluk, 1, 10, 5))
+    tarih = dt.datetime.fromtimestamp(t).date().isoformat()
+    seans = {"id": f"e{int(time.time() * 1000)}", "tur": st, "baslik": str(ad or ad0)[:60], "sure_dk": dk, "zorluk": zor, "kaynak": "elle", "spor": spor, "bas_t": t - dk * 60, "bitis_t": t}
+    _seans_bicimle(seans, spor, dk, zor, None, tarih)
+    return pt.seans_kaydet(tarih, seans) or seans
+
+
+def aktivite_sil(tarih, sid):
+    pt.gun_degistir(tarih, lambda d: d.update(seanslar=[s for s in d.get("seanslar") or [] if not (s.get("id") == sid and s.get("kaynak") == "elle")]))
+
+
 def kayit_isle(k):
     """Tek kaydı uygular. Döner: {tur, tarih, ozet, geri} (geri: geri almak için gereken bilgi) ya da None."""
     tur = k.get("tur")

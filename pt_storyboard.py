@@ -86,7 +86,7 @@ def _jpg(png, jpg, genislik):
     subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", str(png), "-vf", f"scale={genislik}:-2", "-q:v", "4", str(jpg)], capture_output=True, timeout=60)
 
 
-def uret(kod, log=print, yenile=False):
+def uret(kod, log=print, yenile=False, ek=""):
     """Bir hareketin storyboard kareleri. Döner: üretilen kare sayısı (0 = hiçbiri)."""
     kart = pt_kart.kartlar().get(kod) or {}
     g = kart.get("gorsel") or {}
@@ -98,7 +98,7 @@ def uret(kod, log=print, yenile=False):
     ad = pt.KATALOG[kod]["ad"]
     ekip = g.get("ekipman_en") or ""
     ekip = f" Equipment visible: {ekip}." if ekip and ekip.lower() != "none" else ""
-    ortak = ORTAK.format(kamera={"front": "Front", "three-quarter": "Three-quarter"}.get(g.get("kamera"), "Side")) + ekip
+    ortak = ORTAK.format(kamera={"front": "Front", "three-quarter": "Three-quarter"}.get(g.get("kamera"), "Side")) + ekip + ek
     adimlar = [1] if g.get("tutus") else [1, 2, 3]
     yapilan = 0
     for n in adimlar:

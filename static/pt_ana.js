@@ -27,7 +27,7 @@ const saatYaz = t => new Date(t * 1000).toLocaleTimeString('tr-TR', {hour: '2-di
 /* ---------- üç işin bugünkü durumu (yalnız istemcideki veriden) ---------- */
 function hareketDurum(){
   const o = S.o, b = o.bugun || {}, il = o.ilk || {};
-  const L = (b.seanslar || []).filter(s => s.tur !== 'dinlenme');
+  const L = (b.seanslar || []).filter(s => s.tur !== 'dinlenme' && !s.kaynak);   // elle ve sohbetle girilenler planı "yapıldı" saydırmaz
   if (il.aktif && il.simdi){
     if (il.bugun_tamam) return {oran: 1, tamam: true, satir: 'Bugünkü adım tamam'};
     return {oran: 0, satir: `${il.simdi.ad} · ${il.simdi.dk} dk`, seans: {ilk: true, ad: il.simdi.ad, dk: il.simdi.dk}};
@@ -169,7 +169,7 @@ function hareketOzet(h){
   return `<section class="kart an-oz hareket ${h.tamam ? 'tamam' : ''}"><div class="an-ozb"><span class="an-ozi" style="color:var(--vurgu)">${AYAK.hareket.ikon}</span><span>Hareket</span>${H.seri ? `<em>${H.seri} gün seri</em>` : ''}</div>
     <p class="an-ozs">${h.tamam ? (h.dinlenme ? 'Dinlenme' : 'Tamam') : `${Math.round(h.oran * 100)}%`}</p><div class="an-ozc"><i style="width:${Math.round(h.oran * 100)}%" class="${h.tamam ? 'ok' : ''}"></i></div><p class="an-oza">${esc(h.satir)}</p>
     ${btn || (h.tamam && !h.dinlenme ? '' : '<button class="btn genis" data-ansekgit="ayrinti" data-ayakgit="hareket">Bugünü gör</button>')}
-    ${btn ? '<button class="metin an-ozl" data-ansekgit="ayrinti" data-ayakgit="hareket">Listeye bak</button>' : ''}</section>`;
+    <button class="metin an-ozl" data-hareket>Yaptığımı ekle</button>${btn ? '<button class="metin an-ozl" data-ansekgit="ayrinti" data-ayakgit="hareket">Listeye bak</button>' : ''}</section>`;
 }
 function yemekOzet(h){
   const bs = S.o.beslenme || {}, T = bs.toplam || {}, H = bs.hedef || {}, b = S.o.bugun || {};
@@ -395,6 +395,7 @@ window.bugunCiz = function(){
   const sekAc = k => { ss.set('pt_ansek', k); document.body.classList.toggle('an-haftada', k === 'hafta'); $$('[data-ansek]', m).forEach(y => { y.classList.toggle('on', y.dataset.ansek === k); y.setAttribute('aria-selected', y.dataset.ansek === k); }); $$('[data-anp]', m).forEach(d => d.hidden = d.dataset.anp !== k); window.scrollTo(0, 0); };
   $$('[data-ansek]', m).forEach(x => x.onclick = () => sekAc(x.dataset.ansek));
   $$('[data-ansekgit]', m).forEach(x => x.onclick = () => { sekAc(x.dataset.ansekgit); if (x.dataset.ayakgit){ const a = $(`[data-ayak="${x.dataset.ayakgit}"]`, m); if (a) a.click(); } });
+  $$('[data-hareket]', m).forEach(x => x.onclick = () => window.hareketSayfa());
   $$('[data-yo]', m).forEach(x => x.onclick = async () => { const bozar = x.dataset.boz !== '1';
     try{ await api('/api/pt/yemek/oruc', json({tarih: bugunT(), id: x.dataset.yo, bozar})); toast(bozar ? 'Bu kayıt orucu bitirdi.' : 'Orucunuz sürüyor.'); yukle(); }catch(e){ toast(e.message); } });
   $$('[data-ysil]', m).forEach(x => x.onclick = async () => { try{ await fetch(`/api/pt/yemek/${bugunT()}/${x.dataset.ysil}`, {method: 'DELETE'}); toast('Kaldırıldı.'); yukle(); }catch(e){ toast(e.message); } });
