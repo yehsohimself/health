@@ -169,6 +169,21 @@ def _dk(s):
     return int(h) * 60 + int(m)
 
 
+ORUC_KCAL = 15                                                 # sade kahve, çay, su orucu bozmaz (2026-11-03; kullanıcı: "filtre kahve orucu kapatmaz")
+
+
+def oruc_bozar(y):
+    """Bu kayıt orucu bitirdi mi: kişi söylediyse o; yoksa toplam kaloriye göre."""
+    if isinstance(y.get("oruc_bozar"), bool):
+        return y["oruc_bozar"]
+    K = y.get("kalemler") or []
+    return not K or sum(pt.sayi(k.get("kcal"), 0, 5000, 0) for k in K) >= ORUC_KCAL
+
+
+def yeme_anlari(d):
+    return [y["t"] for y in d.get("yemekler") or [] if y.get("t") and oruc_bozar(y)]
+
+
 def pencere_durumu(p=None, tarih=None):
     """18/6: pencere planlanan saatte ya da ilk yemekte açılır; ilk yemek erken olursa o andan sayılır."""
     p = p or pt.profil()
@@ -177,7 +192,7 @@ def pencere_durumu(p=None, tarih=None):
     tarih = tarih or pt.bugun().isoformat()
     d = pt.gun(tarih)
     bas_dk = _dk(d.get("pencere_bas") or b.get("pencere_bas"))
-    ilk = min([y.get("t") for y in d.get("yemekler") or [] if y.get("t")] or [None]) if d.get("yemekler") else None
+    ilk = min(yeme_anlari(d), default=None)
     gun0 = dt.datetime.combine(dt.date.fromisoformat(tarih), dt.time())
     acilis = gun0 + dt.timedelta(minutes=bas_dk)
     if ilk:
@@ -196,7 +211,7 @@ def pencere_durumu(p=None, tarih=None):
     durum = "once" if simdi < acilis and not kapattim else "acik" if simdi < kapanis and not kapattim else "kapandi"
     oruc_bas = _oruc_basi(tarih)
     if durum == "kapandi" and not oruc_bas:                    # yeme saati kendiliğinden bitti: oruç son yemekten (yoksa kapanıştan) sayılır
-        son = max([y.get("t") or 0 for y in d.get("yemekler") or []] or [0])
+        son = max(yeme_anlari(d), default=0)
         oruc_bas = min(son or kapanis.timestamp(), kapanis.timestamp())
     yarin = gun0 + dt.timedelta(days=1, minutes=_dk(b.get("pencere_bas")))
     sonuc = {"acilis": acilis.strftime("%H:%M"), "kapanis": kapanis.strftime("%H:%M"), "acilis_t": int(acilis.timestamp()),
@@ -217,10 +232,10 @@ def _oruc_basi(tarih):
     d = pt.gun(tarih)
     if d.get("oruc_kapandi"):
         return d["oruc_kapandi"]
-    if d.get("yemekler") or d.get("oruc_acildi"):
+    if yeme_anlari(d) or d.get("oruc_acildi"):
         return None
     dun = pt.gun((dt.date.fromisoformat(tarih) - dt.timedelta(days=1)).isoformat())
-    return dun.get("oruc_kapandi") or max([y.get("t") or 0 for y in dun.get("yemekler") or []] or [0]) or None
+    return dun.get("oruc_kapandi") or max(yeme_anlari(dun), default=0) or None
 
 
 def oruc_isaretle(tarih, ne, geri=False, t=None):
@@ -521,6 +536,11 @@ def yemek_kaydet(tarih, y):
     y = dict(y)
     y.setdefault("id", f"y{int(time.time() * 1000)}{uuid.uuid4().hex[:4]}")
     y.setdefault("t", int(time.time()))
+    if not isinstance(y.get("oruc_bozar"), bool):
+        y.pop("oruc_bozar", None)
+    if y.pop("secim", None):                                    # hazır listeden: saat seçilebilir, kayıt o günün
+        y["t"] = max(int(time.time()) - 3 * 86400, min(int(pt.sayi(y["t"], 0, 4e9, time.time())), int(time.time())))
+        tarih = dt.datetime.fromtimestamp(y["t"]).date().isoformat()
     def temiz(k):
         k = dict(k)
         for a, ust in (("miktar_g", 5000), ("kcal", 5000), ("protein", 500), ("yag", 500), ("karb", 1000), ("lif", 200), ("doymus", 300)):
@@ -538,6 +558,35 @@ def yemek_kaydet(tarih, y):
     if y.get("favori"):
         favori_ekle(y)
     return y
+
+
+def yemek_oruc(tarih, yid, bozar):
+    """Kişinin kararı: bu kayıt orucu bozdu mu. None = kaloriye göre."""
+    def f(d):
+        for y in d["yemekler"]:
+            if y.get("id") == yid:
+                if isinstance(bozar, bool):
+                    y["oruc_bozar"] = bozar
+                else:
+                    y.pop("oruc_bozar", None)
+    pt.gun_degistir(tarih, f)
+
+
+HAZIR = Path(__file__).resolve().parent / "pt_medya" / "hazir_yemek.json"
+
+
+def hazir_liste(gun=45):
+    """Hazır yemekler + sık seçilenler (son `gun` gün; değerler BLS 4.0'dan, pt_hazir_kaynak.py)."""
+    v = pt._json(HAZIR, {"gruplar": [], "yemekler": []})
+    sayac, son = {}, {}
+    bugun = pt.bugun()
+    for i in range(gun, -1, -1):
+        for y in pt._json(pt.gun_yolu((bugun - dt.timedelta(days=i)).isoformat()), {}).get("yemekler") or []:
+            for k in y.get("kalemler") or []:
+                if k.get("hazir"):
+                    sayac[k["hazir"]] = sayac.get(k["hazir"], 0) + 1
+                    son[k["hazir"]] = k.get("adet") or 1
+    return {**v, "sik": [a for a, _ in sorted(sayac.items(), key=lambda x: -x[1])[:16]], "son_adet": son, "oruc_kcal": ORUC_KCAL}
 
 
 def yemek_sil(tarih, yid):

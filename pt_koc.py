@@ -115,7 +115,7 @@ def gun_akisi(tarih=None):
     yenen = {y.get("ad") for y in d.get("yemekler") or []}
     ogunler = menu.get("ogunler") or []
     if float(b.get("pencere_saat") or 14) < 14:
-        ekle(_dk(pen["acilis"]), "pencere", "Yeme penceresi açılıyor", "Orucu proteinli bir öğünle açın.", bitti=bool(d.get("yemekler")))
+        ekle(_dk(pen["acilis"]), "pencere", "Yeme penceresi açılıyor", "Orucu proteinli bir öğünle açın.", bitti=bool(pt_beslenme.yeme_anlari(d)))
     if ogunler:
         for i, o in enumerate(ogunler):
             ekle(_dk(o.get("saat"), pen["acilis"]), "ogun", o.get("ad") or "Öğün", f"{o.get('kcal', '')} kcal · {o.get('protein', '')} g protein",

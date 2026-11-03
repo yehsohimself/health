@@ -1014,6 +1014,16 @@ def kaydet(app):
         d = pt.gun(_tarih())
         return jsonify({"yemek": y, "toplam": pt_beslenme.gun_toplam(d), "pencere": pt_beslenme.pencere_durumu(tarih=_tarih())})
 
+    @app.get("/api/pt/hazir")
+    def pt_hazir():
+        return jsonify(pt_beslenme.hazir_liste())
+
+    @app.post("/api/pt/yemek/oruc")
+    def pt_yemek_oruc():
+        g = request.get_json(silent=True) or {}
+        pt_beslenme.yemek_oruc(_tarih(), str(g.get("id") or ""), g.get("bozar"))
+        return jsonify({"tamam": True, "pencere": pt_beslenme.pencere_durumu(tarih=_tarih())})
+
     @app.delete("/api/pt/yemek/<tarih>/<yid>")
     def pt_yemek_sil(tarih, yid):
         pt_beslenme.yemek_sil(_tarih(tarih), yid)

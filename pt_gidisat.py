@@ -29,7 +29,7 @@ def _gun(tarih):
 
 
 def _yeme_bas(d):
-    L = [y.get("t") for y in d.get("yemekler") or [] if y.get("t")] + ([d["oruc_acildi"]] if d.get("oruc_acildi") else [])
+    L = pt_beslenme.yeme_anlari(d) + ([d["oruc_acildi"]] if d.get("oruc_acildi") else [])
     return min(L) if L else None
 
 
@@ -37,7 +37,7 @@ def _yeme_bit(d, pencere_sa=None):
     """Yeme saatinin bittiği an ve tahmin mi olduğu. Tahmin yalnız pencere_sa verilirse yapılır."""
     if d.get("oruc_kapandi"):
         return d["oruc_kapandi"], False
-    L = [y.get("t") for y in d.get("yemekler") or [] if y.get("t")]
+    L = pt_beslenme.yeme_anlari(d)
     if L:
         return max(L), False
     bas = _yeme_bas(d)

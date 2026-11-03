@@ -37,6 +37,7 @@ SEVIYE_AD = {"bol": "Bol", "normal": "Dengede", "dikkat": "Dikkat", "kritik": "S
 # (önek, ürün, tür, değer, günlük üst sınır (çağrı)). Önek iş adının başıyla eşleşir (claude_yaz._is_adi); ilk eşleşen geçerli.
 # Tür yalnız varsayılandır: site isteğinden gelen çağrı "siz", toplantı içeriği "toplanti" sayılır.
 POLITIKA = [
+    ("Pano", "Genel", "arka", "yuksek", 8),   # 2026-11-03: gösterge yorumu ve Dot yanıtı okuma; kayıt değişmedikçe çalışmaz
     # Ghost: X taslakları tek başına bütün kullanımın yarısına yakın (7 günde 781 çağrı); paylaşılan çok az. Değer orta, günlük pay sınırlı.
     ("X taslakları", "Ghost", "arka", "orta", 60), ("karisim", "Ghost", "arka", "orta", 60), ("paylasim", "Ghost", "arka", "orta", 60),
     ("kesif", "Ghost", "arka", "orta", 20), ("tetik", "Ghost", "arka", "orta", 15), ("fikir_kartlari", "Ghost", "arka", "dusuk", 10),

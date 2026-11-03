@@ -63,8 +63,8 @@ function toparlanmaDurum(){
 /* ---------- şimdi ne yapmalı: tek iş, tek düğme ---------- */
 function simdi(D){
   const o = S.o, b = o.bugun || {}, s = new Date().getHours(), pen = ((o.beslenme || {}).hedef || {}).pencere || {};
-  if ((o.tarama || {}).bekliyor) return {ayak: 'hareket', baslik: 'Önce doktorunuzla konuşun', neden: 'Sağlık sorularından birine "evet" dediniz. Onay alınca plan başlar.', dugme: '<button class="btn ana genis" data-doktor>Doktorumla konuştum, onay aldım</button>'};
-  if ((o.calisan || {}).plan) return {ayak: 'hareket', baslik: 'Haftanızı yazıyorum', neden: 'Bir iki dakika sürer. Bu sırada sabah sorularını cevaplayabilirsiniz.', dugme: (b.sabah || {}).isik ? '' : '<button class="btn ana genis" data-sabah>Sabah kontrolü · 30 sn</button>'};
+  if ((o.tarama || {}).bekliyor) return {ayak: 'hareket', baslik: 'Önce doktorunuzla konuşun', ozel: true, neden: 'Sağlık sorularından birine "evet" dediniz. Onay alınca plan başlar.', dugme: '<button class="btn ana genis" data-doktor>Doktorumla konuştum, onay aldım</button>'};
+  if ((o.calisan || {}).plan) return {ayak: 'hareket', baslik: 'Haftanızı yazıyorum', ozel: true, neden: 'Bir iki dakika sürer. Bu sırada sabah sorularını cevaplayabilirsiniz.', dugme: (b.sabah || {}).isik ? '' : '<button class="btn ana genis" data-sabah>Sabah kontrolü · 30 sn</button>'};
   if (!(b.sabah || {}).isik && s < 15) return {ayak: 'toparlanma', baslik: 'Bugün nasılsınız?', neden: 'Uyku, enerji ve ağrı. Yarım dakika; cevaba göre bugünkü antrenmanı hafifletir ya da olduğu gibi bırakırım.', dugme: '<button class="btn ana genis" data-sabah>Sabah kontrolüne başla</button>'};
   const h = D.hareket;
   if (h.seans && h.seans.ilk) return {ayak: 'hareket', baslik: h.seans.ad, neden: 'İlk haftanızın bugünkü adımı. Ölçtükçe program size göre şekillenir.', dugme: `<button class="btn ana genis" data-tikla="[data-ilkbasla]">Başla · ${h.seans.dk} dk</button>`};
@@ -73,7 +73,7 @@ function simdi(D){
     const ad = x.tur === 'bjj_ders' ? 'Dersi kaydet' : (x.bolumler || []).length || x.tur === 'test' ? `Başla${x.sure_dk ? ' · ' + x.sure_dk + ' dk' : ''}` : 'Yaptım';
     return {ayak: 'hareket', baslik: x.baslik || 'Bugünkü antrenman', neden: x.neden || x.aciklama || 'Bugünün hareket işi bu. Bitirince haftalık güç ve kardiyo halkalarınız dolar.', dugme: `<button class="btn ana genis" data-tikla='${sec}'>${ad}</button>`};
   }
-  if (pen.durum === 'acik' && !(b.yemekler || []).length) return {ayak: 'beslenme', baslik: 'Yeme saatindesiniz', neden: `Pencere ${pen.kapanis}'de kapanıyor. Ne yediğinizi fotoğrafla ya da yazarak ekleyin; protein ve kaloriyi ben hesaplarım.`, dugme: `<div class="satir" style="gap:8px;flex-wrap:nowrap">${typeof hizliFotoHtml === 'function' ? hizliFotoHtml('btn ana').replace('class="', 'style="flex:1" class="') : ''}<button class="btn" data-yemek>Yazarak</button></div>`};
+  if (pen.durum === 'acik' && !(b.yemekler || []).length) return {ayak: 'beslenme', baslik: 'Yeme saatindesiniz', neden: `Pencere ${pen.kapanis}'de kapanıyor. Ne yediğinizi listeden seçin; protein ve kaloriyi ben hesaplarım.`, dugme: `<button class="btn ana genis" data-yemek>Yemek ekle</button>`};
   const t = D.toparlanma.sira;
   if (t && t.m) return {ayak: 'toparlanma', baslik: t.m.ad, neden: t.m.neden || t.m.ne || '', dugme: t.m.uygulama === 'nefes' ? `<button class="btn ana genis" data-nefes="${t.m.kod}">Başla${t.m.dk ? ' · ' + t.m.dk + ' dk' : ''}</button>` : t.m.uygulama === 'video' ? `<button class="btn ana genis" data-mvideo="${t.m.kod}">İzle ve yap</button>` : `<button class="btn ana genis" data-myap="${t.m.kod}">Yaptım</button>`};
   if (t && t.aksam) return {ayak: 'toparlanma', baslik: 'Bugün nasıl geçti?', neden: 'Beş kısa soru; yarını birlikte hazırlayalım.', dugme: '<button class="btn ana genis" data-aksamg>Akşam görüşmesi · 1 dk</button>'};
@@ -112,27 +112,80 @@ function anaHtml(){
   const biten = Object.values(D).filter(x => x.tamam).length;
   const y = o.oyun, seriVar = y && (y.seri || y.en_uzun || (y.bugun || {}).durum === 'tamam' || ((y.puan || {}).toplam || 0) > 0);
   const gs = gidisatHtml();
-  let h = `<section class="an-ust"><p class="mono">${esc(tar)}</p><h1 class="bas">${selam}${p.ad ? ', ' + esc(p.ad.split(' ')[0]) : ''}.</h1></section>`;
-  if (gs) h += (seriVar ? puanSerit() : '') + gs + `<h2 class="an-bolum">Bugün</h2>`;
-  h += `<section class="an-ust">
-    <p class="an-amac">Health, uzun ve sağlıklı yaşamanız için her gün <b>üç işi</b> takip eder. Bugün <b>${biten}/3</b> tamam. <button class="metin" data-nasil>Nasıl çalışır?</button></p>
-    <div class="an-uc" role="tablist">${Object.entries(AYAK).map(([k, a]) => `<button class="an-ayak ${k === sec ? 'on' : ''} ${D[k].tamam ? 'tamam' : ''}" role="tab" aria-selected="${k === sec}" data-ayak="${k}">
-      ${halka(D[k].oran, a.renk, a.ikon, D[k].tamam)}<b>${a.ad}</b><small>${esc(D[k].satir)}</small></button>`).join('')}</div></section>`;
-  h += `<section class="kart an-simdi ${N.tamam ? 'tamam' : ''}" style="--ar:${AYAK[N.ayak].renk}"><div class="an-sb"><span class="an-nok"></span><span class="mono">${N.tamam ? 'Durum' : 'Şimdi'} · ${AYAK[N.ayak].ad}</span></div>
-    <h2>${esc(N.baslik)}</h2>${N.neden ? `<p>${esc(N.neden)}</p>` : ''}${N.dugme || ''}</section>`;
-  h += (typeof selamKart === 'function' ? selamKart() : '');
-  h += kutlamaKart() + durgunKart() + agriTakipKart();          // acil olanlar (kutlama, uzun ara, dünkü ağrı) Şimdi'nin hemen altında
-  h += `<section class="an-detay"><div class="an-dbas"><span class="an-dik" style="color:${AYAK[sec].renk}">${AYAK[sec].ikon}</span><div><h2>${AYAK[sec].ad}</h2><p>${esc(AYAK[sec].neden)}</p></div></div>
-    ${Object.keys(AYAK).map(k => `<div data-ayakic="${k}" ${k === sec ? '' : 'hidden'}>${ayakDetay(k)}</div>`).join('')}</section>`;
-  h += `<h2 class="an-bolum">Haftanız <span>Uzun ömrün asıl ölçüsü günler değil, haftalar.</span></h2>`;
-  h += haftaHalka(true) + (seriVar && !gs ? puanSerit() : '') + hikayeKart() + hedefKart(true) + (o.oyun ? gorevKart() : '');
   const notlar = [degerlendirmeKart(), receteKart(), araKontrolKart(), kontrolKart(), haftalikKart(),
     o.mesaj && o.mesaj.hafta && Date.now() / 1000 - o.mesaj.zaman < 4 * 86400 ? `<div class="kart"><div class="kbas"><h3>Haftalık mesajınız</h3><span class="mono">${esc(haftaYazi(o.mesaj.hafta))}</span></div><p class="gri2" style="margin:0 0 6px;font-size:14px">${esc(o.mesaj.degisecek || '')}</p><button class="metin" data-mesaj>Oku</button></div>` : '',
     o.oyun ? oneriKart() : '', araSoruKart(), aliskanlikKart(), tanismaKart()].filter(Boolean);
-  if (notlar.length) h += `<h2 class="an-bolum">Health'ten <span>Sizi tanıdıkça programı nasıl değiştirdiğim.</span></h2>` + notlar.slice(0, 2).join('')
-    + (notlar.length > 2 ? `<details class="an-daha"><summary>${notlar.length - 2} not daha</summary>${notlar.slice(2).join('')}</details>` : '');
+  const selamH = typeof selamKart === 'function' ? selamKart() : '';
+  /* 2026-11-03 (kullanıcı: "Çok fazla şey alt alta. Daha odaklı olmalı."): ilk ekranda yalnız oruç, hareket, yedikleriniz ve son 7 gün; gerisi sekmede, hiçbiri silinmedi. */
+  const SEK = [['bugun', 'Bugün'], ['ayrinti', 'Ayrıntı'], ['hafta', 'Haftam'], ['notlar', 'Notlar' + (notlar.length ? ` · ${notlar.length}` : '')]];
+  const ak = SEK.some(x => x[0] === ss.get('pt_ansek')) ? ss.get('pt_ansek') : 'bugun';
+  const panel = (k, ic) => `<div data-anp="${k}" ${k === ak ? '' : 'hidden'}>${ic}</div>`;
+  const ayriSimdi = N.ozel || (N.ayak === 'toparlanma' && !N.tamam);
+  let h = `<section class="an-ust an-kisa"><p class="mono">${esc(tar)}</p><h1 class="bas">${selam}${p.ad ? ', ' + esc(p.ad.split(' ')[0]) : ''}.</h1></section>
+    <div class="an-sek" role="tablist">${SEK.map(([k, a]) => `<button role="tab" aria-selected="${k === ak}" class="${k === ak ? 'on' : ''}" data-ansek="${k}">${esc(a)}</button>`).join('')}</div>`;
+  h += panel('bugun', kutlamaKart() + durgunKart() + agriTakipKart()
+    + (ayriSimdi ? (N.ozel ? `<section class="kart an-simdi" style="--ar:${AYAK[N.ayak].renk}"><h2>${esc(N.baslik)}</h2>${N.neden ? `<p>${esc(N.neden)}</p>` : ''}${N.dugme || ''}</section>`
+      : `<section class="kart an-ince"><b>${esc(N.baslik)}</b>${(N.dugme || '').replace('btn ana genis', 'btn kucuk')}</section>`) : '')
+    + `<div class="an-ikili">${orucOzet()}${hareketOzet(D.hareket)}</div>` + yemekOzet(D.hareket) + yediGun());
+  h += panel('ayrinti', `<section class="an-ust"><p class="an-amac">Health, uzun ve sağlıklı yaşamanız için her gün <b>üç işi</b> takip eder. Bugün <b>${biten}/3</b> tamam. <button class="metin" data-nasil>Nasıl çalışır?</button></p>
+    <div class="an-uc" role="tablist">${Object.entries(AYAK).map(([k, a]) => `<button class="an-ayak ${k === sec ? 'on' : ''} ${D[k].tamam ? 'tamam' : ''}" role="tab" aria-selected="${k === sec}" data-ayak="${k}">
+      ${halka(D[k].oran, a.renk, a.ikon, D[k].tamam)}<b>${a.ad}</b><small>${esc(D[k].satir)}</small></button>`).join('')}</div></section>
+    <section class="an-detay"><div class="an-dbas"><span class="an-dik" style="color:${AYAK[sec].renk}">${AYAK[sec].ikon}</span><div><h2>${AYAK[sec].ad}</h2><p>${esc(AYAK[sec].neden)}</p></div></div>
+    ${Object.keys(AYAK).map(k => `<div data-ayakic="${k}" ${k === sec ? '' : 'hidden'}>${ayakDetay(k)}</div>`).join('')}</section>`);
+  h += panel('hafta', (seriVar ? puanSerit() : '') + gs + haftaHalka(true) + hikayeKart() + hedefKart(true) + (o.oyun ? gorevKart() : ''));
+  h += panel('notlar', selamH + (notlar.join('') || (selamH ? '' : '<p class="gri2" style="font-size:14px;margin:12px 0">Şimdilik yeni not yok.</p>')));
   h += '<div id="telKart"></div>';
   return {h, N};
+}
+/* ---------- odaklı ilk ekran ---------- */
+function hareketDugme(h){
+  if (h.seans && h.seans.ilk) return `<button class="btn ana genis" data-tikla="[data-ilkbasla]">Başla · ${h.seans.dk} dk</button>`;
+  if (!h.seans) return '';
+  const x = h.seans, sec = x.tur === 'test' ? '[data-test]' : x.tur === 'bjj_ders' ? `[data-bjj="${x.id}"]` : (x.bolumler || []).length ? `[data-basla="${x.id}"]` : `[data-yaptim="${x.id}"]`;
+  return `<button class="btn ana genis" data-tikla='${sec}'>${x.tur === 'bjj_ders' ? 'Dersi kaydet' : (x.bolumler || []).length || x.tur === 'test' ? `Başla${x.sure_dk ? ' · ' + x.sure_dk + ' dk' : ''}` : 'Yaptım'}</button>`;
+}
+function orucMetin(){
+  const g = S.o.gidisat || {}, O = g.oruc || {}, sn = O.suren, pen = ((S.o.beslenme || {}).hedef || {}).pencere || {}, simdi = Date.now() / 1000;
+  const hedef = O.hedef || pen.hedef_oruc || 18;
+  if (sn && sn.durum === 'oruc'){
+    const sa = (simdi - sn.bas_t) / 3600, kalan = hedef - sa;
+    return {oruc: true, ust: 'Oruçtasınız', sure: sure(simdi - sn.bas_t) + (sn.tahmini ? ' ~' : ''), oran: Math.min(1, sa / hedef), alt: kalan > 0 ? `Hedef ${gsVir(hedef)} sa · ${sure(kalan * 3600)} kaldı` : `Hedef ${gsVir(hedef)} sa tuttu`, ok: kalan <= 0};
+  }
+  if (sn && sn.durum === 'yeme'){
+    const k = (pen.kapanis_t || 0) - simdi;
+    return {oruc: false, ust: 'Oruç bitti', sure: saatYaz(sn.bas_t) + "'den beri", oran: 0, alt: k > 0 ? `Yeme saati ${sure(k)} daha sürer` : 'Yeme saati doldu'};
+  }
+  return {oruc: false, ust: 'Oruç', sure: 'Kayıt yok', oran: 0, alt: `Hedef ${gsVir(hedef)} sa`, bos: true};
+}
+function orucOzet(){
+  const m = orucMetin(), O = (S.o.gidisat || {}).oruc || {}, pen = ((S.o.beslenme || {}).hedef || {}).pencere || {};
+  return `<section class="kart an-oz oruc"><div class="an-ozb"><span class="an-ozi" style="color:var(--mavi)">${GS_IK.oruc}</span><span>${esc(m.ust)}</span>${O.seri ? `<em>${O.seri} gün seri</em>` : ''}</div>
+    <p class="an-ozs" data-orucsure>${esc(m.sure)}</p><div class="an-ozc"><i style="width:${Math.round(m.oran * 100)}%" class="${m.ok ? 'ok' : ''}"></i></div><p class="an-oza" data-orucalt>${esc(m.alt)}</p>
+    ${m.oruc ? '<button class="btn genis" data-oruc="ac">Orucumu bitirdim</button>' : `<button class="btn genis" data-oruc="kapat">Oruca başladım</button>`}
+    ${pen.oruc && m.oruc ? '<button class="metin an-ozl" data-ansekgit="ayrinti" data-ayakgit="beslenme">Vücudunuzda şu an ne oluyor?</button>' : ''}</section>`;
+}
+function hareketOzet(h){
+  const H = (S.o.gidisat || {}).hareket || {}, btn = hareketDugme(h);
+  return `<section class="kart an-oz hareket ${h.tamam ? 'tamam' : ''}"><div class="an-ozb"><span class="an-ozi" style="color:var(--vurgu)">${AYAK.hareket.ikon}</span><span>Hareket</span>${H.seri ? `<em>${H.seri} gün seri</em>` : ''}</div>
+    <p class="an-ozs">${h.tamam ? (h.dinlenme ? 'Dinlenme' : 'Tamam') : `${Math.round(h.oran * 100)}%`}</p><div class="an-ozc"><i style="width:${Math.round(h.oran * 100)}%" class="${h.tamam ? 'ok' : ''}"></i></div><p class="an-oza">${esc(h.satir)}</p>
+    ${btn || (h.tamam && !h.dinlenme ? '' : '<button class="btn genis" data-ansekgit="ayrinti" data-ayakgit="hareket">Bugünü gör</button>')}
+    ${btn ? '<button class="metin an-ozl" data-ansekgit="ayrinti" data-ayakgit="hareket">Listeye bak</button>' : ''}</section>`;
+}
+function yemekOzet(h){
+  const bs = S.o.beslenme || {}, T = bs.toplam || {}, H = bs.hedef || {}, b = S.o.bugun || {};
+  const L = (S.o.gunluk && S.o.gunluk.yemekler) || b.yemekler || [];
+  const kc = y => Math.round((y.kalemler || []).reduce((a, x) => a + (+x.kcal || 0), 0));
+  const bozar = y => typeof y.oruc_bozar === 'boolean' ? y.oruc_bozar : kc(y) >= 15 || !(y.kalemler || []).length;
+  return `<section class="kart an-yem"><div class="an-yb"><div><b>Yedikleriniz</b>${L.length ? `<span class="gri">${Math.round(T.kcal || 0)}${H.kcal ? ' / ' + H.kcal : ''} kcal · ${Math.round(T.protein || 0)}${H.protein ? ' / ' + H.protein : ''} g protein</span>` : ''}</div>
+      <button class="btn ${h.seans ? '' : 'ana'}" data-yemek>Ne yedim, ne içtim?</button></div>
+    ${L.length ? `<ul class="an-yl">${L.map(y => `<li><span class="an-yt">${saatYaz(y.t)}</span><span class="an-ya">${esc(y.ad || 'Öğün')}<small>${kc(y)} kcal</small></span>
+      <button class="an-yo ${bozar(y) ? 'boz' : ''}" data-yo="${esc(y.id)}" data-boz="${bozar(y) ? 1 : 0}" title="Dokununca değişir">${bozar(y) ? 'Orucu bozdu' : 'Oruç sürdü'}</button><button class="an-ys" data-ysil="${esc(y.id)}" aria-label="Kaldır">×</button></li>`).join('')}</ul>` : ''}</section>`;
+}
+function yediGun(){
+  const g = S.o.gidisat; if (!g || !g.var) return '';
+  return `<section class="kart an-yedi"><div class="an-yedib"><b>Son 7 gün</b><button class="metin" data-ansekgit="hafta">Takvim</button></div><div class="an-yg">${(g.yedi || []).map(x => `<button data-gsgun="${x.tarih}" class="${x.tarih === bugunT() ? 'bugun' : ''}" aria-label="${esc(gsTarih(x.tarih))}">
+    <small>${esc(gsTarih(x.tarih, {weekday: 'short'}))}</small><span class="an-gh ${x.hareket ? 'ok' : ''}">${x.hareket ? (x.hareket_dk ? x.hareket_dk + ' dk' : '✓') : '–'}</span><span class="an-go ${x.oruc_tamam ? 'ok' : ''}">${x.oruc_sa != null ? gsVir(x.oruc_sa) + ' sa' : '–'}</span></button>`).join('')}</div>
+    <p class="an-yga"><span class="h"></span>Hareket <span class="o"></span>Oruç · Bir güne dokunun, ne yaptığınızı görün.</p></section>`;
 }
 /* ---------- gidişat: seriler, takvim, bir günün dökümü (2026-11-02; kullanıcı: "kaç günlük streak'teyim, şu gün şu kadar saat oruç yapmışım; güne tıklayınca o gün ne yapmışım çıkacak") ---------- */
 let gsTak = null, gsCizildi = false;
@@ -253,7 +306,7 @@ const ALT_ACIK = {
   hareketler: 'Bütün hareketler: nasıl yapılır, hangi kası çalıştırır, sizin seviyeniz neresi.'
 };
 const BOLUM_ACIK = {
-  'Öğünler': 'Fotoğraf çekin ya da yazın; miktarı ve besin değerini Health hesaplar.',
+  'Öğünler': 'Listeden seçin, fotoğraf çekin ya da yazın; besin değerini Health hesaplar.',
   'Kilo': 'Haftada birkaç kez, sabah aç karna tartılın. Tek gün değil, çizgi önemli.',
   'Yeme saatleri': 'Ne zaman yiyip ne zaman ara verdiğiniz. Oruçtayken hangi fazda olduğunuzu ve sıradaki yemeğe kalan süreyi gösterir.',
   'Haftalık menü': 'Hedefinize ve yeme saatlerinize göre yazılmış bir hafta; alışveriş listesiyle.',
@@ -326,17 +379,25 @@ if (mainEl){                                                  // kendi ekledikle
   gozcu.observe(mainEl, AYAR);
 }
 
+setInterval(() => { if (document.hidden || !S.o) return; const a = document.querySelector('[data-orucsure]'); if (!a) return; const m = orucMetin(); a.textContent = m.sure; const b = document.querySelector('[data-orucalt]'); if (b) b.textContent = m.alt; }, 60000);
 window.bugunCiz = function(){
   const o = S.o, m = $('#main');
   const {h, N} = anaHtml();
   m.innerHTML = h;
-  $$('.btn.ana', m).forEach((x, i) => { if (i && !x.closest('.an-simdi')) x.classList.remove('ana'); });   // tek birincil: Şimdi kartınınki
+  $$('.btn.ana', m).forEach(x => { if (!x.closest('.an-simdi, .an-oz, .an-yem')) x.classList.remove('ana'); });   // birincil düğme yalnız ilk ekranda
   durgunBagla(m); haftaHalkaBagla(m); modulBagla(m); telKartYukle(); ilkBagla(m); agriTakipBagla(m); orucBagla(m); bjjSoruBagla(m); bugunBagla(m); selamBagla(m);
   hikayeBagla(m); if (typeof oneriBagla === 'function') oneriBagla(m); hizliFotoBagla(m); kontrolBagla(m); if (typeof sohbetBagla === 'function') sohbetBagla(m);
   gsBagla(m); suBagla(m); if (typeof kocBagla === 'function') kocBagla(m); seriBagla(m); yeniBagla(m);
   $$('[data-sekme]', m).forEach(x => x.onclick = () => { S.sek = 'plan'; S.alt = 'program'; store.set('pt_sek', 'plan'); store.set('pt_alt', 'program'); window.scrollTo(0, 0); ciz(); });
   $$('[data-tikla]', m).forEach(x => x.onclick = () => { const h = $(`[data-ayakic] ${x.dataset.tikla}`, m); if (h) h.click(); });
   $$('[data-nasil]', m).forEach(x => x.onclick = nasilSayfa);
+  document.body.classList.toggle('an-haftada', (ss.get('pt_ansek') || 'bugun') === 'hafta');
+  const sekAc = k => { ss.set('pt_ansek', k); document.body.classList.toggle('an-haftada', k === 'hafta'); $$('[data-ansek]', m).forEach(y => { y.classList.toggle('on', y.dataset.ansek === k); y.setAttribute('aria-selected', y.dataset.ansek === k); }); $$('[data-anp]', m).forEach(d => d.hidden = d.dataset.anp !== k); window.scrollTo(0, 0); };
+  $$('[data-ansek]', m).forEach(x => x.onclick = () => sekAc(x.dataset.ansek));
+  $$('[data-ansekgit]', m).forEach(x => x.onclick = () => { sekAc(x.dataset.ansekgit); if (x.dataset.ayakgit){ const a = $(`[data-ayak="${x.dataset.ayakgit}"]`, m); if (a) a.click(); } });
+  $$('[data-yo]', m).forEach(x => x.onclick = async () => { const bozar = x.dataset.boz !== '1';
+    try{ await api('/api/pt/yemek/oruc', json({tarih: bugunT(), id: x.dataset.yo, bozar})); toast(bozar ? 'Bu kayıt orucu bitirdi.' : 'Orucunuz sürüyor.'); yukle(); }catch(e){ toast(e.message); } });
+  $$('[data-ysil]', m).forEach(x => x.onclick = async () => { try{ await fetch(`/api/pt/yemek/${bugunT()}/${x.dataset.ysil}`, {method: 'DELETE'}); toast('Kaldırıldı.'); yukle(); }catch(e){ toast(e.message); } });
   $$('[data-ayak]', m).forEach(x => x.onclick = () => {
     const k = x.dataset.ayak; ss.set('pt_ayak', k);
     $$('[data-ayak]', m).forEach(y => { y.classList.toggle('on', y === x); y.setAttribute('aria-selected', y === x); });
