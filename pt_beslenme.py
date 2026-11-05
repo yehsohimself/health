@@ -462,6 +462,11 @@ def duzeltme_kaydet(tahmin, son):
         pt._yaz(DUZELTME, d)
 
 
+def _ad_kisa(s, n=120):
+    """Uzun öğün adı kelime ortasında kesilmesin."""
+    return s if len(s) <= n else s[:n].rsplit(" ", 1)[0].rstrip(" ,") + "…"
+
+
 def yemek_coz(metin="", resim=None, resimler=None, cevap=None):
     """Fotoğraf(lar) ve/veya cümle → kalemler. Model gram ve 100 g değerlerini verir, toplamları kod hesaplar.
     `cevap` = {"soru", "cevap"}: önceki tahminin sorusuna verilen cevap (yeniden tahmin)."""
@@ -504,7 +509,7 @@ def yemek_coz(metin="", resim=None, resimler=None, cevap=None):
     sec = [str(s)[:40] for s in (c.get("secenekler") or []) if str(s).strip()][:4]
     esl = str(c.get("eslesen") or "").strip()
     esl_ogun = next((x for x in son_ogunler(10) if x["ad"].lower() == esl.lower()), None) if esl else None
-    return {"ad": str(c.get("ad") or metin or "Öğün")[:80], "kalemler": kal, "soru": str(c.get("soru") or "")[:160], "secenekler": sec if c.get("soru") else [],
+    return {"ad": _ad_kisa(str(c.get("ad") or metin or "Öğün")), "kalemler": kal, "soru": str(c.get("soru") or "")[:160], "secenekler": sec if c.get("soru") else [],
             "eslesen": esl_ogun, "hassasiyet_uyari": str(c.get("hassasiyet_uyari") or "")[:200], "guven": c.get("guven") or "orta"}
 
 
