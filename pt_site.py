@@ -1016,6 +1016,48 @@ def kaydet(app):
         d = pt.gun(_tarih())
         return jsonify({"yemek": y, "toplam": pt_beslenme.gun_toplam(d), "pencere": pt_beslenme.pencere_durumu(tarih=_tarih())})
 
+    @app.get("/api/pt/ogun-duzeni")
+    def pt_ogun_duzeni():
+        import pt_ogun
+        return jsonify(pt_ogun.duzenler())
+
+    @app.post("/api/pt/ogun-duzeni")
+    def pt_ogun_duzeni_sec():
+        import pt_ogun
+        return jsonify(pt_ogun.sec(str((request.get_json(silent=True) or {}).get("duzen") or "")))
+
+    @app.post("/api/pt/ogun-duzeni/yedim")
+    def pt_ogun_duzeni_yedim():
+        import pt_ogun
+        g = request.get_json(silent=True) or {}
+        y = pt_ogun.yedim(str(g.get("duzen") or ""), int(g.get("i") or 0), int(g.get("s") or 0), pt.bugun().isoformat())
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        return jsonify({"yemek": {"id": y["id"], "ad": y["ad"]}, "tarih": pt.bugun().isoformat()})
+
+    @app.get("/api/pt/yemek-detay/<tarih>/<yid>")
+    def pt_yemek_detay(tarih, yid):
+        import pt_ogun
+        y = pt_beslenme.yemek_bul(_tarih(tarih), yid)
+        if not y:
+            return jsonify({"hata": "Bu kayıt bulunamadı."}), 404
+        return jsonify({"yemek": y, "tarih": _tarih(tarih), "nasil": pt_ogun.nasil(y)})
+
+    @app.post("/api/pt/yemek/tasi")
+    def pt_yemek_tasi():
+        g = request.get_json(silent=True) or {}
+        r = pt_beslenme.yemek_tasi(_tarih(g.get("tarih")), str(g.get("id") or ""), pt.sayi(g.get("t"), 0, 4e9, 0), bool(g.get("son_yemek")))
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        return jsonify({"tamam": True, "geri": r, "tarih": r["yeni_tarih"]})
+
+    @app.post("/api/pt/yemek/tasi-geri")
+    def pt_yemek_tasi_geri():
+        pt_beslenme.yemek_tasi_geri((request.get_json(silent=True) or {}).get("geri") or {})
+        with _kilit:
+            pt_oyun._onbellek.clear()
+        return jsonify({"tamam": True})
+
     @app.get("/api/pt/aktivite")
     def pt_aktivite_liste():
         import pt_gidisat

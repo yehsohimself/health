@@ -177,8 +177,8 @@ function yemekOzet(h){
   const kc = y => Math.round((y.kalemler || []).reduce((a, x) => a + (+x.kcal || 0), 0));
   const bozar = y => typeof y.oruc_bozar === 'boolean' ? y.oruc_bozar : kc(y) >= 15 || !(y.kalemler || []).length;
   return `<section class="kart an-yem"><div class="an-yb"><div><b>Yedikleriniz</b>${L.length ? `<span class="gri">${Math.round(T.kcal || 0)}${H.kcal ? ' / ' + H.kcal : ''} kcal · ${Math.round(T.protein || 0)}${H.protein ? ' / ' + H.protein : ''} g protein</span>` : ''}</div>
-      <button class="btn ${h.seans ? '' : 'ana'}" data-yemek>Ne yedim, ne içtim?</button></div>
-    ${L.length ? `<ul class="an-yl">${L.map(y => `<li><span class="an-yt">${saatYaz(y.t)}</span><span class="an-ya">${esc(y.ad || 'Öğün')}<small>${kc(y)} kcal</small></span>
+      <span class="satir" style="gap:8px"><button class="btn" data-duzen>Ne yesem?</button><button class="btn ${h.seans ? '' : 'ana'}" data-yemek>Ne yedim, ne içtim?</button></span></div>
+    ${L.length ? `<ul class="an-yl">${L.map(y => `<li><span class="an-yt">${saatYaz(y.t)}</span><span class="an-ya" ${y.kontrol ? '' : `data-ydetay="${esc(y.id)}" data-ytarih="${bugunT()}" role="button" tabindex="0"`}>${esc(y.ad || 'Öğün')}<small>${kc(y)} kcal${y.kontrol ? '' : ' · ayrıntı'}</small></span>
       <button class="an-yo ${bozar(y) ? 'boz' : ''}" data-yo="${esc(y.id)}" data-boz="${bozar(y) ? 1 : 0}" title="Dokununca değişir">${bozar(y) ? 'Orucu bozdu' : 'Oruç sürdü'}</button><button class="an-ys" data-ysil="${esc(y.id)}" aria-label="Kaldır">×</button></li>`).join('')}</ul>` : ''}</section>`;
 }
 function yediGun(){
@@ -259,7 +259,7 @@ async function gunDokum(tarih){
     const d = y ? (y.bit_t ? `Yeme saati: ${sa(y.bas_t)} – ${sa(y.bit_t)}${y.tahmini ? ' (tahmini)' : ''}.` : `Yemeye başlama: ${sa(y.bas_t)}.`) : '';
     ic += `<h4>Oruç</h4><p class="gs-c">${esc(c + d)}</p>${gsSeritHtml(r)}`;
   }
-  if (r.yemekler.length) ic += `<h4>Yemek <span class="gri">${r.toplam.kcal} kcal · ${r.toplam.protein} g protein</span></h4>` + r.yemekler.map(y => `<div class="gs-is"><div class="gs-isb"><b>${esc(y.ad || 'Öğün')}</b><span>${y.kcal} kcal</span></div></div>`).join('');
+  if (r.yemekler.length) ic += `<h4>Yemek <span class="gri">${r.toplam.kcal} kcal · ${r.toplam.protein} g protein</span></h4>` + r.yemekler.map(y => `<div class="gs-is" data-ydetay="${esc(y.id || '')}" data-ytarih="${esc(r.tarih)}" role="button" tabindex="0" style="cursor:pointer"><div class="gs-isb"><b>${esc(y.ad || 'Öğün')}</b><span>${y.kcal} kcal</span></div></div>`).join('');
   const dig = [r.adim ? (r.adim.duzeltildi ? `~${r.adim.tahmin.toLocaleString('tr-TR')} adım (telefon ${r.adim.sayilan.toLocaleString('tr-TR')} saydı)` : `${r.adim.sayilan.toLocaleString('tr-TR')} adım`) : '', r.kilo ? `Kilo ${gsVir(r.kilo)} kg` : '', r.bel_cm ? `Bel ${gsVir(r.bel_cm)} cm` : '', r.su_ml ? `Su ${gsVir(r.su_ml / 1000)} L` : ''].filter(Boolean);
   const mod = (r.moduller || []).map(modAd);
   if (dig.length || mod.length || r.agri.length) ic += `<h4>Diğer</h4><div class="gs-cip">${dig.concat(mod).map(x => `<span>${esc(x)}</span>`).join('')}${r.agri.map(a => `<span class="ag">${esc(a.bolge || 'Ağrı')}${a.puan ? ' ' + a.puan + '/10' : ''}</span>`).join('')}</div>`;

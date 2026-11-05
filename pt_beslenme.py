@@ -144,7 +144,7 @@ def hedefler(p=None):
     doymus = round((kcal or 2000) * (0.07 if kol else 0.10) / 9)               # kolesterol yüksekse enerjinin <%7'si (AHA), değilse <%10
     return {"kcal": kcal, "protein": protein, "lif": lif, "doymus_ust": doymus, "kolesterol": kol, "protein_aralik": [round(taban * 1.6), round(taban * 2.2)] if taban else None,
             "harcama": round(harcama) if harcama else None, "acik": acik, "kilo_trend": kilo, "kayip": kayip,
-            "ogun_protein": round(protein / max(2, ogun)) if protein else None, "pencere": pencere,
+            "ogun_protein": round(protein / max(1, ogun)) if protein else None, "pencere": pencere,
             "neden": _hedef_nedeni(d, acik, hiz, harcama, kilo)}
 
 
@@ -520,7 +520,7 @@ def foto_kaydet(yid, kaynak):
     return hedef.exists()
 
 
-def disaridan_kaydet(resimler, metin="", tarih=None):
+def disaridan_kaydet(resimler, metin="", tarih=None, t=None):
     """Telefonun Paylaş menüsünden gelen fotoğraf: tahmin edilir ve 'kontrol bekliyor' işaretiyle hemen kaydedilir."""
     y = yemek_coz(metin, resimler=resimler)
     y["id"] = f"y{int(time.time() * 1000)}{uuid.uuid4().hex[:4]}"
@@ -529,6 +529,8 @@ def disaridan_kaydet(resimler, metin="", tarih=None):
     y["kontrol"] = True
     y["tahmin"] = {"ad": y["ad"], "kalemler": [dict(k) for k in y["kalemler"]]}
     tarih = tarih or pt.bugun().isoformat()
+    if t:
+        y["t"] = int(t)
     return yemek_kaydet(tarih, {k: v for k, v in y.items() if k not in ("secenekler", "eslesen", "hassasiyet_uyari")})
 
 
@@ -540,7 +542,11 @@ def yemek_kaydet(tarih, y):
         y.pop("oruc_bozar", None)
     if y.pop("secim", None):                                    # hazır listeden: saat seçilebilir, kayıt o günün
         y["t"] = max(int(time.time()) - 3 * 86400, min(int(pt.sayi(y["t"], 0, 4e9, time.time())), int(time.time())))
+        eski = tarih
         tarih = dt.datetime.fromtimestamp(y["t"]).date().isoformat()
+        if eski != tarih:                                       # düzenlenen kayıt başka güne geçti: eski günde kalmasın
+            pt.gun_degistir(eski, lambda d: d.update(yemekler=[x for x in d["yemekler"] if x.get("id") != y["id"]]))
+    son_yemek = y.pop("son_yemek", None)
     def temiz(k):
         k = dict(k)
         for a, ust in (("miktar_g", 5000), ("kcal", 5000), ("protein", 500), ("yag", 500), ("karb", 1000), ("lif", 200), ("doymus", 300)):
@@ -555,9 +561,72 @@ def yemek_kaydet(tarih, y):
         d["yemekler"] = [x for x in d["yemekler"] if x.get("id") != y["id"]] + [y]
         d["yemekler"].sort(key=lambda x: x.get("t") or 0)
     pt.gun_degistir(tarih, ekle)
+    if son_yemek:
+        pt.gun_degistir(tarih, lambda d: d.update(oruc_kapandi=y["t"]))
     if y.get("favori"):
         favori_ekle(y)
     return y
+
+
+def yemek_bul(tarih, yid):
+    return next((y for y in pt.gun(tarih).get("yemekler") or [] if y.get("id") == yid), None)
+
+
+def yemek_tasi(tarih, yid, t, son_yemek=False):
+    """Kayıtlı yemeğin gününü ve saatini değiştirir (2026-11-05; kullanıcı: "bu yemeği bugün değil dün yedim, sonrasında hiç yemedim").
+    son_yemek: oruç o andan sürer. Yemek ona göre oruç işaretlerini tutarlı bırakır. Döner: geri almak için eski hal."""
+    t = int(t)
+    simdi = int(time.time())
+    if t > simdi + 120:
+        raise ValueError("İleri bir saat seçilemez.")
+    if t < simdi - 14 * 86400:
+        raise ValueError("En çok iki hafta geriye gidebilirsiniz.")
+    y = yemek_bul(tarih, yid)
+    if not y:
+        raise ValueError("Bu kayıt bulunamadı.")
+    hedef = dt.datetime.fromtimestamp(t).date().isoformat()
+    alan = ("oruc_kapandi", "oruc_acildi")
+    geri = {"yid": yid, "eski_t": y.get("t"), "eski_tarih": tarih, "yeni_tarih": hedef,
+            "isaret": {g: {a: pt.gun(g).get(a) for a in alan} for g in {tarih, hedef}}}
+    eski_t = y.get("t") or 0
+
+    def cikar(d):
+        d["yemekler"] = [x for x in d["yemekler"] if x.get("id") != yid]
+        if tarih != hedef and d.get("oruc_kapandi") and d["oruc_kapandi"] >= eski_t and not yeme_anlari(d):
+            d.pop("oruc_kapandi")                               # yanlış günde yenen yemekle kapanmıştı
+        if tarih != hedef and d.get("oruc_acildi") == eski_t:
+            d.pop("oruc_acildi")
+
+    def ekle(d):
+        d["yemekler"] = sorted([x for x in d["yemekler"] if x.get("id") != yid] + [{**y, "t": t}], key=lambda x: x.get("t") or 0)
+        if son_yemek or (d.get("oruc_kapandi") and d["oruc_kapandi"] < t):
+            d["oruc_kapandi"] = t
+        if d.get("oruc_acildi") and d["oruc_acildi"] > t:
+            d["oruc_acildi"] = t
+    if tarih != hedef:
+        pt.gun_degistir(tarih, cikar)
+    pt.gun_degistir(hedef, ekle)
+    return geri
+
+
+def yemek_tasi_geri(g):
+    y = yemek_bul(g["yeni_tarih"], g["yid"])
+    if not y:
+        return
+    if g["yeni_tarih"] != g["eski_tarih"]:
+        pt.gun_degistir(g["yeni_tarih"], lambda d: d.update(yemekler=[x for x in d["yemekler"] if x.get("id") != g["yid"]]))
+
+    def ekle(d):
+        d["yemekler"] = sorted([x for x in d["yemekler"] if x.get("id") != g["yid"]] + [{**y, "t": g["eski_t"]}], key=lambda x: x.get("t") or 0)
+    pt.gun_degistir(g["eski_tarih"], ekle)
+    for gun, deg in (g.get("isaret") or {}).items():
+        def f(d, deg=deg):
+            for a, v in deg.items():
+                if v is None:
+                    d.pop(a, None)
+                else:
+                    d[a] = v
+        pt.gun_degistir(gun, f)
 
 
 def yemek_oruc(tarih, yid, bozar):

@@ -216,7 +216,7 @@ def gun_ozet(tarih):
     yemekler = []
     for y in d.get("yemekler") or []:
         t = pt_beslenme.gun_toplam({"yemekler": [y]})
-        yemekler.append({"ad": y.get("ad") or ", ".join(k.get("ad", "") for k in (y.get("kalemler") or [])[:3]), "t": y.get("t"), "kcal": t.get("kcal"), "protein": t.get("protein")})
+        yemekler.append({"id": y.get("id"), "ad": y.get("ad") or ", ".join(k.get("ad", "") for k in (y.get("kalemler") or [])[:3]), "t": y.get("t"), "kcal": t.get("kcal"), "protein": t.get("protein")})
     pen = _pencere_sa(p)
     bas = _yeme_bas(d)
     bit, bit_tahmini = _yeme_bit(d, pen if tarih != pt.bugun().isoformat() else None)

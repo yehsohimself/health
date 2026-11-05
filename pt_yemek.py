@@ -25,7 +25,7 @@ PLAN_ISTEM = """Sen bir spor diyetisyenisin. {hafta} haftası için gün gün ye
 
 KİŞİ: {kisi}
 GÜNLÜK HEDEF: yaklaşık {kcal} kcal, en az {protein} g protein. Antrenman günlerinde +%10 kalori (fazlası karbonhidrattan), dinlenme günlerinde -%10.
-YEME PENCERESİ: {pencere}. Öğün sayısı: {ogun}. Orucu proteinli bir öğünle açtır; antrenman pencere içindeyse sonraki öğün en proteinli olsun.
+YEME PENCERESİ: {pencere}. Öğün sayısı: {ogun}. Öğün sayısı 1 ise o tek öğün çorba, bol protein, tahıl, sebze ve salatadan oluşan tam bir sofra olsun, en az {protein_tek} g protein. Orucu proteinli bir öğünle açtır; antrenman pencere içindeyse sonraki öğün en proteinli olsun.
 ANTRENMAN GÜNLERİ: {antrenman}
 HASSASİYETLER (KESİNLİKLE kullanma, içinde geçen ürünler dahil): {hassasiyet}
 SEVMEDİKLERİ (kullanma): {sevmedik}
@@ -60,7 +60,7 @@ def plan_uret(kod=None):
     pen = f"{h['pencere']['acilis']}-{h['pencere']['kapanis']}" if float(b.get("pencere_saat") or 14) < 14 else "pencere yok"
     c = claude_yaz.sor_json(PLAN_ISTEM.format(market=pt.market_notu(p),
         hafta=kod, kisi=json.dumps({k: p.get(k) for k in ("cinsiyet", "yas", "kilo_kg", "hedef_kilo_kg", "hedefler", "ek_bilgi")}, ensure_ascii=False),
-        kcal=h["kcal"] or 2000, protein=h["protein"] or 140, pencere=pen, ogun=b.get("ogun_sayisi") or 2, antrenman=antr,
+        kcal=h["kcal"] or 2000, protein=h["protein"] or 140, protein_tek=(h.get("protein_aralik") or [h["protein"] or 120])[0], pencere=pen, ogun=b.get("ogun_sayisi") or 2, antrenman=antr,
         hassasiyet=", ".join(b.get("hassasiyetler") or []) or "yok", sevmedik=", ".join(b.get("sevmedikleri") or []) or "yok",
         diyet=pt_beslenme.DIYET_AD.get(p.get("diyet") or "", "kısıtlama yok"), reyonlar="|".join(REYONLAR),
         aliskanlik=json.dumps(p.get("beslenme_aliskanlik") or {}, ensure_ascii=False) or "bilinmiyor",

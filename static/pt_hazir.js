@@ -111,3 +111,81 @@ window.hareketSayfa = async function(hazir){
   ciz();
 };
 })();
+
+/* Yemeğin günü ve saati (2026-11-05; kullanıcı: "bu yemeği bugün değil dün yedim, sonrasında hiç yemedim; bunları sitede de kolayca yapabilmeliyim").
+   zamanKutu: Bugün · Dün · Önceki gün + saat + "Bundan sonra bir şey yemedim". oku(): {t: yalnız değiştiyse, son}. */
+const gunMetni = o => { const d = new Date(); d.setDate(d.getDate() - o); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+window.zamanKutu = function(el, t0, z = {}){
+  const ilk = t0 ? new Date(t0 * 1000) : new Date();
+  const yerel = d => new Date(d - d.getTimezoneOffset() * 60000).toISOString();
+  z.gun = z.gun || yerel(ilk).slice(0, 10);
+  z.saat = z.saat || yerel(ilk).slice(11, 16);
+  const ciz = () => {
+    el.innerHTML = `<div class="hz-sat hz-zk"><span>Ne zaman</span><div class="hz-c">${[[0, 'Bugün'], [1, 'Dün'], [2, 'Önceki gün']].map(([o, a]) => `<button type="button" data-zg="${gunMetni(o)}" class="${z.gun === gunMetni(o) ? 'on' : ''}">${a}</button>`).join('')}
+      <input type="date" data-zt value="${z.gun}" max="${gunMetni(0)}" min="${gunMetni(14)}" aria-label="Tarih"><input type="time" data-zs value="${z.saat}" aria-label="Saat"></div></div>
+      <label class="satir hz-son"><input type="checkbox" data-zson ${z.son ? 'checked' : ''}> Bundan sonra bir şey yemedim</label>`;
+    $$('[data-zg]', el).forEach(b => b.onclick = () => { z.gun = b.dataset.zg; z.dokundu = true; ciz(); });
+    $('[data-zt]', el).onchange = e => { if (e.target.value){ z.gun = e.target.value; z.dokundu = true; ciz(); } };
+    $('[data-zs]', el).onchange = e => { if (e.target.value){ z.saat = e.target.value; z.dokundu = true; } };
+    $('[data-zson]', el).onchange = e => { z.son = e.target.checked; };
+  };
+  ciz();
+  return {oku: () => ({t: z.dokundu ? Math.floor(new Date(`${z.gun}T${z.saat}`).getTime() / 1000) : null, son: !!z.son})};
+};
+
+/* Bir yemeğin ayrıntısı: hedefe göre nasıl, ne zaman yendi, Health'e sor, düzenle, kaldır. */
+window.yemekDetay = async function(tarih, id){
+  let v; try{ v = await api(`/api/pt/yemek-detay/${tarih}/${id}`); }catch(e){ toast(e.message); return; }
+  const y = v.yemek, n = v.nasil; let kod = n.secili;
+  const p = sayfa(`<h3>${esc(y.ad || 'Öğün')}</h3>${y.foto ? `<img class="hz-yfoto" src="/pt-yemek-foto/${esc(y.id)}.jpg" alt="">` : ''}
+    <p class="gri2 hz-kal">${esc((y.kalemler || []).map(k => k.ad).join(', '))}</p>
+    <div class="hz-seg" id="ydSeg"><button data-k="tek">Tek öğünümse</button><button data-k="iki">İki öğünden biriyse</button></div><div id="ydN"></div>
+    <h4 class="hz-b">Ne zaman yediniz?</h4><div id="ydZ"></div><div class="satir" style="margin-top:6px"><button class="btn kucuk" id="ydTasi">Saati kaydet</button></div>
+    <div class="salt"><button class="btn" id="ydDuz">Gramları düzenle</button><button class="btn" id="ydSor">Health'e sor</button><button class="metin sessiz" id="ydSil">Kaldır</button></div>`);
+  const nc = () => { const d = n[kod];
+    $$('#ydSeg button', p).forEach(b => b.classList.toggle('on', b.dataset.k === kod));
+    $('#ydN', p).innerHTML = `<p class="hz-karar">${esc(d.baslik)}</p><div class="hz-olc">${d.satirlar.map(s => { const a = s.hedef ? Math.min(100, Math.round(s.deger / s.hedef * 100)) : 0, asti = s.ust && s.deger > s.hedef;
+      return `<div><span>${esc(s.ad)}</span><div class="an-ozc"><i style="width:${a}%${asti ? ';background:var(--turuncu)' : ''}"></i></div><b>${s.deger} / ${s.hedef} ${s.birim}</b></div>`; }).join('')}</div>${d.notlar.map(x => `<p class="hz-not">${esc(x)}</p>`).join('')}<p class="gri hz-kay">Sayılar tahmin; hedef ${kod === 'tek' ? 'günün tamamı' : 'günün yarısı'}.</p>`; };
+  $$('#ydSeg button', p).forEach(b => b.onclick = () => { kod = b.dataset.k; nc(); }); nc();
+  const zk = window.zamanKutu($('#ydZ', p), y.t);
+  $('#ydTasi', p).onclick = async () => { const z = zk.oku();
+    if (!z.t && !z.son) return toast('Değişiklik yok.');
+    try{ const r = await api('/api/pt/yemek/tasi', json({tarih, id, t: z.t || y.t, son_yemek: z.son})); p.kapat(); yukle();
+      toast(z.son ? 'Kaydedildi. Oruç o andan sürüyor.' : 'Kaydedildi.', 'Geri al', async () => { await api('/api/pt/yemek/tasi-geri', json({geri: r.geri})); yukle(); }); }catch(e){ toast(e.message); } };
+  $('#ydDuz', p).onclick = () => { p.kapat(); yemekSayfa(y, {duzenle: {tarih}}); };
+  $('#ydSor', p).onclick = () => { p.kapat(); sohbetSayfa(`${gunMetni(0) === tarih ? 'Bugünkü' : tarih + ' tarihli'} "${y.ad}" öğünüm ${kod === 'tek' ? 'tek öğünüm olarak' : 'iki öğünümden biri olarak'} nasıl? Neyi ekleyeyim?`); };
+  $('#ydSil', p).onclick = async () => { await fetch(`/api/pt/yemek/${tarih}/${id}`, {method: 'DELETE'}); p.kapat(); toast('Kaldırıldı.'); yukle(); };
+};
+
+/* Tek ve iki öğün düzeni (2026-11-05): ne yiyeceği, porsiyonlarıyla; "Yedim" tek dokunuş. Beslenme'de kart, başka yerde sayfa. */
+const duzenHtml = v => { const d = v.duzenler[v.secili], h = v.hedef;
+  return `<div class="kbas"><h3>Yemek düzeni</h3></div><div class="hz-seg" data-dseg>${Object.values(v.duzenler).map(x => `<button data-dk="${x.kod}" class="${x.kod === v.secili ? 'on' : ''}">${esc(x.ad)}</button>`).join('')}</div>
+    <p class="gri2 hz-kal">${esc(d.neden)}</p>
+    ${d.ogunler.map((o, i) => `<div class="hz-ogun" data-oi="${i}"><div class="hz-ob"><b>${esc(o.ad)}</b><span class="gri">${esc(o.saat)}</span>${o.secenekler.length > 1 ? `<span class="hz-c hz-osec">${o.secenekler.map((s, j) => `<button data-os="${j}" class="${j ? '' : 'on'}">${esc(s.ad)}</button>`).join('')}</span>` : ''}</div>
+      ${o.secenekler.map((s, j) => `<div class="hz-os" data-osg="${j}" ${j ? 'hidden' : ''}><ul>${s.kalemler.map(k => `<li>${esc(k)}</li>`).join('')}</ul><div class="hz-oa"><span class="gri">${Math.round(s.kcal)} kcal · ${Math.round(s.protein)} g protein</span><button class="btn kucuk" data-oy="${i}:${j}">Yedim</button></div></div>`).join('')}</div>`).join('')}
+    <p class="hz-top">Günün toplamı <b>${d.toplam.kcal}</b>${h.kcal ? ' / ' + h.kcal : ''} kcal · <b>${d.toplam.protein}</b>${h.protein ? ' / ' + h.protein : ''} g protein · <b>${d.toplam.doymus}</b>${h.doymus_ust ? ' / en çok ' + h.doymus_ust : ''} g doymuş yağ</p>
+    ${h.kolesterol ? '<p class="gri hz-kay">Kolesterol için: krema ve tereyağı yerine zeytinyağı. Yumurtayı doktorunuza sorun; gerekirse yerine yoğurt ya da lor.</p>' : ''}
+    <p class="gri hz-kay">Değerler Alman besin tablosundan (BLS 4.0); porsiyonlar protein hedefinize göre. Haftalık menünün öğün sayısı da bu seçime uyar.</p>`; };
+const duzenBagla = (k, v, yenile) => {
+  $$('[data-dk]', k).forEach(b => b.onclick = async () => { if (b.dataset.dk === v.secili) return; try{ const r = await api('/api/pt/ogun-duzeni', json({duzen: b.dataset.dk})); yenile(r); toast(`${r.duzenler[r.secili].ad} seçildi.`); }catch(e){ toast(e.message); } });
+  $$('.hz-ogun', k).forEach(o => $$('[data-os]', o).forEach(b => b.onclick = () => { $$('[data-os]', o).forEach(x => x.classList.toggle('on', x === b)); $$('[data-osg]', o).forEach(x => x.hidden = x.dataset.osg !== b.dataset.os); }));
+  $$('[data-oy]', k).forEach(b => b.onclick = async () => { const [i, s] = b.dataset.oy.split(':').map(Number);
+    try{ const r = await api('/api/pt/ogun-duzeni/yedim', json({duzen: v.secili, i, s})); yukle();
+      toast('Eklendi.', 'Geri al', async () => { await fetch(`/api/pt/yemek/${r.tarih}/${r.yemek.id}`, {method: 'DELETE'}); yukle(); }); }catch(e){ toast(e.message); } });
+};
+window.duzenKartYukle = async function(){
+  const k = $('#duzenKart'); if (!k) return;
+  const ciz = v => { k.innerHTML = duzenHtml(v); duzenBagla(k, v, ciz); };
+  try{ ciz(await api('/api/pt/ogun-duzeni')); }catch(e){ k.remove(); }
+};
+window.duzenSayfa = async function(){
+  let v; try{ v = await api('/api/pt/ogun-duzeni'); }catch(e){ toast(e.message); return; }
+  const p = sayfa('<div id="dzS"></div>'), k = $('#dzS', p);
+  const ciz = x => { k.innerHTML = duzenHtml(x); duzenBagla(k, x, ciz); };
+  ciz(v);
+};
+document.addEventListener('click', e => {
+  const d = e.target.closest('[data-duzen]'); if (d){ window.duzenSayfa(); return; }
+  const y = e.target.closest('[data-ydetay]'); if (y && y.dataset.ydetay) window.yemekDetay(y.dataset.ytarih, y.dataset.ydetay);
+});
+document.addEventListener('keydown', e => { if (e.key !== 'Enter') return; const y = e.target.closest && e.target.closest('[data-ydetay]'); if (y && y.dataset.ydetay) window.yemekDetay(y.dataset.ytarih, y.dataset.ydetay); });

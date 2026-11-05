@@ -779,7 +779,7 @@ body:has(.perde) #yazDock,body:has(.nfo) #yazDock,body:has(#oyn) #yazDock,body:h
 </style>
 <link rel="stylesheet" href="/static/pt_gorsel.css?v=6">
 <link rel="stylesheet" href="/static/pt_ana.css?v=9">
-<link rel="stylesheet" href="/static/pt_hazir.css?v=4">
+<link rel="stylesheet" href="/static/pt_hazir.css?v=5">
 <script src="/static/bekleme.js?v=4"></script>
 </head>
 <body>
@@ -1880,6 +1880,7 @@ function sohbetKartHtml(k){
   const o = S.o;
   if (k === 'seans'){ const s = ((o.bugun || {}).seanslar || []).find(x => !x.bitti && x.tur !== 'dinlenme' && (x.bolumler || []).length); if (!s) return '';
     return `<div class="skart"><div><b>${esc(s.baslik || 'Bugünün seansı')}</b><small>${s.sure_dk || ''} dk</small></div><button class="btn ana kucuk" data-sbasla="${esc(s.id)}">Başla</button></div>`; }
+  if (k === 'duzen') return `<div class="skart"><div><b>Tek ve iki öğün düzeni</b><small>Ne yiyeceğiniz, porsiyonlarıyla</small></div><button class="btn kucuk" data-duzen>Aç</button></div>`;
   if (k === 'doz') return dozHtml(o.doz);
   if (k === 'nefes') return `<div class="skart"><div><b>Nefes çalışması</b><small>5 dakika · 4 saniye alın, 6 saniye verin</small></div><button class="btn kucuk" data-snefes>Başlat</button></div>`;
   if (k === 'program') return `<div class="skart"><div><b>Bu haftanın planı</b></div><button class="btn kucuk" data-sprog>Aç</button></div>`;
@@ -2413,11 +2414,11 @@ function beslenmeCiz(){
     ${h.protein ? `<p class="gri" style="font-size:13px;margin:10px 0 0">Her öğünde yaklaşık ${h.ogun_protein} g protein (${(S.o.profil.beslenme || {}).ogun_sayisi || 2} öğün).${t.kcal ? ` Yağ ${t.yag} g · karbonhidrat ${t.karb} g.` : ''}</p>${t.lif || t.doymus ? `<p class="gri" style="font-size:13px;margin:6px 0 0">Lif <b>${t.lif}</b> / en az ${h.lif} g · doymuş yağ <b${t.doymus > h.doymus_ust ? ' style="color:var(--turuncu)"' : ''}>${t.doymus}</b> / en çok ${h.doymus_ust} g${h.kolesterol ? ' (kolesterol notunuz için)' : ''}.</p>` : ''}` : '<p class="gri" style="font-size:13px;margin:10px 0 0">Boy, kilo ve doğum tarihinizi Siz sekmesinden girince hedefleriniz hesaplanır.</p>'}</div>`;
   html += pencereKart(true);
   html += `<h2 class="bolum">Öğünler</h2><div class="kart">${(d.yemekler || []).map(y => { const k = y.kalemler || [], kc = Math.round(k.reduce((a, x) => a + (+x.kcal || 0), 0)), pr = Math.round(k.reduce((a, x) => a + (+x.protein || 0), 0));
-      return `<div class="lsatir"${y.kontrol ? ` data-kontrol="${esc(y.id)}" style="cursor:pointer"` : ''}>${y.foto ? `<img class="yk" src="/pt-yemek-foto/${esc(y.id)}.jpg" alt="">` : ''}<div class="lgovde"><b>${esc(y.ad)}${y.kontrol ? ' <span class="rozetk">kontrol edin</span>' : ''}</b><small>${new Date(y.t * 1000).toLocaleTimeString('tr-TR', {hour: '2-digit', minute: '2-digit'})} · ${kc} kcal · ${pr} g protein · ${esc(k.map(x => x.ad).join(', '))}</small></div><button class="metin sessiz" data-ysil="${esc(y.id)}">Sil</button></div>`; }).join('') || '<p class="gri" style="margin:0;font-size:14px">Henüz kayıt yok.</p>'}
-    <div class="satir" style="margin-top:12px"><button class="btn ana" data-yemek>Yemek ekle</button>${hizliFotoHtml('btn')}${o.dun_ogun ? '<button class="btn" data-dunku>Dünkü gibi</button>' : ''}<button class="btn" data-oneri>Bugün ne yesem?</button></div>
+      return `<div class="lsatir"${y.kontrol ? ` data-kontrol="${esc(y.id)}" style="cursor:pointer"` : ''}>${y.foto ? `<img class="yk" src="/pt-yemek-foto/${esc(y.id)}.jpg" alt="">` : ''}<div class="lgovde"${y.kontrol ? '' : ` data-ydetay="${esc(y.id)}" data-ytarih="${bugunT()}" role="button" tabindex="0" style="cursor:pointer"`}><b>${esc(y.ad)}${y.kontrol ? ' <span class="rozetk">kontrol edin</span>' : ''}</b><small>${new Date(y.t * 1000).toLocaleTimeString('tr-TR', {hour: '2-digit', minute: '2-digit'})} · ${kc} kcal · ${pr} g protein · ${esc(k.map(x => x.ad).join(', '))}</small></div><button class="metin sessiz" data-ysil="${esc(y.id)}">Sil</button></div>`; }).join('') || '<p class="gri" style="margin:0;font-size:14px">Henüz kayıt yok.</p>'}
+    <div class="satir" style="margin-top:12px"><button class="btn ana" data-yemek>Yemek ekle</button>${hizliFotoHtml('btn')}${o.dun_ogun ? '<button class="btn" data-dunku>Dünkü gibi</button>' : ''}<button class="btn" data-duzen>Tek ve iki öğün düzeni</button><button class="btn" data-oneri>Bugün ne yesem?</button></div>
     ${(b.son || []).length ? `<span class="etk">Her zamanki</span><div class="cipler">${b.son.slice(0, 8).map((x, i) => `<button data-hep="${i}">${esc(x.ad)}</button>`).join('')}</div>` : ''}
     ${(d.yemekler || []).length ? `<label class="satir gri" style="margin-top:12px;font-size:13px"><input type="checkbox" id="eksik" ${d.eksik_kayit ? 'checked' : ''}> Bugün yediklerimin hepsini kaydetmedim <span style="flex-basis:100%;margin-left:26px">Hedefiniz hesaplanırken bu gün sayılmaz.</span></label>` : ''}</div>`;
-  html += '<div class="kart" id="menuKart"><div class="satir gri"><span class="donen"></span></div></div>';
+  html += '<div class="kart" id="duzenKart"></div><div class="kart" id="menuKart"><div class="satir gri"><span class="donen"></span></div></div>';
   if (d.yemek_onerisi) html += oneriHtml(d.yemek_onerisi);
   html += `<h2 class="bolum">Kilo <span>${sonTrend ? sonTrend[2].toFixed(1).replace('.', ',') + ' kg ortalama' : ''}</span></h2><div class="kart">${grafik(tr)}
     <div class="satir" style="margin-top:10px"><input class="alan kisa" id="k_kilo" inputmode="decimal" placeholder="kg" value="${d.kilo ?? ''}"><input class="alan kisa" id="k_bel" inputmode="decimal" placeholder="bel cm" value="${d.bel_cm ?? ''}"><button class="btn" id="k_kaydet">Kaydet</button></div>
@@ -2428,6 +2429,7 @@ function beslenmeCiz(){
   hizliFotoBagla(m); kontrolBagla(m);
   $$('[data-ysil]', m).forEach(x => x.onclick = async e => { e.stopPropagation(); await api(`/api/pt/yemek/${bugunT()}/${x.dataset.ysil}`, {method: 'DELETE'}); yukle(); });
   $$('[data-hep]', m).forEach(x => x.onclick = () => yemekSayfa(b.son[+x.dataset.hep]));
+  if (window.duzenKartYukle) window.duzenKartYukle();
   $('[data-oneri]', m).onclick = async e => { const bt = e.target; bt.disabled = true; bt.innerHTML = '<span class="donen"></span> Düşünüyorum'; try{ await api('/api/pt/yemek-onerisi', json({tarih: bugunT()})); await yukle(); }catch(er){ toast(er.message); bt.disabled = false; bt.textContent = 'Bugün ne yesem?'; } };
   if ($('#eksik', m)) $('#eksik', m).onchange = e => api('/api/pt/eksik-kayit', json({tarih: bugunT(), eksik: e.target.checked}));
   menuKart();
@@ -2500,8 +2502,8 @@ function oneriHtml(o){ return `<div class="kart"><div class="kbas"><h3>Bugün i�
    kendiliğinden güncellenir (kcal/protein elle değişirse o satır elle sayılır). Sorunun hazır cevapları yeniden tahmin ettirir. Kaydederken ilk
    tahmin de gider: Health düzeltmelerinizden porsiyon alışkanlığınızı öğrenir. `duzenle`: Paylaş menüsünden gelmiş, kontrol bekleyen öğün. */
 function yemekSayfa(hazir, {dosyalar, duzenle} = {}){
-  const p = sayfa(`<h3>${duzenle ? 'Öğünü kontrol edin' : 'Yemek ekle'}</h3>
-    ${duzenle ? `<p class="gri2" style="margin:0 0 10px;font-size:14px">Telefonunuzdan gelen fotoğraftan tahmin ettim. Gramları düzeltip kaydedin.</p>` : `<p class="gri2" style="margin:0 0 10px;font-size:14px">Fotoğraf çekin; isterseniz bir cümle ekleyin. Yemekten sonra tabakta kalanı da çekerseniz onu düşerim.</p>`}
+  const p = sayfa(`<h3>${duzenle ? (hazir && hazir.kontrol ? 'Öğünü kontrol edin' : 'Öğünü düzenleyin') : 'Yemek ekle'}</h3>
+    ${duzenle ? `<p class="gri2" style="margin:0 0 10px;font-size:14px">${hazir && hazir.kontrol ? 'Telefonunuzdan gelen fotoğraftan tahmin ettim. Gramları düzeltip kaydedin.' : 'Gramları ve saati değiştirip kaydedin.'}</p>` : `<p class="gri2" style="margin:0 0 10px;font-size:14px">Fotoğraf çekin; isterseniz bir cümle ekleyin. Yemekten sonra tabakta kalanı da çekerseniz onu düşerim.</p>`}
     <div class="yfotolar" id="y_fotolar">${duzenle && hazir && hazir.foto ? `<img src="/pt-yemek-foto/${esc(hazir.id)}.jpg" alt="">` : ''}</div>
     ${duzenle ? '' : `<div class="satir"><label class="btn">Fotoğraf çek<input type="file" accept="image/*" capture="environment" id="y_kamera" hidden></label><label class="btn">Galeriden<input type="file" accept="image/*" multiple id="y_foto" hidden></label></div>
     <textarea class="alan" id="y_metin" rows="2" style="margin-top:10px" placeholder="İsterseniz yazın: 2 kepçe mercimek çorbası, 1 dilim ekmek"></textarea>
@@ -2524,8 +2526,9 @@ function yemekSayfa(hazir, {dosyalar, duzenle} = {}){
       ${y.hassasiyet_uyari ? `<div class="not uyari">${esc(y.hassasiyet_uyari)}</div>` : ''}
       <p class="gri" style="font-size:12.5px">${K.some(k => k.kaynak) ? (K.some(k => k.bls) ? 'Besin değerleri Alman besin tablosundan (BLS 4.0, Max Rubner-Institut); gramlar tahmin. ' : '') + 'Gramı değiştirince kalori kendiliğinden güncellenir. Fotoğraflar yağı genelde eksik gösterir.' : ''}</p>
       ${K.some(k => k.kaynak) ? `<div class="sohbetsatir" style="margin:4px 0 10px"><input id="y_duz" placeholder="Yanlış olanı yazın: pilav yarım tabaktı, yağsız pişti…"><button id="y_duzgon" aria-label="Yeniden hesapla">↑</button></div>` : ''}
-      <label class="satir" style="font-size:14px"><input type="checkbox" id="y_fav"> Sık yediklerime ekle</label>
+      <div id="y_zaman"></div><label class="satir" style="font-size:14px"><input type="checkbox" id="y_fav"> Sık yediklerime ekle</label>
       <div class="salt">${duzenle ? '<button class="btn" id="y_sil">Sil</button>' : ''}<button class="btn ana" id="y_kaydet">Kaydet</button></div>`;
+    p.__z = p.__z || {}; const zk = window.zamanKutu($('#y_zaman', p), duzenle && hazir ? hazir.t : null, p.__z);
     const oku = () => $$('.tabak tr[data-i]', p).map(tr => { const x = {}; $$('input', tr).forEach(i => x[i.dataset.a] = i.dataset.a === 'ad' ? i.value : +String(i.value).replace(',', '.') || 0);
       return {...(K[+tr.dataset.i] || {}), ...x}; });
     const toplamYaz = () => { const L = oku(); $('#y_tk', p).textContent = Math.round(L.reduce((s, x) => s + (+x.kcal || 0), 0)); $('#y_tp', p).textContent = Math.round(L.reduce((s, x) => s + (+x.protein || 0), 0)); };
@@ -2546,7 +2549,8 @@ function yemekSayfa(hazir, {dosyalar, duzenle} = {}){
     const sil = $('#y_sil', p); if (sil) sil.onclick = async () => { await fetch(`/api/pt/yemek/${duzenle.tarih}/${hazir.id}`, {method: 'DELETE'}); p.kapat(); toast('Silindi.'); yukle(); };
     $('#y_kaydet', p).onclick = async () => {
       const yem = {ad: $('#y_ad', p).value || 'Öğün', kalemler: oku(), favori: $('#y_fav', p).checked, tahmin, kontrol: false};
-      if (duzenle) Object.assign(yem, {id: hazir.id, t: hazir.t, foto: hazir.foto}); else if (fotoId) Object.assign(yem, {id: fotoId, foto: true});
+      if (duzenle) Object.assign(yem, {id: hazir.id, t: hazir.t, foto: hazir.foto}, typeof hazir.oruc_bozar === 'boolean' ? {oruc_bozar: hazir.oruc_bozar} : {}); else if (fotoId) Object.assign(yem, {id: fotoId, foto: true});
+      const z = zk.oku(); if (z.t){ yem.t = z.t; yem.secim = true; } if (z.son) yem.son_yemek = true;
       try{ await gonder('/api/pt/yemek', {tarih: duzenle ? duzenle.tarih : bugunT(), yemek: yem}); p.kapat(); toast('Kaydedildi.'); yukle(); }catch(e){ toast(e.message); } };
   };
   const tahminEt = async cevap => {
@@ -3914,8 +3918,8 @@ if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.reg
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !mesgul()) yukle(true); });
 yukle();
 </script>
-<script src="/static/pt_hazir.js?v=3"></script>
-<script src="/static/pt_ana.js?v=18"></script>
+<script src="/static/pt_hazir.js?v=4"></script>
+<script src="/static/pt_ana.js?v=19"></script>
 <script src="/static/pt_gorsel.js?v=6"></script>
 <script src="/static/zil.js?v=2"></script>
 </body>

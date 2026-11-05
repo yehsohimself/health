@@ -26,6 +26,9 @@ yediği yemek, kilo, uyku, içtiği su) onu "kayitlar" listesine yaz: bunlar ona
 gerekiyorsa tek cümle yorum ekle (ör. maç yoğun çalışma sayılır, yarın hafif tutalım). Yalnız YENİ yapılan işi kayıt aç. Daha önce söylediği bir işin ayrıntısını ya da düzeltmesini
 veriyorsa ("tek seferde yaptım", "60 dakikaydı") SON KAYITLAR'daki kimliği "guncelle"ye yaz, yalnız değişen alanları ver. Aynı işi gerçekten bir kez daha yaptıysa ("50 squat daha") "ayri": true yaz.
 Soru sorduğu ya da konuştuğu mesajlarda ("ne yapayım?") kayıt açma. Kaydetmediğin ya da güncellemediğin şeyi yaptım deme. Tarihleri {bugun} gününe göre çöz ("dün", "cumartesi").
+Kayıtlı bir yemeğin günü ya da saati yanlışsa ("onu dün yedim", "13.30'daydı") yeni yemek açma: tur "yemek_tasi", SON YEMEKLER'den "id", doğru "tarih" ve "saat"; sonrasında yemediyse "son_yemek": true.
+Yemek kaydı olmadan orucun başlangıcını söylüyorsa ("dün 13.30'dan beri bir şey yemedim") tur "son_yemek", tarih ve saat. Geçmişte yediği yeni bir yemeği söylüyorsa "yemek" kaydına saat yaz.
+"Bu yemek yeterli mi?", "ne yemeliyim?" gibi sorularda kayıt açma: SON YEMEKLER ve BESLENME'deki sayılarla, kişinin seçili düzenine göre net cevap ver, eksik varsa neyi ne kadar ekleyeceğini söyle; "duzen" kartını gösterebilirsin. Yiyecek değerlerini bunların dışında kesin gibi söyleme.
 Süre ya da zorluk söylenmediyse makul tahmin et (zorluk 1-10: halı saha/büyük saha futbol 7-8, tempolu yürüyüş 3-4). Ayrıca görevin: (a) durumu anlamak için gerekiyorsa TEK seçenekli soru sormak, (b) yeterince biliyorsan planda yapacağın
 değişikliği önermek. Teşhis koyma. Göğüs ağrısı, baş dönmesi, bayılma, yayılan uyuşma, şişlikle keskin eklem ağrısı gibi uyarı belirtilerinde
 antrenmanı durdur ve doktora/112'ye yönlendir (eylem: dinlenme).
@@ -36,6 +39,8 @@ SABAH KONTROLÜ: {sabah}
 BU HAFTA: {hafta}
 GÜNLÜK LİSTE: {gunluk}
 SON KAYITLAR: {son}
+SON YEMEKLER (kayıtlı; yemek sorularında önce bunlara bak): {yemekler}
+BESLENME: {beslenme}
 APPLE SAĞLIK (son günler): {saglik}
 ORUÇ (koddan; oruç, otofaji, açlık, yemek saati sorulursa bunu kullan, saatleri yaklaşık söyle, otofajinin insanlarda başlama saatinin ölçülemediğini açıkça söyle; spor varsa birlikte yorumla): {oruc}
 BU HAFTANIN SAĞLIK DOZU: {doz}
@@ -48,10 +53,10 @@ KONUŞMA:
 JSON döndür:
 {{"yanit": "cevabın",
   "oneriler": ["kişinin bundan sonra sana söyleyebileceği 2-3 kısa şey (en çok 5 kelime, onun ağzından): 'Neden test var?', 'Yarına alalım'"],
-  "kartlar": ["gerekirse göster: seans (bugünün seansı, başlat düğmesiyle) | doz (haftalık sağlık dozu) | nefes (nefes çalışması başlat) | program (haftalık yapı) | kilo (kilo eğrisi) | hareket:<kod> (hareketin kartı)"],
-  "kayitlar": [{{"tur": "aktivite|yemek|kilo|uyku|su", "tarih": "YYYY-MM-DD", "guncelle": "düzeltilen aktivite kaydının id'si, varsa", "ayri": "aynı iş bir kez daha yapıldıysa true",
+  "kartlar": ["gerekirse göster: duzen (tek ve iki öğün yemek düzeni) | seans (bugünün seansı, başlat düğmesiyle) | doz (haftalık sağlık dozu) | nefes (nefes çalışması başlat) | program (haftalık yapı) | kilo (kilo eğrisi) | hareket:<kod> (hareketin kartı)"],
+  "kayitlar": [{{"tur": "aktivite|yemek|yemek_tasi|son_yemek|kilo|uyku|su", "tarih": "YYYY-MM-DD", "id": "yemek_tasi için yemeğin id'si", "son_yemek": "bundan sonra yemediyse true", "guncelle": "düzeltilen aktivite kaydının id'si, varsa", "ayri": "aynı iş bir kez daha yapıldıysa true",
      "spor": "futbol|basketbol|tenis|voleybol|padel|yuzme|kosu|yuruyus|bisiklet|jiujitsu|yoga|fitness|dans|diger", "ad": "kısa ad: 'Futbol (büyük saha)'",
-     "sure_dk": sayı, "zorluk": 1-10, "saat": "aktivite bittiği saat HH:MM, söylendiyse", "not": "...", "metin": "yemek için: yenen her şey miktarıyla", "ogun": "kahvalti|ogle|aksam|ara",
+     "sure_dk": sayı, "zorluk": 1-10, "saat": "aktivitenin bittiği ya da yemeğin yendiği saat HH:MM, söylendiyse", "not": "...", "metin": "yemek için: yenen her şey miktarıyla", "ogun": "kahvalti|ogle|aksam|ara",
      "kilo_kg": sayı, "bel_cm": sayı, "uyku_saat": sayı, "ml": sayı}}],
   "soru": null ya da {{"soru": "...", "secenekler": ["3-5 kısa, aynı düzeyde seçenek"]}},
   "eylem": null ya da {{"tur": "bugun|hafta|liste|tasi|profil|not|dinlenme", "aciklama": "kullanıcıya tek cümle: ne değişecek",
@@ -163,6 +168,18 @@ def aktivite_sil(tarih, sid):
     pt.gun_degistir(tarih, lambda d: d.update(seanslar=[s for s in d.get("seanslar") or [] if not (s.get("id") == sid and s.get("kaynak") == "elle")]))
 
 
+def _an(tarih, saat, eski=None):
+    """Tarih + 'HH:MM' → an. Saat yoksa eski kaydın saati, o da yoksa öğlen; ileri bir an verilmez."""
+    m = re.fullmatch(r"(\d{1,2})[:.](\d{2})", str(saat or "").strip())
+    if m and int(m[1]) < 24 and int(m[2]) < 60:
+        s = dt.time(int(m[1]), int(m[2]))
+    elif eski:
+        s = dt.datetime.fromtimestamp(eski).time()
+    else:
+        s = dt.time(13, 0)
+    return min(int(dt.datetime.combine(dt.date.fromisoformat(tarih), s).timestamp()), int(time.time()))
+
+
 def kayit_isle(k):
     """Tek kaydı uygular. Döner: {tur, tarih, ozet, geri} (geri: geri almak için gereken bilgi) ya da None."""
     tur = k.get("tur")
@@ -191,9 +208,27 @@ def kayit_isle(k):
         _seans_bicimle(seans, spor, dk, zor, k.get("saat"), t)
         pt.seans_kaydet(t, seans)
         return {"tur": tur, "tarih": t, "ozet": f"{gun_ad} · {ad} · {dk} dk", "geri": {"seans": seans["id"]}}
+    if tur == "yemek_tasi" and k.get("id"):
+        import pt_beslenme
+        yid = str(k["id"])
+        kaynak = next((g for g in (pt.bugun() - dt.timedelta(days=i) for i in range(15)) if pt_beslenme.yemek_bul(g.isoformat(), yid)), None)
+        if not kaynak:
+            return {"tur": tur, "tarih": t, "ozet": "Bu yemek kaydını bulamadım", "hata": True}
+        y = pt_beslenme.yemek_bul(kaynak.isoformat(), yid)
+        ss = _an(t, k.get("saat"), y.get("t"))
+        g = pt_beslenme.yemek_tasi(kaynak.isoformat(), yid, ss, bool(k.get("son_yemek")))
+        return {"tur": tur, "tarih": t, "ozet": f"{gun_ad} {dt.datetime.fromtimestamp(ss):%H.%M} · {y.get('ad')}" + (" · oruç o andan sürüyor" if k.get("son_yemek") else ""), "geri": {"yemek_tasi": g}}
+    if tur == "son_yemek":
+        ss = _an(t, k.get("saat"))
+        once = {"oruc_kapandi": pt.gun(t).get("oruc_kapandi")}
+        pt.gun_degistir(t, lambda d: d.update(oruc_kapandi=ss))
+        return {"tur": tur, "tarih": t, "ozet": f"Oruç {gun_ad.lower()} {dt.datetime.fromtimestamp(ss):%H.%M}'ten beri sürüyor", "geri": {"once": once}}
     if tur == "yemek" and str(k.get("metin") or "").strip():
         import pt_beslenme
-        y = pt_beslenme.disaridan_kaydet([], str(k["metin"])[:400], t)
+        ss = _an(t, k.get("saat")) if k.get("saat") or t != pt.bugun().isoformat() else None
+        y = pt_beslenme.disaridan_kaydet([], str(k["metin"])[:400], t, ss)
+        if k.get("son_yemek") and y.get("t"):
+            pt.gun_degistir(t, lambda d: d.update(oruc_kapandi=y["t"]))
         top = round(sum(x.get("kcal") or 0 for x in y.get("kalemler") or []))
         return {"tur": tur, "tarih": t, "ozet": f"{gun_ad} · {y.get('ad')} · yaklaşık {top} kcal (kontrol edin)", "geri": {"yemek": y["id"]}}
     if tur == "kilo" and (k.get("kilo_kg") or k.get("bel_cm")):
@@ -236,6 +271,9 @@ def kayit_geri(r):
     elif g.get("yemek"):
         import pt_beslenme
         pt_beslenme.yemek_sil(t, g["yemek"])
+    elif g.get("yemek_tasi"):
+        import pt_beslenme
+        pt_beslenme.yemek_tasi_geri(g["yemek_tasi"])
     elif "once" in g:
         def f(d):
             for a, v in g["once"].items():
@@ -309,6 +347,8 @@ def baglam():
         saglik=_g(_saglik_ozet, "yok"), doz=_g(lambda: json.dumps(__import__("pt_uzun").doz_ozeti().get("satirlar"), ensure_ascii=False), "yok"),
         moduller=_g(lambda: ", ".join(f"{m['ad']}{' (bugün yapıldı)' if m.get('bitti') else ''}" for m in __import__("pt_modul").gunun()) or "yok", "yok"),
         gunluk=_g(lambda: __import__("pt_gunluk").baglam_metni(p), "yok"),
+        yemekler=_g(lambda: json.dumps(__import__("pt_ogun").son_yemekler(), ensure_ascii=False), "yok"),
+        beslenme=_g(lambda: __import__("pt_ogun").baglam_metni(p), "yok"),
         oruc=_g(lambda: __import__("pt_oruc").anlat(__import__("pt_beslenme").pencere_durumu(p).get("oruc")), "yok"))
 
 
@@ -357,7 +397,7 @@ def gonder(metin):
         cevap["kayitlar"] = K
         cevap["kayit_no"] = f"k{int(time.time() * 1000)}"
     cevap["oneriler"] = [str(x)[:40] for x in (c.get("oneriler") or []) if str(x).strip()][:3]
-    KART = ("seans", "doz", "nefes", "program", "kilo")
+    KART = ("seans", "doz", "nefes", "program", "kilo", "duzen")
     cevap["kartlar"] = [str(k)[:40] for k in (c.get("kartlar") or []) if str(k).split(":")[0] in KART or str(k).startswith("hareket:")][:2]
     if c.get("soru") and (c["soru"].get("secenekler") or []):
         cevap["soru"] = {"soru": str(c["soru"].get("soru") or "")[:200], "secenekler": [str(x)[:60] for x in c["soru"]["secenekler"]][:5]}

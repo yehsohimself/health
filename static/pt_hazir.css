@@ -85,3 +85,25 @@ html[data-urun="pt"] body:not(.an-haftada) .pn{display:none!important}
 .hz-duz{position:static;box-shadow:none;border-top:0;background:none;padding:8px 0 4px}
 .hz-c input[type=number]{width:64px;border:1px solid var(--cizgi);background:transparent;color:var(--ink2);border-radius:999px;padding:5px 9px;font:inherit;font-size:13px}
 .hz-c input[type=datetime-local]{border:1px solid var(--cizgi);background:transparent;color:var(--ink2);border-radius:999px;padding:4px 8px;font:inherit;font-size:12.5px;max-width:190px}
+/* yemek zamanı, ayrıntı, tek ve iki öğün düzeni */
+.hz-zk{align-items:flex-start;margin:14px 0 6px}
+.hz-zk .hz-c{gap:6px}
+.hz-son{font-size:14px;margin:0 0 10px}
+.hz-seg{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--yuzey3);margin:8px 0 12px}
+.hz-seg button{flex:1;border:0;background:none;color:var(--ink2);font:inherit;font-size:14px;padding:8px 10px;border-radius:999px;cursor:pointer}
+.hz-seg button.on{background:var(--ink);color:var(--zemin,#08080a);font-weight:600}
+.hz-yfoto{width:100%;max-height:240px;object-fit:cover;border-radius:12px;margin:0 0 8px}
+.hz-kal{font-size:13.5px;margin:0 0 10px}
+.hz-karar{font-size:18px;font-weight:650;margin:4px 0 10px}
+.hz-olc{display:flex;flex-direction:column;gap:8px}
+.hz-olc>div{display:grid;grid-template-columns:82px 1fr auto;align-items:center;gap:10px;font-size:13.5px}
+.hz-olc b{font-weight:600;font-variant-numeric:tabular-nums}
+.hz-not{font-size:14.5px;line-height:1.45;margin:10px 0 0}
+.hz-kay{font-size:12.5px;margin:10px 0 0}
+.hz-b{font-size:14px;margin:18px 0 0}
+.hz-ogun{border-top:1px solid var(--cizgi);padding:12px 0}
+.hz-ob{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hz-osec{margin-left:auto}
+.hz-os ul{margin:8px 0;padding:0 0 0 18px;font-size:14.5px;line-height:1.5}
+.hz-oa{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px}
+.hz-top{border-top:1px solid var(--cizgi);padding-top:12px;margin:0;font-size:14px}
